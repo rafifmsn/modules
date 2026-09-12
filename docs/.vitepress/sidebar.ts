@@ -10,7 +10,10 @@ export const sidebar: DefaultTheme.SidebarMulti = {
   "/learn/fundamentals/": [
     {
       text: "Blockchain Fundamentals",
-      items: [{ text: "Track Overview", link: "/learn/fundamentals/" }],
+      items: [
+        { text: "Track Overview", link: "/learn/fundamentals/" },
+        { text: "Back to All Tracks", link: "/learn/" },
+      ],
     },
     {
       text: "Part 1: Distributed Trust & Cryptography",
@@ -162,6 +165,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       text: "Builder Foundations",
       items: [
         { text: "Track Overview", link: "/learn/builder-foundations/" },
+        { text: "Back to All Tracks", link: "/learn/" },
       ],
     },
   ],
@@ -170,6 +174,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       text: "Protocol Engineering",
       items: [
         { text: "Track Overview", link: "/learn/protocol-engineering/" },
+        { text: "Back to All Tracks", link: "/learn/" },
       ],
     },
   ],

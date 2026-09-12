@@ -70,7 +70,7 @@ However, if someone hands you a glass of pink smoothie, it is physically impossi
 In SHA-256, because the output space is $2^{256}$, recovering an input $x$ by brute force requires an expected search of $2^{255}$ trial evaluations.
 To grasp how immense $2^{256}$ is:
 - The total number of atoms in the observable universe is estimated around $10^{80}$, which is roughly $2^{266}$.
-- If every computer on Earth performed one billion hashes per second for the entire age of the universe (13.8 billion years), the network would have searched less than $0.000000000000000000000000000001\%$ of the total 256-bit keyspace.
+- If every computer on Earth performed one billion hashes per second for the entire age of the universe (13.8 billion years), the network would have searched less than $10^{-30}\%$ of the total 256-bit keyspace.
 
 ### 3. Second Pre-Image Resistance (Weak Collision Resistance)
 

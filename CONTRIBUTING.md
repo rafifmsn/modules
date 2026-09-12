@@ -48,8 +48,8 @@ docs/learn/fundamentals/02-cryptographic-primitives.md
 
 ### 3. Register the Page in the Sidebar
 
-Sidebar navigation is configured manually in `docs/.vitepress/config.mts`.
-Locate the matching track key inside `themeConfig.sidebar` and add your page to the `items` array.
+Sidebar navigation is configured manually in `docs/.vitepress/sidebar.ts`.
+Locate the matching track key and add your page to the `items` array.
 The display order in the portal directly follows the array order:
 
 ```ts
