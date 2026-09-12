@@ -41,7 +41,7 @@ Because validators do not need to liquidate rewards to pay electric utilities, t
 ### 3. Asymmetric Punitive Power (The Slashing Advantage)
 
 Suppose an adversary acquires 51 percent of the mining equipment on a Proof of Work chain and mounts a catastrophic double-spending reorganization:
-- The honest community can fork to a new mining algorithm, but the community **cannot physically reach into the attacker's warehouse to destroy their ASIC chips**.\
+- The honest community can fork to a new mining algorithm, but the community **cannot physically reach into the attacker's warehouse to destroy their ASIC chips**.
 - The attacker retains their physical machines and can attack the next algorithm or sell the hardware on secondary markets to recoup their investment.
 
 In Proof of Stake, the attacker's security asset **lives directly on the blockchain itself**:

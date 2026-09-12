@@ -154,7 +154,8 @@ Miners recoup their expenses through two revenue streams awarded exclusively whe
 ### The Nash Equilibrium of Honest Mining
 
 This structure forms a self-enforcing **Nash Equilibrium**:
-- If a miner includes a fraudulent transaction (such as spending coins they do not own or double-spending), full nodes and non-mining peers verify the block rules and **immediately drop the block**.\n- The fraudulent miner incurs 100 percent of the electrical cost of calculating the valid Proof of Work hash, but receives **zero coins and zero fees**.
+- If a miner includes a fraudulent transaction (such as spending coins they do not own or double-spending), full nodes and non-mining peers verify the block rules and **immediately drop the block**.
+- The fraudulent miner incurs 100 percent of the electrical cost of calculating the valid Proof of Work hash, but receives **zero coins and zero fees**.
 - Conversely, following the rules and building honestly on the longest chain guarantees that valid blocks are accepted and rewarded with high-value native currency.
 Dishonesty is rendered economically irrational by design.
 

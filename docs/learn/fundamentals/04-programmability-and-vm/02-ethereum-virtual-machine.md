@@ -3,9 +3,11 @@
 In Bitcoin, the state machine is specialized and intentionally limited: transactions consume unspent outputs (UTXOs) and evaluate lightweight Forth-like verification scripts.
 While Bitcoin scripts can verify cryptographic signatures, enforce multi-sig thresholds, and establish relative timelocks, they cannot maintain internal state variables, loop dynamically, or evaluate complex arbitrary business logic.
 
-In 2013, Vitalik Buterin recognized that by embedding a complete virtual machine directly inside a decentralized blockchain, the network could transform from a distributed calculator into a **global, decentralized supercomputer**.\nThat computational engine is the **Ethereum Virtual Machine (EVM)**.
+In 2013, Vitalik Buterin recognized that by embedding a complete virtual machine directly inside a decentralized blockchain, the network could transform from a distributed calculator into a **global, decentralized supercomputer**.
+That computational engine is the **Ethereum Virtual Machine (EVM)**.
 
-The EVM is the runtime execution environment for every smart contract deployed on Ethereum and dozens of compatible chains (such as Polygon, Avalanche C-Chain, Arbitrum, Optimism, BNB Chain, and Base).\nIt serves as a deterministic state machine: given a current world state $\\sigma$ and a valid transaction $T$, the EVM executes the transaction's bytecode and deterministically transitions the world into a new state $\\sigma'$:
+The EVM is the runtime execution environment for every smart contract deployed on Ethereum and dozens of compatible chains (such as Polygon, Avalanche C-Chain, Arbitrum, Optimism, BNB Chain, and Base).
+It serves as a deterministic state machine: given a current world state $\\sigma$ and a valid transaction $T$, the EVM executes the transaction's bytecode and deterministically transitions the world into a new state $\\sigma'$:
 
 $$f_{\\text{EVM}}(\\sigma, T) = \\sigma'$$
 
@@ -13,7 +15,8 @@ Every validating full node on Earth independently runs the exact same EVM byteco
 
 ## Architectural Components of the EVM
 
-The EVM is a **quasi-Turing-complete, stack-based machine**.\nDuring execution, the EVM partitions data across six distinct physical regions, each with fundamentally different lifecycles, access costs, and performance characteristics:
+The EVM is a **quasi-Turing-complete, stack-based machine**.
+During execution, the EVM partitions data across six distinct physical regions, each with fundamentally different lifecycles, access costs, and performance characteristics:
 
 ```mermaid
 flowchart TD
@@ -34,10 +37,12 @@ Let us examine the primary four data regions in depth:
 
 ### 1. The Stack: The Computational Engine
 
-The EVM is not a register-based machine (like modern x86 or ARM CPUs).\nIt is a **stack machine** that operates on a Last-In, First-Out (LIFO) stack.
+The EVM is not a register-based machine (like modern x86 or ARM CPUs).
+It is a **stack machine** that operates on a Last-In, First-Out (LIFO) stack.
 - **Capacity:** Exactly **1,024 items**. If an operation pushes a 1,025th item onto the stack, the EVM triggers a `Stack Overflow` exception and halts.
 - **Word Size:** Each stack slot holds exactly one 256-bit word.
-- **The 16-Slot Access Constraint ("Stack Too Deep"):** While the stack can hold 1,024 words, EVM swap and duplicate instructions (`SWAP1` through `SWAP16`, `DUP1` through `DUP16`) can only reach the top 16 items on the stack.\n  If a smart contract function attempts to manipulate more than 16 local variables simultaneously, the Solidity compiler aborts with the infamous error: `"Stack too deep"`.
+- **The 16-Slot Access Constraint ("Stack Too Deep"):** While the stack can hold 1,024 words, EVM swap and duplicate instructions (`SWAP1` through `SWAP16`, `DUP1` through `DUP16`) can only reach the top 16 items on the stack.
+  If a smart contract function attempts to manipulate more than 16 local variables simultaneously, the Solidity compiler aborts with the infamous error: `"Stack too deep"`.
 
 ```mermaid
 flowchart TD
