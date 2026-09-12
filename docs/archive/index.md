@@ -6,9 +6,9 @@ head:
       content: noindex, nofollow
 ---
 
-# Testing Suite
+# Special Pages & Archive
 
-This section serves as an archive for research notes, draft specifications, and visual sandbox verification.
+This section serves as dedicated space for auxiliary, occasional, and unlisted resources, including event specifications, competition guidelines, legal notices, and staging verification.
 Use this space to test diagrams, mathematical notation, and new component layouts before integrating them into active curricula.
 
 ## Mermaid Diagram Verification

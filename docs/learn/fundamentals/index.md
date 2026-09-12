@@ -23,7 +23,7 @@ Upon completing this track, learners will be able to:
 
 ## Curated Syllabus
 
-### Part 1: Foundations of Distributed Trust & Cryptography
+### Module 1: Foundations of Distributed Trust & Cryptography
 
 1. **[The Double-Spending Problem & Digital Cash History](/learn/fundamentals/01-distributed-trust/01-double-spending-and-digital-cash)**
    - Centralized clearinghouses versus decentralized verification.
@@ -37,7 +37,7 @@ Upon completing this track, learners will be able to:
 4. **[Peer-to-Peer Networks & Network Topologies](/learn/fundamentals/01-distributed-trust/04-peer-to-peer-networks-and-topologies)**
    - Gossip protocols, node discovery, peer connectivity, and network latency.
 
-### Part 2: Blockchain Architecture & State Models
+### Module 2: Blockchain Architecture & State Models
 
 1. **[Anatomy of a Block & Block Headers](/learn/fundamentals/02-architecture-and-state/01-block-anatomy-and-headers)**
    - Block headers, previous block hashes, timestamps, nonces, and transaction roots.
@@ -51,7 +51,7 @@ Upon completing this track, learners will be able to:
    - Soft forks versus hard forks.
    - Longest-chain rules, block reorganizations, and probabilistic versus deterministic finality.
 
-### Part 3: Consensus Mechanisms & Game Theory
+### Module 3: Consensus Mechanisms & Game Theory
 
 1. **[The Byzantine Generals Problem](/learn/fundamentals/03-consensus-and-game-theory/01-byzantine-generals-problem)**
    - Distributed fault tolerance, safety versus liveness, and network partition assumptions.
@@ -64,7 +64,7 @@ Upon completing this track, learners will be able to:
 4. **[Alternative & Hybrid Consensus Models](/learn/fundamentals/03-consensus-and-game-theory/04-alternative-and-hybrid-consensus-models)**
    - Delegated Proof of Stake, Practical Byzantine Fault Tolerance, and DAG-based consensus.
 
-### Part 4: Programmability, Virtual Machines & Tooling
+### Module 4: Programmability, Virtual Machines & Tooling
 
 1. **[From Static Ledgers to Programmable State](/learn/fundamentals/04-programmability-and-vm/01-static-ledgers-to-programmable-state)**
    - Scripting limitations in Bitcoin script.
@@ -82,7 +82,7 @@ Upon completing this track, learners will be able to:
    - Deterministic execution limits regarding external off-chain data.
    - Decentralized oracle networks, data aggregation, and cryptographic proofs.
 
-### Part 5: Decentralized Systems: Tokens, Protocols & Governance
+### Module 5: Decentralized Systems: Tokens, Protocols & Governance
 
 1. **[Token Standards & Digital Ownership](/learn/fundamentals/05-decentralized-systems/01-token-standards-and-digital-ownership)**
    - Fungible tokens via ERC-20, non-fungible tokens via ERC-721, and multi-tokens via ERC-1155.
@@ -98,7 +98,7 @@ Upon completing this track, learners will be able to:
 5. **[Decentralized Autonomous Organizations](/learn/fundamentals/05-decentralized-systems/05-decentralized-autonomous-organizations)**
    - Proposal lifecycles, token-weighted voting, quadratic voting, and timelock controllers.
 
-### Part 6: Scalability, Layer 2 & Protocol Security
+### Module 6: Scalability, Layer 2 & Protocol Security
 
 1. **[The Blockchain Trilemma](/learn/fundamentals/06-scalability-and-security/01-blockchain-trilemma)**
    - Balancing decentralization, security, and transaction throughput.
