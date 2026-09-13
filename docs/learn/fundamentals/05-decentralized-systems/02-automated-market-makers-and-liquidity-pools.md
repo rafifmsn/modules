@@ -1,5 +1,10 @@
 # Automated Market Makers and Liquidity Pools
 
+![Automated Market Makers and Liquidity Pools](./assets/5-2.jpg)
+
+In the previous module, we examined how token standards (ERC-20, ERC-721, ERC-1155) establish composable digital property on top of the virtual machine.
+However, once tokens exist on a shared ledger, users need a way to trade them permissionlessly.
+
 In traditional finance, trading assets relies on the **Central Limit Order Book (CLOB)**.
 Every stock exchange (such as the New York Stock Exchange or NASDAQ) and centralized cryptocurrency exchange (such as Binance or Coinbase) maintains a continuous ledger of bids (buyers) and asks (sellers) sorted by price and time.
 Professional institutional firms called **market makers** continuously post orders on both sides of the book, capturing the bid-ask spread and providing liquidity to retail traders.
@@ -24,8 +29,8 @@ flowchart TD
     end
 
     subgraph AMM_Model ["Automated Market Maker (AMM) Model"]
-        LPs[Liquidity Providers: Alice & Bob] -->|Deposit Reserves 50/50| Pool["Liquidity Pool Contract: Holds Reserves of Token X and Token Y"]
-        Trader[Autonomous Trader] -->|Deposits Token X| Pool
+        LPs[Liquidity Providers: Bob & Charlie] -->|Deposit Reserves 50/50| Pool["Liquidity Pool Contract: Holds Reserves of Token X and Token Y"]
+        Trader[Autonomous Trader: Alice] -->|Deposits Token X| Pool
         Pool -->|Returns Token Y via Mathematical Invariant| Trader
         Note["Zero counterparty matching! Trader trades directly against the smart contract reserve pool."]
     end
@@ -34,8 +39,8 @@ flowchart TD
 In an AMM:
 - **No Order Book:** There are no active bids, asks, or order cancellations.
 - **Pooled Reserves:** Passive investors called **Liquidity Providers (LPs)** deposit equal values of two tokens into a shared smart contract reserve pool.
-- **Autonomous Counterparty:** When a trader wants to swap Token X for Token Y, they do not wait for another human to sell Token Y.
-  The trader deposits Token X directly into the smart contract pool and withdraws Token Y according to a deterministic mathematical formula.
+- **Autonomous Counterparty:** When Alice wants to swap Token X for Token Y, she does not wait for another human to sell Token Y.
+  Alice deposits Token X directly into the smart contract pool and withdraws Token Y according to a deterministic mathematical formula.
 
 ## The Constant Product Invariant: $x \cdot y = k$
 
@@ -74,7 +79,7 @@ As a trader drains more of Token Y from the pool, the marginal cost of Token Y r
 
 Let us walk through the exact mathematical derivation of a trade on Uniswap V2, including the standard **0.30 percent trading fee** ($\gamma = 0.997$ or $99.7\%$ multiplier).
 
-Suppose a trader wants to deposit $\Delta x$ tokens into the pool to purchase $\Delta y$ tokens:
+Suppose Alice wants to deposit $\Delta x$ tokens into the pool to purchase $\Delta y$ tokens:
 1. The initial pool state satisfies:
    $$x \cdot y = k$$
 2. A 0.3% fee is deducted from the input amount:
@@ -133,7 +138,7 @@ flowchart TD
     end
 
     subgraph SlippageDelay ["Slippage: External Mempool Latency"]
-        Broadcast["User Broadcasts Tx at Time T0 (Expected Price P0)"] --> MempoolDelay["Tx Sits in Mempool for 12 Seconds"]
+        Broadcast["Alice Broadcasts Tx at Time T0 (Expected Price P0)"] --> MempoolDelay["Tx Sits in Mempool for 12 Seconds"]
         MempoolDelay --> OtherTrades["Other traders' transactions execute first"]
         OtherTrades --> ActualPrice["Tx executes at Time T1 at different price P1"]
     end
@@ -146,7 +151,7 @@ flowchart TD
 ## Liquidity Provision and LP Share Tokens
 
 Where does the initial capital in an AMM come from?
-Independent Liquidity Providers (LPs) deposit capital into the pool.
+Independent Liquidity Providers (such as Bob and Charlie) deposit capital into the pool.
 
 When an LP deposits both tokens, the smart contract mints specialized **ERC-20 LP Tokens** that represent their proportional claim on the pool's assets.
 
@@ -172,10 +177,10 @@ Liquidity providers face a specific mathematical risk called **Impermanent Loss 
 
 ```mermaid
 flowchart TD
-    Deposit["LP Deposits 1 ETH ($1,000) + 1,000 USDC (Total $2,000)"] --> PriceMoves["External Market: ETH Price Surges 4x to $4,000!"]
+    Deposit["Bob Deposits 1 ETH ($1,000) + 1,000 USDC (Total $2,000)"] --> PriceMoves["External Market: ETH Price Surges 4x to $4,000!"]
     PriceMoves --> Arbitrage["Arbitrageurs buy cheap ETH from pool until pool price matches market"]
     Arbitrage --> PoolState["New Pool Reserves: 0.5 ETH + 2,000 USDC"]
-    PoolState --> Withdraw["LP Withdraws: Value = (0.5 * 4000) + 2000 = $4,000"]
+    PoolState --> Withdraw["Bob Withdraws: Value = (0.5 * 4000) + 2000 = $4,000"]
     Deposit -.-> HoldStrategy["HODL Strategy: Hold 1 ETH + 1,000 USDC in Wallet"]
     HoldStrategy --> HoldVal["HODL Value = (1 * 4000) + 1000 = $5,000!"]
     Withdraw & HoldVal --> Compare["Impermanent Loss = $4,000 - $5,000 = -$1,000 (-20%)!"]
@@ -201,16 +206,26 @@ $$\text{IL}(r) = \frac{2\sqrt{r}}{1 + r} - 1$$
 
 ### Why is it Called "Impermanent"?
 
-The loss is termed "impermanent" because if the relative price of the two tokens returns to its exact original ratio when you deposited, the loss completely disappears!
+The loss is termed "impermanent" because if the relative price of the two tokens returns to its exact original ratio when Bob deposited, the loss completely disappears.
 However, if an LP withdraws their capital while prices are divergent, the loss is realized permanently.
 For liquidity provision to be profitable, the cumulative 0.3% trading fees earned by the pool must exceed the impermanent loss incurred from price divergence.
+
+## Specialized Invariants: Curve Stableswap
+
+While Uniswap's constant product invariant is ideal for volatile pairs (such as ETH/USDC), it is inefficient for assets that are meant to trade at parity (such as USDC/USDT, DAI/USDC, or stETH/ETH).
+A constant sum invariant ($x + y = C$) offers zero slippage, but easily drains completely if one asset drifts in value.
+
+In 2019, Michael Egorov created **Curve Finance**, introducing the **Stableswap Invariant**:
+- It bridges the constant sum and constant product curves using an amplification coefficient ($A$).
+- Around the 1:1 price peg, the curve is flat, providing deep liquidity with virtually zero slippage.
+- If an asset undergoes significant depegging, the curve shifts dynamically towards a constant product hyperbola to protect remaining pool reserves.
 
 ## Evolution: Uniswap V3 Concentrated Liquidity
 
 In Uniswap V2, liquidity is spread uniformly across the entire price curve from zero to infinity ($[0, \infty)$).
 In an ETH/USDC pool where ETH trades between $2,500 and $3,500:
 - Over **90 percent of the pooled capital** sits idle in extreme ranges (waiting for ETH to trade at $1 or $1,000,000), earning zero fees.
-- Capital efficiency is extraordinarily low.
+- Capital efficiency is low.
 
 In May 2021, Uniswap launched **Uniswap V3**, introducing **Concentrated Liquidity**:
 
@@ -223,7 +238,20 @@ flowchart LR
 ```
 
 - **Custom Price Ranges (Ticks):** LPs choose specific minimum and maximum price boundaries ($[P_{\text{lower}}, P_{\text{upper}}]$) for their capital.
-- **Extreme Capital Efficiency:** Within that narrow price band, an LP's capital provides up to **4,000 times higher liquidity depth** than Uniswap V2, generating drastically higher fee yields with smaller capital outlays.
+- **Capital Efficiency:** Within that narrow price band, an LP's capital provides up to **4,000 times higher liquidity depth** than Uniswap V2, generating drastically higher fee yields with smaller capital outlays.
 - **NFT LP Positions:** Because every LP can select custom price ranges, LP positions are no longer fungible.
   Uniswap V3 represents LP positions as unique **ERC-721 NFTs** containing the specific tick range coordinates.
 - **Range Risk:** If the market price moves outside an LP's specified range, their position converts 100 percent into the depreciating asset and stops earning all trading fees until the price moves back into range.
+
+## The Next Question: How Do We Borrow and Lend Without Credit Scores?
+
+We have traced how automated market makers replace centralized order books with pooled reserves and invariant curves.
+However, trading spot assets is only one half of a functional financial system.
+The other half is credit and lending.
+
+In traditional finance, obtaining a loan requires credit bureaus, income verification, employment history, and physical legal enforcement.
+On a permissionless blockchain where borrowers are anonymous cryptographic addresses, how can anyone lend money without the borrower simply walking away with the funds?
+
+How do protocols like Aave, Compound, and MakerDAO achieve automated solvency through **over-collateralization, Loan-to-Value (LTV) limits, and liquidation auctions**?
+And how do interest rate curves adjust dynamically to supply and demand?
+To explore decentralized debt engines, we proceed to **Collateralized Lending and Solvency**.

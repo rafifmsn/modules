@@ -1,12 +1,17 @@
 # The Blockchain Trilemma
 
+![The Blockchain Trilemma](./assets/6-1.jpg)
+
+In the previous module, we examined how decentralized systems, automated market makers, lending pools, and DAOs coordinate global capital and algorithmic institutions.
+However, as these decentralized protocols expand to serve millions of global participants, they collide directly with a fundamental constraint of distributed systems: **The Blockchain Trilemma**.
+
 In computer science and distributed systems architecture, designing protocols is an exercise in managing fundamental trade-offs.
 No single database or communication network can maximize every operational parameter simultaneously.
 
 In 2017, Ethereum creator Vitalik Buterin formalized the core architectural constraint of public distributed ledgers as **The Blockchain Trilemma**.
 The trilemma posits that a decentralized ledger can achieve at most **two out of three** core properties simultaneously:
 
-1. **Decentralization:** The network can be validated and operated by thousands of ordinary users on consumer-grade hardware without relying on an oligarchy of data centers.
+1. **Decentralization:** The network can be validated and operated by thousands of ordinary users (such as Alice running a node on a consumer laptop) without relying on an oligarchy of data centers.
 2. **Security:** The protocol is mathematically and economically resilient against coordinated Byzantine attacks, 51% reorganizations, and colluding cartels.
 3. **Scalability (Throughput):** The system can process thousands of transactions per second (TPS) with sub-second finality and negligible user transaction fees.
 
@@ -39,7 +44,7 @@ flowchart LR
     end
 
     subgraph Blockchain_Decentralized ["Decentralized Blockchain Execution"]
-        User2[User] --> Gossip[Global P2P Gossip Mesh]
+        User2[User: Bob] --> Gossip[Global P2P Gossip Mesh]
         Gossip --> Node1[Node in Tokyo] & Node2[Node in Berlin] & Node3[Node in New York]
         Note2["Every single transaction executed redundantly by 10,000+ independent nodes globally!"]
     end
@@ -50,7 +55,7 @@ In a centralized system like Visa:
 - There is no Byzantine fault tolerance, no peer-to-peer gossip latency, and no redundant independent verification.
 
 In a decentralized blockchain:
-- **Redundant Execution:** When you swap tokens on Uniswap, that transaction is not executed once.
+- **Redundant Execution:** When Bob swaps tokens on Uniswap, that transaction is not executed once.
   It is executed **redundantly by tens of thousands of independent validator nodes across the globe**.
 - **The Physical Throughput Limit:** Transaction throughput ($\text{TPS}$) is physically bounded by the capacity of the slowest participating validator node:
 
@@ -79,9 +84,9 @@ flowchart TD
 ```
 
 1. **State Explosion:** If a blockchain processes 50,000 TPS, its global state trie expands by tens of gigabytes every single day, requiring hundreds of terabytes of ultra-fast NVMe storage within a few years.
-2. **Consumer Hardware Exclusion:** Ordinary users running nodes on home laptops can no longer keep up with the tip of the chain; their machines fall behind and crash.
+2. **Consumer Hardware Exclusion:** Ordinary users like Alice running nodes on home laptops can no longer keep up with the tip of the chain; their machines fall behind and crash.
 3. **Loss of Self-Sovereignty:** When ordinary people cannot afford to run a full node, they are forced to trust a handful of multi-million-dollar data center operators.
-   At that point, the blockchain ceases to be decentralized; it becomes an inefficient, expensive replica of Amazon Web Services.
+   At that point, the blockchain ceases to be decentralized; it becomes an inefficient replica of Amazon Web Services.
 
 The core philosophy of Ethereum and Bitcoin is that **preserving the ability of ordinary humans to run a verifying full node on consumer hardware is non-negotiable**.
 Without decentralization, cryptographic immutability is an illusion.
@@ -126,7 +131,7 @@ flowchart TD
 
 1. **Execution:** Taking incoming transactions, executing EVM/SVM bytecode, updating user balances, and calculating the new state root.
    In modular architectures, execution is moved off-chain to **Layer 2 Rollups**, which can run at thousands of transactions per second.
-2. **Settlement:** The ultimate judicial arbiter that finalizes state commitments, resolves fraud proofs, and verifies mathematical zero-knowledge validity proofs.
+2. **Settlement:** The ultimate judicial arbiter that finalizes state commitments, resolves fraud disputes, and verifies mathematical zero-knowledge validity proofs.
 3. **Consensus:** Establishing the indisputable, immutable chronological ordering of transaction batches through Proof of Stake or Proof of Work.
 4. **Data Availability (DA):** Ensuring that the raw transaction bytes are publicly broadcast and retrievable by anyone, proving that no validator has hidden transactions.
 
@@ -134,3 +139,15 @@ By offloading execution to Layer 2 rollups while anchoring security, consensus, 
 - **Decentralization:** Preserved on Layer 1, where ordinary users continue running full nodes.
 - **Security:** Layer 2 rollups inherit 100 percent of the multi-billion-dollar cryptographic security and economic finality of Layer 1.
 - **Scalability:** Achieved by executing thousands of transactions per second off-chain, compressing them into compact cryptographic proofs, and settling them on Layer 1 for pennies.
+
+## The Next Question: How Does Layer 2 Actually Inherit Layer 1 Security?
+
+We have established why monolithic blockchains hit physical limits and why decoupling execution from consensus is the path forward.
+However, this leads directly to a crucial question:
+How does an off-chain layer actually execute transactions while proving its correctness to Layer 1?
+
+What is the difference between a sidechain, a state channel, plasma, and a genuine rollup?
+Why does a sidechain like Polygon PoS rely on its own separate validator consensus (introducing independent security assumptions), while a true Layer 2 rollup relies strictly on Ethereum Layer 1 for its ultimate security?
+And how do bridge contracts on Layer 1 ensure that users can always withdraw their funds even if the off-chain operators go offline or turn malicious?
+
+To explore the taxonomy and mechanics of off-chain scaling, we advance to **Layer 2 Fundamentals**.

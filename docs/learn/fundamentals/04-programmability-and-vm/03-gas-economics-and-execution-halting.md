@@ -1,11 +1,14 @@
 # Gas Economics and Execution Halting
 
-In standard desktop or cloud software development, developers rarely concern themselves with the computational cost of an addition operation or writing a variable to RAM.
-Physical hardware is abundant, and operating systems virtualize memory seamlessly.
+![Gas Economics and Execution Halting](./assets/4-3.jpg)
 
-On a decentralized blockchain, however, computing resources are intensely scarce.
+In the previous module, we examined the inner workings of the Ethereum Virtual Machine: how instructions manipulate the stack, allocate linear memory, and commit persistent storage to disk.
+However, computing resources on a decentralized blockchain are intensely scarce.
 Every instruction executed by a smart contract is not executed once on a central server; it is executed **redundantly by tens of thousands of independent validator computers worldwide**.
 Every byte of persistent storage is replicated across thousands of physical solid-state drives permanently.
+
+In standard desktop or cloud software development, developers rarely concern themselves with the computational cost of an addition operation or writing a variable to RAM.
+Physical hardware is abundant, and operating systems virtualize memory seamlessly.
 
 To allocate these scarce resources efficiently, prevent denial-of-service attacks, and create a sustainable economic market for transaction processing, Ethereum introduced **Gas Economics**.
 
@@ -24,8 +27,7 @@ flowchart LR
 
 - **Gas Units (The Computational Measure):**
   Gas is a unit of pure physical work.
-  Adding two numbers with the `ADD` opcode costs **3 gas**.
-  Writing a new word to disk with `SSTORE` costs **20,000 gas**.
+  Adding two numbers with the `ADD` opcode costs **3 gas**.\n  Writing a new word to disk with `SSTORE` costs **20,000 gas**.
   These values are hardcoded in the protocol specification and remain completely constant regardless of whether ETH is trading at $10 or $10,000.
 - **Gas Price (The Market Auction):**
   The price of gas is denominated in **gwei** (where $1 \text{ gwei} = 10^{-9} \text{ ETH} = 1,000,000,000 \text{ wei}$).
@@ -54,7 +56,7 @@ Let us break down each component:
 3. **Contract Creation (32,000 gas):**
    If the transaction deploys a new contract (`to` field is null), an additional 32,000 gas is assessed to cover the initialization of a new account state trie node.
 
-If a transaction specifies a `gasLimit` smaller than $G_{\text{intrinsic}}$, nodes drop it immediately without running the EVM.
+If Alice submits a transaction specifying a `gasLimit` smaller than $G_{\text{intrinsic}}$, nodes drop it immediately without running the EVM.
 
 ## EIP-1559: The Dynamic Fee Market Architecture
 
@@ -78,11 +80,11 @@ flowchart TD
 Under EIP-1559, every block has a protocol-calculated **Base Fee per Gas**:
 - **Mandatory:** Every transaction included in the block must pay at least this base fee.
 - **Burned:** Crucially, **100 percent of the base fee is burned (destroyed)** by sending it to a dead address, permanently shrinking the circulating supply of ETH.
-- **Why Burn It?** If the base fee were paid to the miner, miners could collude with off-chain users to artificially inflate block space or create fake transactions to manipulate the base fee calculation without economic penalty. Burning the fee aligns miner incentives strictly with the protocol.
+- **Why Burn It?** If the base fee were paid to the block proposer, proposers could collude with off-chain users to artificially inflate block space or create fake transactions to manipulate the base fee calculation without economic penalty. Burning the fee aligns proposer incentives strictly with the protocol.
 
 ### 2. The Priority Fee (Tip to Validator)
 
-The **Priority Fee** (miner tip) is an optional additional payment that goes directly into the block proposer's pocket to incentivize them to prioritize your transaction over others during times of congestion.
+The **Priority Fee** (miner tip) is an optional additional payment that goes directly into the block proposer's pocket to incentivize them to prioritize Alice's transaction over others during times of congestion.
 
 ### 3. Effective Gas Price Calculation
 
@@ -92,7 +94,7 @@ $$\text{EffectiveGasPrice} = \min\big(\text{maxFeePerGas}, \text{BaseFee} + \tex
 
 $$\text{Total Transaction Cost} = \text{GasUsed} \times \text{EffectiveGasPrice}$$
 
-Any remaining difference between `maxFeePerGas` and the actual `EffectiveGasPrice` is refunded directly back to the user's account.
+Any remaining difference between `maxFeePerGas` and the actual `EffectiveGasPrice` is refunded directly back to Alice's account.
 
 ## The Base Fee Adjustment Formula: Elastic Blocks
 
@@ -153,7 +155,7 @@ An Out-of-Gas exception occurs when a transaction exhausts its allocated `gasLim
 - **State Rollback:** Like a revert, all state changes are completely rolled back to maintain consistency.
 - **Punitive Gas Handling:** **Zero gas is refunded.** The user forfeits **100 percent of their prepaid `gasLimit`**.
 - **Why the Penalty?** Because the validator spent physical CPU time executing instructions until the fuel ran out, the validator must be compensated for their hardware expenditure.
-  Without this forfeiture rule, attackers could spam nodes with massive computations for free.
+  Without this forfeiture rule, an attacker like Mallory could spam nodes with massive computations for free.
 
 ## Storage Gas Refunds and EIP-3529
 
@@ -169,3 +171,17 @@ In August 2021, **EIP-3529** overhauled the refund mechanism:
 - Capped maximum refunds at **one-fifth (20%)** of the total gas consumed in the transaction.
 
 This permanently eliminated gas token arbitrage schemes and stabilized block execution latencies across validator nodes.
+
+## The Next Question: How Do Humans and Contracts Safely Transact?
+
+We have traced how gas regulates computational execution and prevents denial-of-service collapse.
+However, in standard Ethereum architecture, gas must be paid in native ETH signed by an ECDSA private key from an Externally Owned Account (EOA).
+
+This creates acute real-world friction:
+- Alice must hold native ETH just to transfer USDC.
+- If Alice loses her 12-word seed phrase, her entire life savings are permanently lost.
+- Smart contracts cannot initiate their own transactions or pay gas on behalf of users.
+
+How can we decouple user accounts from cryptographic private keys?
+How do smart contract wallets, paymasters, session keys, and **Account Abstraction (ERC-4337)** eliminate seed phrases and enable Web2-like user experiences?
+To explore the evolution of digital identity, we turn to **Wallets and Account Abstraction**.

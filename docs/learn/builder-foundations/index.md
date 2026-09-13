@@ -22,7 +22,7 @@ Upon completing this track, learners will be able to:
 
 ## Curated Syllabus
 
-### Phase 1: Cryptographic Primitives in Code
+### Module 1: Cryptographic Primitives in Code
 
 1. **Keys, Signatures & Addresses**
    - Setting up a minimal Node.js scripting environment with Viem.
@@ -35,7 +35,7 @@ Upon completing this track, learners will be able to:
    - How browser extensions manage keys and request user confirmations.
    - Funding a development wallet using public testnet faucets.
 
-### Phase 2: Interacting Directly with the Node
+### Module 2: Interacting Directly with the Node
 
 1. **JSON-RPC Architecture**
    - Connecting directly to an RPC node provider via HTTP and WebSockets.
@@ -47,7 +47,7 @@ Upon completing this track, learners will be able to:
    - How contracts log events to the receipt bloom filter.
    - Writing a tiny event listener script to monitor testnet activity in real time.
 
-### Phase 3: First Smart Contracts in Remix
+### Module 3: First Smart Contracts in Remix
 
 1. **Solidity Syntax Essentials**
    - Writing basic contracts using Remix IDE without local build tool complexity.
@@ -62,7 +62,7 @@ Upon completing this track, learners will be able to:
    - Deploying to the Sepolia testnet via browser wallet injection.
    - Writing a Node.js script with Viem to read state and trigger contract functions programmatically.
 
-### Phase 4: Working with Token Standards
+### Module 4: Working with Token Standards
 
 1. **Deploying Fungible Tokens (ERC-20)**
    - Importing OpenZeppelin standard contracts inside Remix.
@@ -73,7 +73,7 @@ Upon completing this track, learners will be able to:
    - Setting up basic token URI metadata pointing to IPFS gateways.
    - Verifying contract source code directly on a public block explorer.
 
-### Phase 5: Minimal Web Interfaces
+### Module 5: Minimal Web Interfaces
 
 1. **Wallet Connection Mechanics**
    - Setting up a basic web project using Vite, React or plain HTML, and Viem.
@@ -86,7 +86,7 @@ Upon completing this track, learners will be able to:
    - Encoding function calldata and prompting user transaction approvals.
    - Managing user feedback during pending states, confirmations, and user rejections.
 
-### Phase 6: Gas & Failure Modes
+### Module 6: Gas & Failure Modes
 
 1. **Understanding Transaction Economics**
    - Gas units versus gas price, base fee burns, and priority tips.

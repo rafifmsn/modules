@@ -3,17 +3,20 @@ import type { DefaultTheme } from "vitepress";
 export const sidebar: DefaultTheme.SidebarMulti = {
   "/archive/": [
     {
-      text: "Archive & Sandbox",
-      items: [{ text: "Testing Suite", link: "/archive/" }],
+      text: "Special & Auxiliary Pages",
+      items: [{ text: "Overview", link: "/archive/" }],
     },
   ],
   "/learn/fundamentals/": [
     {
       text: "Blockchain Fundamentals",
-      items: [{ text: "Track Overview", link: "/learn/fundamentals/" }],
+      items: [
+        { text: "Track Overview", link: "/learn/fundamentals/" },
+        { text: "Back to All Tracks", link: "/learn/" },
+      ],
     },
     {
-      text: "Part 1: Distributed Trust & Cryptography",
+      text: "Module 1: Distributed Trust & Cryptography",
       collapsed: false,
       items: [
         {
@@ -35,7 +38,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
     {
-      text: "Part 2: Architecture & State Models",
+      text: "Module 2: Architecture & State Models",
       collapsed: false,
       items: [
         {
@@ -57,7 +60,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
     {
-      text: "Part 3: Consensus Mechanisms & Game Theory",
+      text: "Module 3: Consensus Mechanisms & Game Theory",
       collapsed: false,
       items: [
         {
@@ -79,7 +82,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
     {
-      text: "Part 4: Programmability, Virtual Machines & Tooling",
+      text: "Module 4: Programmability, Virtual Machines & Tooling",
       collapsed: false,
       items: [
         {
@@ -105,7 +108,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
     {
-      text: "Part 5: Decentralized Systems: Tokens, Protocols & Governance",
+      text: "Module 5: Decentralized Systems: Tokens, Protocols & Governance",
       collapsed: false,
       items: [
         {
@@ -131,7 +134,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       ],
     },
     {
-      text: "Part 6: Scalability, Layer 2 & Protocol Security",
+      text: "Module 6: Scalability, Layer 2 & Protocol Security",
       collapsed: false,
       items: [
         {
@@ -162,6 +165,7 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       text: "Builder Foundations",
       items: [
         { text: "Track Overview", link: "/learn/builder-foundations/" },
+        { text: "Back to All Tracks", link: "/learn/" },
       ],
     },
   ],
@@ -170,13 +174,23 @@ export const sidebar: DefaultTheme.SidebarMulti = {
       text: "Protocol Engineering",
       items: [
         { text: "Track Overview", link: "/learn/protocol-engineering/" },
+        { text: "Back to All Tracks", link: "/learn/" },
       ],
     },
   ],
   "/learn/": [
     {
       text: "Curriculum",
-      items: [{ text: "All Tracks", link: "/learn/" }],
+      items: [{ text: "Curriculum Overview", link: "/learn/" }],
+    },
+    {
+      text: "Tracks",
+      collapsed: false,
+      items: [
+        { text: "Blockchain Fundamentals", link: "/learn/fundamentals/" },
+        { text: "Builder Foundations", link: "/learn/builder-foundations/" },
+        { text: "Protocol Engineering", link: "/learn/protocol-engineering/" },
+      ],
     },
   ],
 };

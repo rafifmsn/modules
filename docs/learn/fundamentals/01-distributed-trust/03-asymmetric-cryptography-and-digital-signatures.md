@@ -1,12 +1,17 @@
 # Asymmetric Cryptography and Digital Signatures
 
-In centralized financial systems, your identity and authority are enforced through credentials issued by intermediaries: bank account numbers, physical signatures on checks, passwords, and two-factor SMS codes.
-If someone steals your credit card number, they can spend your money.
-The bank resolves this by acting as an ultimate arbiter: they verify identity documents, reverse fraudulent charges, and issue new plastic cards.
+![Asymmetric Cryptography and Digital Signatures](./assets/1-3.jpg)
 
-In a decentralized blockchain, there is no customer support desk, no fraud department, and no identity verification bureau.
+In the previous module, we examined how cryptographic hash functions and Merkle trees guarantee data integrity: once data is recorded, nobody can alter a single bit without breaking the root hash.
+However, data integrity alone does not solve ownership.
+If Alice creates a transaction paying Bob, and that transaction is hashed into a block, how do network nodes confirm that *Alice* authorized the transfer rather than Mallory forging an instruction in Alice's name?
+
+In centralized banking, authority is enforced through credentials managed by intermediaries: account numbers, physical signatures on checks, passwords, and two-factor SMS codes.
+If someone steals your credit card number, the bank resolves this by acting as an ultimate arbiter: they reverse fraudulent charges, freeze compromised accounts, and re-issue cards.
+
+In a decentralized blockchain, there is no customer support desk, no fraud hotline, and no identity bureau.
 Ownership must be mathematically absolute.
-Anyone who knows a secret must be able to spend funds, and anyone who does not know that secret must be physically and mathematically barred from doing so.
+Anyone who knows a secret key must be able to spend funds, and anyone who does not know that secret must be physically and mathematically barred from doing so.
 This is achieved through **asymmetric cryptography** (public-key cryptography) and **digital signatures**.
 
 ## Symmetric vs. Asymmetric Cryptography
@@ -29,7 +34,7 @@ flowchart LR
 
 In symmetric cryptography (such as AES):
 - The sender and the recipient use the exact same secret key $K$ to encrypt and decrypt information.
-- This creates the **Key Distribution Problem**: How do two parties who have never met in person share the secret key $K$ over an insecure internet without an eavesdropper intercepting it?
+- This creates the **Key Distribution Problem**: How do two parties who have never met in person share the secret key $K$ over an insecure internet without an eavesdropper like Eve intercepting it?
 
 In the late 1970s, Whitfield Diffie, Martin Hellman, and Ralph Merkle solved this dilemma by introducing **Asymmetric Cryptography**.
 Instead of a single shared key, asymmetric systems generate a **mathematically linked keypair**:
@@ -87,7 +92,7 @@ flowchart TD
 ### The Group Law: Point Addition and Point Doubling
 
 We can define an arithmetic addition operation on the points of an elliptic curve:
-1. **Point Addition ($P + Q$):** To add two distinct points $P$ and $Q$, draw a straight line through them. The line will intersect the curve at exactly one third point, $-R$. Reflect $-R$ across the horizontal $x$-axis to obtain the result: $R = P + Q$.
+1. **Point Addition ($P + Q$):** To add two distinct points $P$ and Q, draw a straight line through them. The line will intersect the curve at exactly one third point, $-R$. Reflect $-R$ across the horizontal $x$-axis to obtain the result: $R = P + Q$.
 2. **Point Doubling ($P + P = 2P$):** To add a point $P$ to itself, draw the line tangent to the curve at point $P$. Find the intersection point $-R$ and reflect it across the $x$-axis to obtain $2P$.
 
 ### Scalar Point Multiplication
@@ -136,7 +141,7 @@ where $p = 2^{256} - 2^{32} - 977$.
 
 ### 2. Ed25519 and Curve25519 (Solana, Polkadot, Cosmos)
 
-Designed by cryptographer Daniel J. Bernstein (djb) in 2011, Ed25519 is a Twisted Edwards curve defined by:
+Designed by cryptographer Daniel J. Bernstein in 2011, Ed25519 is a Twisted Edwards curve defined by:
 
 $$-x^2 + y^2 = 1 - \frac{121665}{121666} x^2 y^2 \pmod{2^{255} - 19}$$
 
@@ -199,10 +204,10 @@ The resulting digital signature $\sigma$ is the pair of 256-bit integers:
 
 $$\sigma = (r, s)$$
 
-### The Catastrophic Danger of Nonce Reuse
+### The Danger of Nonce Reuse
 
 Notice step 2 in signature generation: the ephemeral key $k$ must be completely unique and unpredictable for every single signature.
-If a signer uses the **identical nonce $k$** to sign two different transactions ($m_1$ and $m_2$), an outside observer can derive the private key using basic high-school algebra!
+If a signer uses the **identical nonce $k$** to sign two different transactions ($m_1$ and $m_2$), an outside observer like Eve can derive the private key using basic algebra.
 
 Given two signatures with the same $r$:
 $$s_1 = k^{-1}(z_1 + r \cdot d) \pmod n$$
@@ -215,12 +220,21 @@ $$k = (z_1 - z_2)(s_1 - s_2)^{-1} \pmod n$$
 Once the nonce $k$ is calculated, the attacker solves for the private key $d$:
 $$d = r^{-1}(s_1 \cdot k - z_1) \pmod n$$
 
-This exact failure occurred in the PlayStation 3 hack in 2010 (Sony hardcoded a static nonce $k$) and caused millions of dollars in Bitcoin wallet thefts in 2013 due to broken pseudo-random number generators on Android devices.
-To solve this permanently, modern implementations use **RFC 6979**, which derives $k$ deterministically by hashing the private key and the message:
+This exact vulnerability led to the PlayStation 3 code-signing breach in 2010 (when Sony hardcoded a static nonce $k$) and resulted in millions of dollars in Bitcoin wallet thefts in 2013 due to broken pseudo-random number generators in Android.
+To solve this permanently, modern implementations use **RFC 6979**, which derives $k$ deterministically by hashing the private key and the message payload:
 
 $$k = \text{HMAC-SHA256}(d \mathbin{\Vert} z)$$
 
-This guarantees that $k$ is always mathematically unpredictable to outsiders, completely unique for each message, and 100% deterministic.
+This guarantees that $k$ is always mathematically unpredictable to outsiders, completely unique for each distinct transaction, and 100% deterministic.
+
+### Production Scars: Signature Malleability
+
+Another critical vulnerability in ECDSA is **signature malleability**.
+Because elliptic curve points are symmetric across the $x$-axis, if $(r, s)$ is a valid signature on message $z$, then $(r, -s \pmod n)$ is also mathematically valid for the exact same public key.
+An adversary like Mallory could intercept Alice's unconfirmed transaction on the peer network, replace $s$ with $-s \pmod n$, and re-broadcast the transaction.
+The signature remains valid, but because the raw transaction bytes changed, the transaction hash (TxID) changed as well.
+This created confusion in automated exchange balance systems, where exchanges believed a withdrawal had failed when it had actually been confirmed under a modified TxID.
+Bitcoin resolved this permanently with **BIP-66** (enforcing low-$s$ values) and **BIP-141 (Segregated Witness)**, which separated signature witnesses completely from transaction hash generation.
 
 ### 2. Signature Verification
 
@@ -248,7 +262,7 @@ In 2021, Bitcoin activated the Taproot soft fork (BIP-340), upgrading its signat
 Claus Schnorr patented his signature scheme in 1990, which prevented its inclusion in early cryptographic standards.
 When the patent expired in 2008, ECDSA had already been standardized.
 
-Schnorr signatures are mathematically simpler,provably secure under standard random oracle assumptions, and natively **linear**:
+Schnorr signatures are mathematically simpler, provably secure under standard random oracle assumptions, and natively **linear**:
 
 ```mermaid
 flowchart LR
@@ -308,3 +322,15 @@ flowchart LR
 3. Keep only the **rightmost 20 bytes** (last 40 hexadecimal characters).
 4. Prepend `0x` to form the raw address.
 5. **EIP-55 Mixed-Case Checksum:** The capitalization of individual hexadecimal letters is determined by the hash of the lowercase address string. If a user mistypes a single character, the client detects a checksum mismatch and rejects the transaction before broadcast.
+
+## The Next Question: How Does an Authenticated Transaction Propagate?
+
+We now have the complete cryptographic toolkit for sovereign transactions:
+- Alice signs a payload using her private key, proving her authority beyond mathematical doubt.
+- Every node on the network can verify Alice's signature using her public key.
+- Transactions are hashed into Merkle trees, ensuring permanent tamper resistance.
+
+However, a signed transaction sitting on Alice's local laptop achieves nothing on its own.
+In a decentralized system without a central web server, an AWS API gateway, or a database administrator, how does Alice broadcast her transaction to thousands of independent computers scattered across every continent?
+How do nodes discover each other, resist censorship, and propagate blocks without a single point of failure?
+To answer this, we must examine the communications backbone of decentralized trust: **Peer-to-Peer Networks and Topologies**.

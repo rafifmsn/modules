@@ -1,7 +1,10 @@
 # Proof of Work and Nakamoto Consensus
 
-In an open, permissionless network like the public internet, anyone can download software, generate an IP address, and begin transmitting messages.
-This openness is the superpower of decentralized systems, but it presents a catastrophic vulnerability: **The Sybil Attack**.
+![Proof of Work and Nakamoto Consensus](./assets/3-2.jpg)
+
+In the previous module, we examined the Byzantine Generals Problem and saw that classical BFT consensus requires a known, permissioned committee of participants ($n \ge 3f + 1$).
+However, this classical framework collapses on an open, permissionless network like the public internet, where anyone can download software, generate an IP address, and begin transmitting messages.
+This openness is the core strength of decentralized systems, but it presents a catastrophic vulnerability: **The Sybil Attack**.
 
 If a blockchain relied on democratic voting where "one IP address equals one vote," an attacker with a modest laptop could spin up 100,000 virtual machines in the cloud for a few dollars, claim 99 percent of the voting power, and instantly authorize fraudulent transactions.
 Any open consensus mechanism must find a way to distribute decision-making authority without trusting human identities, IP addresses, or central registries.
@@ -88,7 +91,7 @@ This memoryless property ensures that block discovery is fair, decentralized, an
 
 If Bitcoin simply had a static, unchangeable target $T$:
 - In 2009, when only a few laptops were mining, it would take months to find a single block.
-- In 2026, with millions of high-powered industrial ASIC rigs operating globally, blocks would be produced every millisecond, causing catastrophic network propagation collisions, massive forks, and immediate state explosion.
+- With millions of high-powered industrial ASIC rigs operating globally, blocks would be produced every millisecond, causing catastrophic network propagation collisions, massive forks, and immediate state explosion.
 
 To maintain a consistent, predictable monetary issuance and stable transaction clearing time, Bitcoin implements a **Dynamic Difficulty Adjustment**.
 
@@ -131,7 +134,7 @@ $$D = \frac{T_{\text{genesis}}}{T_{\text{current}}}$$
 
 Proof of Work is not merely a cryptographic algorithm; it is a **game-theoretic economic mechanism**.
 
-Miners do not mine out of altruism.
+Miners like Alice do not mine out of altruism.
 They mine to generate a profit.
 Mining incurs real, unavoidable capital expenditures (buying ASIC hardware) and operational expenditures (paying monthly electricity bills in fiat currency).
 
@@ -154,7 +157,8 @@ Miners recoup their expenses through two revenue streams awarded exclusively whe
 ### The Nash Equilibrium of Honest Mining
 
 This structure forms a self-enforcing **Nash Equilibrium**:
-- If a miner includes a fraudulent transaction (such as spending coins they do not own or double-spending), full nodes and non-mining peers verify the block rules and **immediately drop the block**.\n- The fraudulent miner incurs 100 percent of the electrical cost of calculating the valid Proof of Work hash, but receives **zero coins and zero fees**.
+- If a miner includes a fraudulent transaction (such as spending coins they do not own or double-spending), full nodes and non-mining peers verify the block rules and **immediately drop the block**.
+- The fraudulent miner incurs 100 percent of the electrical cost of calculating the valid Proof of Work hash, but receives **zero coins and zero fees**.
 - Conversely, following the rules and building honestly on the longest chain guarantees that valid blocks are accepted and rewarded with high-value native currency.
 Dishonesty is rendered economically irrational by design.
 
@@ -166,26 +170,31 @@ While Nakamoto consensus is remarkably robust, it is subject to well-defined gam
 
 If a single entity or mining cartel controls more than 50 percent of the global hash power ($q > 0.5$):
 - The attacker can calculate Proof of Work faster than the rest of the honest network combined.
-- The attacker can secretly mine an alternative private chain while sending a transaction on the public chain (e.g. depositing $100M of BTC to an exchange, selling it for fiat, and withdrawing the fiat).
+- The attacker can secretly mine an alternative private chain while sending a transaction on the public chain (such as depositing $100M of cryptocurrency to an exchange, selling it for cash, and withdrawing the proceeds).
 - Once the exchange withdrawal completes, the attacker releases their secretly mined private chain to the public.
 - Because the private chain has accumulated greater cumulative difficulty, the network reorganizes to the attacker's chain under the longest-chain rule.
-- The original deposit transaction is wiped out, and the attacker retains both the fiat cash and the original BTC!
+- The original deposit transaction is wiped out, and the attacker retains both the cash and the original coins.
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Attacker as Attacker (51% Hashpower)
+    actor Mallory as Mallory (51% Hashpower)
     participant Public as Public Honest Chain
     participant Exchange as Cryptocurrency Exchange
     participant Private as Secret Private Branch
 
-    Attacker->>Public: 1. Send $100M BTC deposit to Exchange
-    Attacker->>Private: 2. Secretly mine private fork excluding the deposit
-    Exchange-->>Attacker: 3. Wait for 6 confirmations and disburse fiat cash withdrawal
-    Attacker->>Public: 4. Attacker broadcasts secret private chain (heavier difficulty!)
-    Public->>Public: 5. Global nodes execute reorg: adopt attacker's heavier chain
-    Note over Exchange,Attacker: Exchange deposit erased! Attacker kept fiat and BTC!
+    Mallory->>Public: 1. Send $100M deposit to Exchange
+    Mallory->>Private: 2. Secretly mine private fork excluding the deposit
+    Exchange-->>Mallory: 3. Wait for 6 confirmations and disburse cash withdrawal
+    Mallory->>Public: 4. Mallory broadcasts secret private chain (heavier difficulty!)
+    Public->>Public: 5. Global nodes execute reorg: adopt Mallory's heavier chain
+    Note over Exchange,Mallory: Exchange deposit erased! Mallory kept cash and coins!
 ```
+
+#### Real-World Battle Scars: 51% Attacks on Altcoins
+While attacking Bitcoin's massive global hashrate would require billions of dollars in specialized ASICs and direct gigawatt-scale power plants, smaller Proof of Work networks that share algorithms with larger networks are highly vulnerable.
+Networks like **Ethereum Classic (ETC)** in 2019 and 2020, and **Bitcoin Gold (BTG)** in 2018, suffered repeated 51% reorganization attacks.
+Attackers rented GPU or Ethash hashing power for a few hours via marketplace platforms (like NiceHash), executed multi-million-dollar double-spends against centralized exchanges, and orphaned dozens of blocks in canonical history.
 
 Crucially, a 51 percent attack **does not** allow the attacker to:
 - Steal coins from other users' wallets (because the attacker lacks their private keys).
@@ -222,3 +231,14 @@ flowchart LR
    An ASIC can perform no other task (it cannot render a video or boot an operating system), but it executes SHA-256 hashing billions of times more efficiently than general-purpose CPUs.
 
 This hardware industrialization led to large-scale mining operations located near cheap hydroelectric, geothermal, or stranded natural gas energy sources, permanently anchoring digital monetary issuance to the physical energy infrastructure of the planet.
+
+## The Next Question: Can We Secure State Without Burning Energy?
+
+Proof of Work permanently solved the Sybil attack by forcing participants to expend physical electricity and silicon.
+However, this thermodynamic anchor comes with severe trade-offs: massive environmental energy consumption, dedicated hardware arms races, and perpetual structural selling pressure as miners liquidate rewards to pay electricity bills in fiat currency.
+
+This raises a foundational design question:
+Can we replace physical thermodynamic energy with bonded digital capital inside the blockchain itself?
+How does **Proof of Stake (PoS)** solve the classic "Nothing at Stake" dilemma?
+How does automated on-chain slashing destroy dishonest capital, and how do modern networks achieve deterministic mathematical finality?
+To explore this paradigm, we proceed to **Proof of Stake and Finality Gadgets**.

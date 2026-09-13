@@ -11,12 +11,12 @@ This track examines the conceptual foundations of distributed ledgers, cryptogra
 
 Topics covered:
 
-- Part 1: Foundations of Distributed Trust and Cryptography
-- Part 2: Blockchain Architecture and State Models (UTXO vs Account)
-- Part 3: Consensus Mechanisms and Game Theory (PoW, PoS, and BFT)
-- Part 4: Programmability, Virtual Machines, and Tooling (EVM and Oracles)
-- Part 5: Decentralized Systems: Tokens, Protocols, and Governance
-- Part 6: Scalability, Layer 2, and Protocol Security (Rollups and MEV)
+- Module 1: Foundations of Distributed Trust and Cryptography
+- Module 2: Blockchain Architecture and State Models (UTXO vs Account)
+- Module 3: Consensus Mechanisms and Game Theory (PoW, PoS, and BFT)
+- Module 4: Programmability, Virtual Machines, and Tooling (EVM and Oracles)
+- Module 5: Decentralized Systems: Tokens, Protocols, and Governance
+- Module 6: Scalability, Layer 2, and Protocol Security (Rollups and MEV)
 
 [View Fundamentals Syllabus](/learn/fundamentals/)
 
@@ -26,12 +26,12 @@ This track bridges theory and code, pairing every core concept with working scri
 
 Topics covered:
 
-- Phase 1: Cryptographic Primitives in Code (Keys, Signatures, and Wallets)
-- Phase 2: Interacting Directly with the Node (JSON-RPC, Balances, and Logs)
-- Phase 3: First Smart Contracts in Remix (Solidity Basics and Testnet Deployments)
-- Phase 4: Working with Token Standards (OpenZeppelin ERC-20 and ERC-721)
-- Phase 5: Minimal Web Interfaces (Wallet Connection, State Reads, and Writes)
-- Phase 6: Gas and Failure Modes (Reverts, Debugging, and Security Awareness)
+- Module 1: Cryptographic Primitives in Code (Keys, Signatures, and Wallets)
+- Module 2: Interacting Directly with the Node (JSON-RPC, Balances, and Logs)
+- Module 3: First Smart Contracts in Remix (Solidity Basics and Testnet Deployments)
+- Module 4: Working with Token Standards (OpenZeppelin ERC-20 and ERC-721)
+- Module 5: Minimal Web Interfaces (Wallet Connection, State Reads, and Writes)
+- Module 6: Gas and Failure Modes (Reverts, Debugging, and Security Awareness)
 
 [View Builder Foundations Syllabus](/learn/builder-foundations/)
 
@@ -41,13 +41,13 @@ This track covers production-grade on-chain engineering, advanced contract archi
 
 Topics covered:
 
-- Phase 1: Local Development Environment and Modern Tooling (Foundry)
-- Phase 2: Solidity Architecture and Low-Level Primitives (Storage and Assembly)
-- Phase 3: Token Standards and Contract Upgradability (UUPS and Proxies)
-- Phase 4: Rigorous Testing, Fuzzing, and Gas Optimization (Forge Invariants)
-- Phase 5: DeFi Protocol Engineering and Oracles (AMMs, Staking, and Lending)
-- Phase 6: Full-Stack dApp Development (Viem, Wagmi, and Production CI/CD)
-- Phase 7: Smart Contract Security and Auditing Foundations (Slither and Aderyn)
+- Module 1: Local Development Environment and Modern Tooling (Foundry)
+- Module 2: Solidity Architecture and Low-Level Primitives (Storage and Assembly)
+- Module 3: Token Standards and Contract Upgradability (UUPS and Proxies)
+- Module 4: Rigorous Testing, Fuzzing, and Gas Optimization (Forge Invariants)
+- Module 5: DeFi Protocol Engineering and Oracles (AMMs, Staking, and Lending)
+- Module 6: Full-Stack dApp Development (Viem, Wagmi, and Production CI/CD)
+- Module 7: Smart Contract Security and Auditing Foundations (Slither and Aderyn)
 
 [View Protocol Engineering Syllabus](/learn/protocol-engineering/)
 

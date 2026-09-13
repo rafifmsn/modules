@@ -1,5 +1,11 @@
 # Collateralized Lending and Protocol Solvency
 
+![Collateralized Lending and Protocol Solvency](./assets/5-3.jpg)
+
+In the previous module, we explored automated market makers and saw how constant product formulas replace centralized order books with pooled liquidity.
+However, spot trading is only one pillar of a functional financial ecosystem.
+The second foundational pillar is credit and lending.
+
 In traditional banking, lending money is mediated by credit underwriting bureaus (such as FICO, Equifax, or Experian), legal contracts, and law enforcement.
 A bank lends you money because they know your legal identity, inspect your income tax returns, and possess the power to garnish your wages or repossess your home if you fail to repay.
 
@@ -35,11 +41,11 @@ flowchart TD
 
 A common question from beginners is: *If I have $15,000 in ETH, why would I deposit it just to borrow $10,000 in cash? Why not simply sell $10,000 of my ETH?*
 
-Borrowers use over-collateralized loans for four primary financial motivations:
+Borrowers like Alice use over-collateralized loans for four primary financial motivations:
 1. **Tax Optimization:** Selling cryptocurrency triggers a taxable capital gains event in most jurisdictions. Borrowing against assets is not considered a sale and incurs zero capital gains tax.
-2. **Long-Term HODL Exposure:** If you believe ETH will appreciate 500 percent over the next two years, selling your ETH sacrifices that upside. By borrowing against your ETH, you retain 100 percent exposure to price appreciation while accessing liquid cash today.
+2. **Long-Term HODL Exposure:** If Alice believes ETH will appreciate 500 percent over the next two years, selling her ETH sacrifices that upside. By borrowing against her ETH, she retains 100 percent exposure to price appreciation while accessing liquid cash today.
 3. **Leverage (Going Long):** A trader can deposit $10,000 in ETH, borrow $7,000 in USDC, buy another $7,000 in ETH on Uniswap, and deposit that new ETH back into the lending market, creating a leveraged long position.
-4. **Shorting Assets:** A trader can deposit stablecoins, borrow an asset they believe will collapse (e.g. a failing altcoin), sell it immediately for cash, wait for the price to drop, buy it back cheaply, and return the loan to pocket the difference.
+4. **Shorting Assets:** A trader can deposit stablecoins, borrow an asset they believe will collapse, sell it immediately for cash, wait for the price to drop, buy it back cheaply, and return the loan to pocket the difference.
 
 ## Core Risk Parameters in Decentralized Lending
 
@@ -61,7 +67,7 @@ The **Loan-To-Value (LTV)** ratio defines the maximum amount a user can borrow a
 
 $$\text{Max Borrow Capacity} = \text{Collateral Value} \times \text{LTV}$$
 
-For example, if an asset has an LTV of **$80\%$**, depositing $\$10,000$ worth of ETH permits you to borrow at most $\$8,000$ in stablecoins.
+For example, if an asset has an LTV of **$80\%$**, depositing $\$10,000$ worth of ETH permits Alice to borrow at most $\$8,000$ in stablecoins.
 
 ### 2. The Liquidation Threshold (LT)
 
@@ -69,7 +75,7 @@ The **Liquidation Threshold (LT)** is the critical margin boundary at which a lo
 
 $$\text{LT} > \text{LTV}$$
 
-The buffer between the LTV (e.g., $80\%$) and the Liquidation Threshold (e.g., $85\%$) provides the borrower with a safety margin against small price fluctuations.
+The buffer between the LTV (such as $80\%$) and the Liquidation Threshold (such as $85\%$) provides the borrower with a safety margin against small price fluctuations.
 
 ### 3. The Liquidation Bonus (Liquidator Incentive)
 
@@ -110,16 +116,16 @@ sequenceDiagram
     actor Borrower as Alice (Borrower)
     participant Oracle as Chainlink Price Oracle
     participant Pool as Aave Lending Pool
-    actor Liquidator as Liquidator Bot (Searcher)
+    actor Liquidator as Liquidator Bot (Bob)
 
     Borrower->>Pool: Deposits $10,000 ETH and Borrows $8,000 USDC (HF = 1.06)
-    Note over Oracle: ETH price drops 15% on Binance and Coinbase!
+    Note over Oracle: ETH price drops 15% on external exchanges!
     Oracle->>Pool: Update price feed - Alice HF drops to 0.92 (unhealthy HF below 1.0)
     Liquidator->>Pool: Call liquidationCall(Alice, 4,000 USDC debt repaid)
     Pool->>Pool: 1. Burns 4,000 USDC of Alice debt (50% Close Factor)
     Pool->>Pool: 2. Seizes $4,200 of Alice ETH collateral (5% bonus!)
-    Pool->>Liquidator: Transfers $4,200 in ETH to Liquidator
-    Note over Liquidator: Liquidator swaps ETH on Uniswap for $4,200 USDC ($200 Net Profit!)
+    Pool->>Liquidator: Transfers $4,200 in ETH to Liquidator (Bob)
+    Note over Liquidator: Bob swaps ETH on Uniswap for $4,200 USDC ($200 Net Profit!)
     Note over Borrower: Alice debt reduced and Health Factor restored safely above 1.1!
 ```
 
@@ -144,7 +150,7 @@ sequenceDiagram
 
 ## Systemic Insolvency and Bad Debt
 
-What happens if an asset's price does not drop smoothly, but suffers an instantaneous 60% flash crash within a single block (for example, during the March 2020 COVID market collapse or the May 2022 Terra-Luna collapse)?
+What happens if an asset's price does not drop smoothly, but suffers an instantaneous flash crash within a single block?
 
 If ETH price drops so rapidly that the value of Alice's collateral falls below her debt:
 
@@ -153,6 +159,14 @@ $$\text{Collateral Value} < \text{Debt Value}$$
 Alice's position becomes underwater.
 The liquidator has zero financial incentive to liquidate her position because the seized collateral is worth less than the debt they would have to repay.
 This creates **Bad Debt (Protocol Insolvency)**.
+
+### Real-World Battle Scars: Black Thursday (March 12, 2020)
+This catastrophic scenario played out in production on **Black Thursday** in March 2020.
+As crypto markets collapsed over 50 percent in a single day, Ethereum mempool gas prices skyrocketed to hundreds of gwei.
+Most liquidators' transactions were stuck or failed due to low gas settings.
+A handful of sophisticated liquidators submitted transactions with massive priority fees, participating in MakerDAO collateral auctions where they faced zero competition.
+These liquidators bid **0 DAI** for vaults containing thousands of dollars in ETH collateral, walking away with over **$8 million in ETH for virtually zero payment**.
+This left MakerDAO with over **$4 million in bad debt**, forcing the protocol to execute its first emergency debt auction to mint and sell MKR tokens on open markets to recapitalize the system.
 
 ### Protocol Backstops Against Bad Debt
 
@@ -191,3 +205,15 @@ Protocols use a **piecewise linear (kinked) interest rate model**:
 - When $U < U_{\text{optimal}}$ (typically 80%), the borrow interest rate grows gently.
 - When $U > U_{\text{optimal}}$, the borrow rate spikes vertically toward 50% or 100% APR.
 This steep economic penalty immediately forces borrowers to repay their loans and entices outside lenders to deposit fresh capital, guaranteeing that the pool never runs out of available cash for depositors seeking withdrawals.
+
+## The Next Question: How Do We Align Economic Incentives Long-Term?
+
+We have examined how autonomous credit protocols maintain solvency through mathematical risk parameters and dynamic utilization curves.
+Notice that protocols like MakerDAO, Aave, Compound, and Uniswap all rely on native governance tokens (MKR, AAVE, COMP, UNI) to manage parameters and absorb systemic risks.
+
+However, issuing a token is straightforward; engineering long-term economic alignment is one of the hardest challenges in computer science and game theory.
+Why did early "liquidity mining" schemes collapse into hyperinflationary death spirals?
+How do vesting cliffs, lockups, and token sinks stabilize value?
+And how did the **Vote-Escrowed (veToken)** model, pioneered by Curve, transform short-term mercenary capital into committed long-term protocol governors?
+
+To master the mechanics of protocol design and game-theoretic incentives, we proceed to **Tokenomics and Economic Incentive Design**.

@@ -23,7 +23,7 @@ Upon completing this track, developers will be able to:
 
 ## Curated Syllabus
 
-### Phase 1: Local Development Environment & Modern Tooling
+### Module 1: Local Development Environment & Modern Tooling
 
 1. **Toolchain Setup & CLI Configuration**
    - Node.js, pnpm, and Git configurations for monorepos and multi-package repositories.
@@ -36,7 +36,7 @@ Upon completing this track, developers will be able to:
    - Interacting with deployed contracts from the command line using `cast`.
    - Managing public and private JSON-RPC providers such as Alchemy, Infura, and QuickNode.
 
-### Phase 2: Solidity Architecture & Low-Level Primitives
+### Module 2: Solidity Architecture & Low-Level Primitives
 
 1. **Solidity Type System & Fundamentals**
    - Value types versus reference types including arrays, structs, and mappings.
@@ -53,7 +53,7 @@ Upon completing this track, developers will be able to:
    - Forwarding execution context with `delegatecall` and reading state via `staticcall`.
    - Fallback and receive functions.
 
-### Phase 3: Token Standards & Contract Upgradability
+### Module 3: Token Standards & Contract Upgradability
 
 1. **ERC-20 Fungible Tokens**
    - Core interface, balance mappings, allowances, and transfer logic.
@@ -68,7 +68,7 @@ Upon completing this track, developers will be able to:
    - EIP-1967 storage slots.
    - Transparent Upgradeable Proxies versus Universal Upgradeable Proxy Standard (UUPS).
 
-### Phase 4: Rigorous Testing, Fuzzing & Gas Optimization
+### Module 4: Rigorous Testing, Fuzzing & Gas Optimization
 
 1. **Solidity-Native Testing with Forge**
    - Structuring tests, assertions, and console logging in Solidity.
@@ -80,7 +80,7 @@ Upon completing this track, developers will be able to:
    - Generating gas reports and snapshots with `forge snapshot`.
    - Optimization patterns: caching array lengths, unchecked math, custom errors, and slot packing.
 
-### Phase 5: DeFi Protocol Engineering & Oracles
+### Module 5: DeFi Protocol Engineering & Oracles
 
 1. **Constant Product Automated Market Makers**
    - Architecting a Uniswap v2 core exchange: pair contracts, factory pattern, and liquidity tokens.
@@ -95,7 +95,7 @@ Upon completing this track, developers will be able to:
    - Consuming decentralized price feeds with stale check validation.
    - Requesting cryptographically proven randomness via Chainlink VRF.
 
-### Phase 6: Full-Stack dApp Development
+### Module 6: Full-Stack dApp Development
 
 1. **Modern Web3 Frontend Stack**
    - Connecting React or Vue frontends with Viem and Wagmi.
@@ -110,7 +110,7 @@ Upon completing this track, developers will be able to:
    - Automating Foundry build and test pipelines with GitHub Actions.
    - Deploying frontend dApps statically to Cloudflare Pages.
 
-### Phase 7: Smart Contract Security & Auditing Foundations
+### Module 7: Smart Contract Security & Auditing Foundations
 
 1. **Common Vulnerability Patterns**
    - Reentrancy attacks including single-function, cross-function, and read-only reentrancy.

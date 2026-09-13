@@ -70,7 +70,7 @@ Ensure that each complete sentence is placed on its own line and no emojis are u
 
 ### 2. Configure Sidebar Navigation and Order
 
-Open `docs/.vitepress/config.mts` and locate `themeConfig.sidebar`.
+Open `docs/.vitepress/sidebar.ts`.
 Add your page link to the corresponding track items array.
 The display order in the portal matches the array order:
 

@@ -35,7 +35,7 @@ Content is organized under the `docs/` directory:
 - `docs/learn/fundamentals/`: Theoretical foundations, cryptographic primitives, and distributed ledger concepts.
 - `docs/learn/builder-foundations/`: Smart contract development, testing frameworks, and application architectures.
 - `docs/learn/protocol-engineering/`: Virtual machine internals, consensus implementations, and Layer 2 rollups.
-- `docs/archive/`: Internal research notes, technical specifications, and component sandbox verifications.
+- `docs/archive/`: Auxiliary pages, event/competition materials, draft specifications, and unlisted staging resources.
 
 ### 2. Create the Markdown File
 
@@ -48,8 +48,8 @@ docs/learn/fundamentals/02-cryptographic-primitives.md
 
 ### 3. Register the Page in the Sidebar
 
-Sidebar navigation is configured manually in `docs/.vitepress/config.mts`.
-Locate the matching track key inside `themeConfig.sidebar` and add your page to the `items` array.
+Sidebar navigation is configured manually in `docs/.vitepress/sidebar.ts`.
+Locate the matching track key and add your page to the `items` array.
 The display order in the portal directly follows the array order:
 
 ```ts

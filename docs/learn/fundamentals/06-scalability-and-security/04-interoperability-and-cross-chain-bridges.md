@@ -1,5 +1,10 @@
 # Interoperability and Cross-Chain Bridges
 
+![Interoperability and Cross-Chain Bridges](./assets/6-4.jpg)
+
+In the previous module, we examined rollup architectures and saw how Optimistic and Zero-Knowledge rollups scale execution off-chain while settling securely on Layer 1.
+However, as rollups and independent Layer 1 networks proliferate, they introduce a major operational challenge: **Liquidity Fragmentation**.
+
 Public blockchains are sovereign, isolated state machines.
 By design, Ethereum has no native mechanism to verify what occurs on Solana, and Bitcoin cannot observe transactions on Avalanche.
 As capital and applications fragment across hundreds of distinct Layer 1s and Layer 2s, cross-chain communication protocols and bridges provide the connective tissue enabling asset transfers and cross-chain contract calls.
@@ -13,7 +18,7 @@ To move an asset from Chain A to Chain B, a bridge must verify that an event occ
 ```mermaid
 flowchart LR
     subgraph Chain A
-        User[User] -->|Locks 10 ETH| LockBox[Bridge Escrow Contract]
+        User[User: Alice] -->|Locks 10 ETH| LockBox[Bridge Escrow Contract]
     end
 
     subgraph Relayer / Verifier
@@ -22,7 +27,7 @@ flowchart LR
 
     subgraph Chain B
         BridgeMechanism -->|Authorize Mint| MintBox[Wrapped Token Contract]
-        MintBox -->|Mints 10 wETH| Recipient[Recipient on Chain B]
+        MintBox -->|Mints 10 wETH| Recipient[Recipient: Alice on Chain B]
     end
 ```
 
@@ -45,23 +50,23 @@ The most widespread and historically vulnerable bridge design.
 A small set of off-chain validators (or a Multi-Party Computation federation) monitors Chain A.
 When a deposit occurs, the validators sign an attestation approving the minting of wrapped tokens on Chain B.
 - **Trust Assumption:** $M$-of-$N$ honest threshold among bridge operators.
-- **Vulnerabilities:** If a threshold of private keys is compromised, stolen, or socially engineered, the attackers can forge minting authorizations and drain 100 percent of the collateral locked in the escrow contract.
+- **Vulnerabilities:** If a threshold of private keys is compromised, stolen, or socially engineered, attackers like Mallory can forge minting authorizations and drain 100 percent of the collateral locked in the escrow contract.
   The Ronin Network ($625M) and Harmony Horizon ($100M) bridge hacks occurred due to compromised multi-sig validator keys.
 
 ### 2. Optimistic Bridges (e.g. Nomad)
 
 Optimistic bridges introduce a challenge window before transactions are finalized on the destination chain.
-A relayer submits a proposed message root, opening a dispute window (e.g. 30 minutes).
+A relayer submits a proposed message root, opening a dispute window (such as 30 minutes).
 Independent watchers monitor both chains.
 If an unauthorized transaction is submitted, a watcher posts a fraud proof to the destination contract, halting the bridge before funds can be withdrawn.
 - **Trust Assumption:** $1$-of-$N$ honest watcher assumption.
 
 ### 3. Light Client and Relay Bridges (e.g. Cosmos IBC, Rainbow Bridge)
 
-The gold standard for decentralized bridging between sovereign Layer 1s.
+The standard for decentralized bridging between sovereign Layer 1s.
 A smart contract on Chain B implements an on-chain **light client** that verifies the consensus proofs and block headers of Chain A directly:
 - Relayers continuously forward block headers from Chain A to Chain B.
-- The light client on Chain B verifies the cryptographic signatures (e.g. Ed25519 or BLS) of Chain A's validator set.
+- The light client on Chain B verifies the cryptographic signatures of Chain A's validator set.
 - Individual transactions are verified using Merkle inclusion proofs checked directly against the verified block headers.
 - **Trust Assumption:** Equivalent to the security of the underlying consensus mechanisms of both chains.
   No external multi-sig committee exists to be compromised.
@@ -93,7 +98,7 @@ flowchart LR
 
 ### 1. Lock-and-Mint (Wrapped Assets)
 
-- **Mechanism:** The user locks native ETH into a smart contract on Ethereum. The bridge mints an equivalent quantity of wrapped tokens (`wETH`) on Avalanche.
+- **Mechanism:** Alice locks native ETH into a smart contract on Ethereum. The bridge mints an equivalent quantity of wrapped tokens (`wETH`) on Avalanche.
 - **Risk:** Wrapped tokens carry systemic counterparty risk. If the underlying escrow vault on Ethereum is exploited, the wrapped tokens on Avalanche become completely unbacked and crash to zero.
 
 ### 2. Burn-and-Mint (Native Minting)
@@ -115,3 +120,16 @@ flowchart LR
 | **Wormhole Bridge (2022)** | $320 Million | Smart contract signature verification bypass: Attacker forged a sysvar instruction on Solana to bypass Guardian signature verification. |
 | **Nomad Bridge (2022)** | $190 Million | Uninitialized storage pointer: An update set the trusted message root to `0x00`, causing uninitialized messages to auto-validate as genuine proofs. |
 | **Harmony Horizon (2022)** | $100 Million | Compromised 2-of-5 multi-sig server infrastructure. |
+
+## The Next Question: How Do We Defend the Frontier?
+
+The multi-hundred-million-dollar bridge hacks demonstrate an inescapable truth: blockchains are unforgiving, adversarial environments.
+Once a smart contract is deployed to an immutable ledger, any logic bug, reentrancy vulnerability, or integer flaw can be drained autonomously in seconds with zero legal recourse.
+
+Beyond smart contract vulnerabilities, there is another pervasive adversarial force operating within every block: **Maximal Extractable Value (MEV)**.
+In the transparent mempool, searchers, bots, and block builders monitor every unconfirmed transaction, reordering, front-running, and sandwiching trades to siphon billions of dollars from ordinary users.
+
+How do reentrancy attacks, flash loans, and economic logic errors allow exploiters to drain protocols?
+How do MEV bots extract arbitrage and liquidation profits?
+And what defensive paradigms (formal verification, invariant testing, Flashbots, and private RPCs) protect the future of decentralized finance?
+To investigate the adversarial frontier of smart contract security and transaction ordering, we advance to the final lesson: **Protocol Security and MEV**.

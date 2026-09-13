@@ -1,19 +1,27 @@
 # The Ethereum Virtual Machine (EVM) Architecture
 
+![The Ethereum Virtual Machine (EVM) Architecture](./assets/4-2.jpg)
+
+In the previous module, we examined how Ethereum transformed the blockchain from a static ledger into a Turing-complete state machine regulated by gas metering.
+However, conceptualizing a "world computer" raises a direct systems question: what does this machine look like under the hood?
+
 In Bitcoin, the state machine is specialized and intentionally limited: transactions consume unspent outputs (UTXOs) and evaluate lightweight Forth-like verification scripts.
 While Bitcoin scripts can verify cryptographic signatures, enforce multi-sig thresholds, and establish relative timelocks, they cannot maintain internal state variables, loop dynamically, or evaluate complex arbitrary business logic.
 
-In 2013, Vitalik Buterin recognized that by embedding a complete virtual machine directly inside a decentralized blockchain, the network could transform from a distributed calculator into a **global, decentralized supercomputer**.\nThat computational engine is the **Ethereum Virtual Machine (EVM)**.
+In 2013, Vitalik Buterin recognized that by embedding a complete virtual machine directly inside a decentralized blockchain, the network could transform from a distributed calculator into a **global, decentralized supercomputer**.
+That computational engine is the **Ethereum Virtual Machine (EVM)**.
 
-The EVM is the runtime execution environment for every smart contract deployed on Ethereum and dozens of compatible chains (such as Polygon, Avalanche C-Chain, Arbitrum, Optimism, BNB Chain, and Base).\nIt serves as a deterministic state machine: given a current world state $\\sigma$ and a valid transaction $T$, the EVM executes the transaction's bytecode and deterministically transitions the world into a new state $\\sigma'$:
+The EVM is the runtime execution environment for every smart contract deployed on Ethereum and dozens of compatible chains (such as Polygon, Avalanche C-Chain, Arbitrum, Optimism, BNB Chain, and Base).
+It serves as a deterministic state machine: given a current world state $\sigma$ and a valid transaction $T$, the EVM executes the transaction's bytecode and deterministically transitions the world into a new state $\sigma'$:
 
-$$f_{\\text{EVM}}(\\sigma, T) = \\sigma'$$
+$$f_{\text{EVM}}(\sigma, T) = \sigma'$$
 
 Every validating full node on Earth independently runs the exact same EVM bytecode on its local hardware, executing every instruction in lockstep to arrive at the identical cryptographic state root.
 
 ## Architectural Components of the EVM
 
-The EVM is a **quasi-Turing-complete, stack-based machine**.\nDuring execution, the EVM partitions data across six distinct physical regions, each with fundamentally different lifecycles, access costs, and performance characteristics:
+The EVM is a **quasi-Turing-complete, stack-based machine**.
+During execution, the EVM partitions data across six distinct physical regions, each with fundamentally different lifecycles, access costs, and performance characteristics:
 
 ```mermaid
 flowchart TD
@@ -34,10 +42,12 @@ Let us examine the primary four data regions in depth:
 
 ### 1. The Stack: The Computational Engine
 
-The EVM is not a register-based machine (like modern x86 or ARM CPUs).\nIt is a **stack machine** that operates on a Last-In, First-Out (LIFO) stack.
+The EVM is not a register-based machine (like modern x86 or ARM CPUs).
+It is a **stack machine** that operates on a Last-In, First-Out (LIFO) stack.
 - **Capacity:** Exactly **1,024 items**. If an operation pushes a 1,025th item onto the stack, the EVM triggers a `Stack Overflow` exception and halts.
-- **Word Size:** Each stack slot holds exactly one 256-bit word.
-- **The 16-Slot Access Constraint ("Stack Too Deep"):** While the stack can hold 1,024 words, EVM swap and duplicate instructions (`SWAP1` through `SWAP16`, `DUP1` through `DUP16`) can only reach the top 16 items on the stack.\n  If a smart contract function attempts to manipulate more than 16 local variables simultaneously, the Solidity compiler aborts with the infamous error: `"Stack too deep"`.
+- **Word Size:** Each stack slot holds exactly one 256-bit word (matching Keccak-256 and secp256k1 curve parameters).
+- **The 16-Slot Access Constraint ("Stack Too Deep"):** While the stack can hold 1,024 words, EVM swap and duplicate instructions (`SWAP1` through `SWAP16`, `DUP1` through `DUP16`) can only reach the top 16 items on the stack.
+  If a smart contract function attempts to manipulate more than 16 local variables simultaneously, the Solidity compiler aborts with the error: `"Stack too deep"`.
 
 ```mermaid
 flowchart TD
@@ -112,15 +122,15 @@ The EVM provides two primary opcodes for cross-contract interaction, each establ
 ```mermaid
 flowchart TD
     subgraph Call_Isolated ["Standard CALL: Isolated Context"]
-        User1[User] -->|Calls| ContractA1[Contract A]
+        Alice1[Alice] -->|Calls| ContractA1[Contract A]
         ContractA1 -->|CALL| ContractB1[Contract B]
         Note1["msg.sender = Contract A<br/>Storage Modified = Contract B's Storage"]
     end
 
     subgraph Delegatecall_Shared ["DELEGATECALL: Borrowed Code / Shared Context"]
-        User2[User] -->|Calls| Proxy[Proxy Contract A]
+        Alice2[Alice] -->|Calls| Proxy[Proxy Contract A]
         Proxy -->|DELEGATECALL| Implementation[Implementation Contract B]
-        Note2["msg.sender = User (Preserved!)<br/>Storage Modified = Proxy Contract A's Storage!"]
+        Note2["msg.sender = Alice (Preserved!)<br/>Storage Modified = Proxy Contract A's Storage!"]
     end
 ```
 
@@ -133,13 +143,18 @@ When Contract A executes a standard `CALL` to Contract B:
 ### 2. The `DELEGATECALL` Opcode (The Foundation of Upgradeable Proxies)
 
 Introduced in EIP-7, `DELEGATECALL` allows Contract A to execute code from Contract B **inside Contract A's own storage and execution context**:
-- **`msg.sender` and `msg.value`:** Preserved from the original caller (the user).
+- **`msg.sender` and `msg.value`:** Preserved from the original caller (Alice).
 - **Storage Context:** Code is fetched from Contract B, but **all reads and writes mutate Contract A's storage slots**.
 
 This architectural primitive enabled the modern **Proxy Pattern**:
 - Users interact with an immutable **Proxy Contract** that holds all user funds, token balances, and state variables.
 - The proxy executes a `DELEGATECALL` to an **Implementation Contract** holding the business logic.
 - To upgrade the protocol, developers deploy a new implementation contract and update a single storage pointer in the proxy, preserving all user balances while upgrading the underlying code.
+
+#### Real-World Battle Scars: The Parity Multi-Sig Freeze (2017)
+The dual nature of `DELEGATECALL` carries acute architectural risks.
+In November 2017, the second Parity Multi-Sig wallet exploit occurred when an uninitialized shared library contract used by hundreds of multi-sig wallets was accidentally claimed and self-destructed (`kill()` / `SELFDESTRUCT`).
+Because all user wallets delegated their core functionality to this single library address, the deletion of the library bytecode instantly froze **513,774 ETH** across 587 wallets, rendering the funds permanently unrecoverable.
 
 ## Deterministic Address Derivation: `CREATE` vs. `CREATE2`
 
@@ -184,3 +199,14 @@ $$\text{Address} = \text{Rightmost20Bytes}\Big(\text{Keccak-256}\big(\mathtt{0xf
 - **Factory Predictability:** Decentralized exchanges (like Uniswap V2 and V3) use `CREATE2` to deterministically calculate liquidity pool addresses from the sorted addresses of the two traded tokens:
   $$\text{PoolAddress} = f(\text{Factory}, \text{TokenA}, \text{TokenB})$$
   eliminating the need for on-chain registry lookups and dramatically saving gas.
+
+## The Next Question: How Are Computational Costs Measured and Priced?
+
+We have explored the internal anatomy of the EVM: how stack, memory, storage, and calldata interact across the opcode lifecycle.
+However, every step of this computational machine is strictly regulated by gas metering.
+
+How does the protocol decide what an opcode is worth?
+Why is reading from disk thousands of times more expensive than adding two numbers in memory?
+Why did early Ethereum suffer from wild, volatile gas price spikes during market crashes?
+How did **EIP-1559** completely redesign Ethereum's fee market by burning the base fee and formalizing priority tips?
+To explore the economic physics of smart contract execution, we proceed to **Gas Economics and Execution Halting**.

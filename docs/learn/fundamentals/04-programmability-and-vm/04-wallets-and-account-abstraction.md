@@ -1,5 +1,10 @@
 # Wallets and Account Abstraction
 
+![Wallets and Account Abstraction](./assets/4-4.jpg)
+
+In the previous module, we examined gas economics and saw that every state transition requires fuel paid in the native cryptocurrency of the network.
+However, in standard blockchain architecture, this requirement is bound tightly to a single private key.
+
 For mainstream users, their relationship with a blockchain is mediated entirely through a single piece of software: the **wallet**.
 A crypto wallet does not actually store coins inside your phone or hardware dongle.
 Your funds live permanently on the public blockchain ledger as account balances or UTXOs.
@@ -57,7 +62,7 @@ $$\mathtt{m / \text{purpose}' / \text{coin\_type}' / \text{account}' / \text{cha
   - `0'` for Bitcoin Mainnet.
   - `60'` for Ethereum.
   - `501'` for Solana.
-- **`account'`:** Allows partitioning a single seed into separate organizational accounts (e.g. Personal vs Business).
+- **`account'`:** Allows partitioning a single seed into separate organizational accounts (such as Personal vs Business).
 - **`change`:** `0` for external receiving addresses; `1` for internal change addresses.
 - **`address_index`:** Sequential counter (`0, 1, 2, ...`) generating individual addresses.
 
@@ -81,7 +86,7 @@ flowchart LR
 ### The Systemic Vulnerabilities of EOAs
 
 1. **Catastrophic Failure Modes:**
-   If a user accidentally reveals their 12-word seed phrase to a phishing website, an automated sweeper bot drains their account within seconds.
+   If Alice accidentally reveals her 12-word seed phrase to a phishing website, an automated sweeper bot drains her account within seconds.
    There is no mechanism to freeze the account, rotate the private key, or add a multi-factor authorization delay.
 2. **Gas Dependency (The On-Ramp Problem):**
    An EOA cannot execute a transaction or interact with any smart contract unless the account holds native ETH to pay for gas.
@@ -89,7 +94,7 @@ flowchart LR
    She must first purchase ETH from a centralized exchange, complete KYC, and transfer the ETH to her wallet before she can move her own money.
 3. **Signature Overhead:**
    Every single action in Web3 requires an individual cryptographic signature.
-   Playing a blockchain game or executing a multi-step DeFi transaction requires approving five or six consecutive pop-up modals, destroying user experience.
+   Playing a blockchain game or executing a multi-step DeFi transaction requires approving five or six consecutive pop-up modals, hurting user experience.
 4. **Hardcoded Cryptography:**
    EOAs are permanently hardcoded to use **ECDSA over the secp256k1 curve**.
    Users cannot use secure hardware enclaves built into smartphones (such as Apple's Secure Enclave or Android Keystore, which use the secp256r1 curve) or quantum-resistant signature schemes.
@@ -97,25 +102,25 @@ flowchart LR
 ## Account Abstraction: The Smart Contract Account Paradigm
 
 **Account Abstraction** decouples the account's on-chain identity from a single hardcoded cryptographic private key.
-Instead of being governed by a raw keypair, the user's account **is a programmable smart contract**.
+Instead of being governed by a raw keypair, Alice's account **is a programmable smart contract**.
 
 ```mermaid
 flowchart TD
     subgraph Account Abstraction Paradigm
-        User[User] --> Auth[Arbitrary Authentication Logic]
+        User[Alice] --> Auth[Arbitrary Authentication Logic]
         Auth --> SCA["Smart Contract Account (Smart Wallet)"]
         SCA --> Execution[Execute Transaction on Blockchain]
     end
 
     Auth -.-> Passkey["Biometric FaceID / Passkeys (secp256r1)"]
-    Auth -.-> MultiSig["Multi-Sig: 2-of-3 Family / Friends"]
+    Auth -.-> MultiSig["Multi-Sig: 2-of-3 Friends (Bob, Charlie)"]
     Auth -.-> Session["Session Keys: 1-Click Gaming for 2 Hours"]
     Auth -.-> Social["Social Recovery: Guardians Recover Lost Key"]
 ```
 
 Under Account Abstraction, the verification logic (`validateUserOp`) is defined entirely in software:
-- **Key Rotation:** If your signing key is compromised, you can rotate the key without changing your account address or moving your assets.
-- **Social Recovery:** If you lose your phone, trusted friends, family members, or institutional guardians can sign a recovery transaction restoring your access, permanently eliminating the fear of lost seed phrases.
+- **Key Rotation:** If Alice's signing key is compromised, she can rotate the key without changing her account address or moving her assets.
+- **Social Recovery:** If Alice loses her phone, trusted friends Bob and Charlie can sign a recovery transaction restoring her access, permanently eliminating the fear of lost seed phrases.
 - **Gas Sponsorship (Paymasters):** Applications can sponsor gas fees for their users, or allow users to pay gas in stablecoins like USDC instead of native ETH.
 - **Batched Transactions:** Users can execute an ERC-20 `approve` and Uniswap `swap` in a single atomic transaction with a single click.
 
@@ -129,15 +134,15 @@ Let us examine the complete ERC-4337 operational architecture:
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User
+    actor Alice as User (Alice)
     participant AltMempool as Alternative P2P UserOp Mempool
     participant Bundler as Bundler (Block Builder)
     participant EP as EntryPoint Singleton Contract
     participant PM as Paymaster Contract
-    participant Wallet as Smart Contract Account
+    participant Wallet as Alice's Smart Contract Account
 
-    User->>User: Construct & sign UserOperation (UserOp)
-    User->>AltMempool: Broadcast UserOp to specialized mempool
+    Alice->>Alice: Construct & sign UserOperation (UserOp)
+    Alice->>AltMempool: Broadcast UserOp to specialized mempool
     Bundler->>Bundler: Aggregate multiple UserOps into single bundle
     Bundler->>EP: Call handleOps([UserOp1, UserOp2...]) as standard L1 Tx
     EP->>Wallet: 1. validateUserOp() (Verify signature & nonce)
@@ -178,3 +183,21 @@ sequenceDiagram
 | **Signature Standards** | Hardcoded to ECDSA only | Arbitrary: Passkeys, WebAuthn, BLS, Post-Quantum |
 | **Transaction Batching** | No (1 transaction per signature) | Yes (Atomic multi-call batching in 1 click) |
 | **L1 Protocol Changes** | Legacy standard built into genesis | Zero protocol changes required |
+
+## The Next Question: How Do Blockchains Know About the Real World?
+
+We have traced how programmable accounts and smart contracts transform user experience, allowing sophisticated authorization, gas sponsorship, and atomic transaction execution.
+However, notice a fundamental limitation shared by all smart contracts:
+The Ethereum Virtual Machine is an entirely self-contained, isolated cryptographic sandbox.
+
+The EVM can calculate mathematical equations, verify signatures, and inspect internal account balances.
+However, it cannot answer basic real-world questions:
+- What is the current USD price of Ether?
+- Did Flight 204 arrive in Tokyo on time?
+- What was the final score of the championship match?
+- Did a drought occur in a specific agricultural region?
+
+Why can a blockchain never make a standard HTTP web request?
+Why does this limitation give rise to **The Oracle Problem**?
+And how do decentralized oracle networks securely bridge off-chain reality into deterministic smart contracts without introducing centralized single points of failure?
+To investigate the interface between code and physical reality, we proceed to **The Oracle Problem**.
