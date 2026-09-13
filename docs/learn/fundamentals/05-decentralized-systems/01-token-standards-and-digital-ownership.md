@@ -1,5 +1,8 @@
 # Token Standards and Digital Ownership
 
+In the previous module, we examined how the Ethereum Virtual Machine executes arbitrary bytecode, meters gas, empowers smart contract accounts, and interfaces with off-chain reality via decentralized oracles.
+Now we investigate the foundational economic primitives built on top of this virtual machine: the mathematical standardization of digital ownership.
+
 Before the invention of programmable blockchains, digital ownership was fundamentally illusory.
 When you "bought" an ebook on Amazon Kindle, a song on iTunes, or an in-game skin in a multiplayer video game, you did not own a digital asset.
 You were granted a revocable, conditional software license stored in a private corporate database.
@@ -38,7 +41,7 @@ One USDC in your wallet has the exact same economic utility and market value as 
 
 ### The Internal Data Structures
 
-At its core, an ERC-20 smart contract is essentially a glorified spreadsheet implemented as two persistent Solidity mappings:
+At its core, an ERC-20 smart contract is essentially a spreadsheet implemented as two persistent Solidity mappings:
 
 ```solidity
 // 1. Account Balances: Maps an address to its current token balance
@@ -107,11 +110,11 @@ sequenceDiagram
 
 ### EIP-2612: Gasless Approvals via Off-Chain Signatures (`permit`)
 
-The traditional `approve` + `transferFrom` workflow requires **two sequential transactions**, forcing the user to pay gas twice and wait for two separate block confirmations.
+The traditional `approve` + `transferFrom` workflow requires **two sequential transactions**, forcing Alice to pay gas twice and wait for two separate block confirmations.
 
 In 2020, **EIP-2612** introduced the **`permit()`** extension using EIP-712 typed structured data hashing:
-- The user signs an off-chain message specifying the spender, amount, nonce, and deadline.
-- The user transmits the $(v, r, s)$ signature bytes directly to the application.
+- Alice signs an off-chain message specifying the spender, amount, nonce, and deadline.
+- Alice transmits the $(v, r, s)$ signature bytes directly to the application.
 - The application submits the permit signature and the swap call in a **single atomic transaction**, saving gas and enabling gasless account experiences.
 
 ## Deep Dive: The ERC-721 Non-Fungible Token (NFT) Standard
@@ -151,7 +154,7 @@ If the recipient `to` is a smart contract, `safeTransferFrom` executes a safety 
 ### The Metadata Architecture: On-Chain vs. Off-Chain Storage
 
 An NFT smart contract does not store heavy image, video, or audio files on-chain.
-Storing a 5-megabyte JPEG file in Ethereum persistent storage would cost hundreds of thousands of dollars in gas!
+Storing a 5-megabyte JPEG file in Ethereum persistent storage would cost hundreds of thousands of dollars in gas.
 
 Instead, the contract stores a lightweight string pointer accessed via the **`tokenURI(uint256 tokenId)`** function:
 
@@ -223,3 +226,16 @@ flowchart TD
 | **Batch Transfers** | No (requires loop / external multicall) | No (1 transaction per NFT) | **Yes:** Native `safeBatchTransferFrom()` |
 | **Contract Overhead** | 1 contract per token type | 1 contract per collection | 1 single contract for thousands of tokens |
 | **Typical Use Cases** | Stablecoins (USDC), governance (UNI) | Digital art, real estate, ENS domains | Game items, inventory systems, financial tickets |
+
+## The Next Question: How Do We Trade Tokens Without Wall Street?
+
+Now that we have standardized digital assets across fungible tokens, non-fungible collectibles, and multi-token gaming economies, a fundamental question emerges:
+How do market participants trade these assets trustlessly?
+
+In traditional finance, trading relies on Central Limit Order Books (CLOBs) matching bids and asks microsecond by microsecond on centralized exchange servers (such as NASDAQ or the NYSE).
+However, deploying a high-frequency order book on Ethereum is impossible: every order, cancellation, and revision would incur substantial gas fees and block latency.
+
+How did decentralized finance overcome this limitation?
+How did developers replace Wall Street order books with autonomous mathematical curves ($x \cdot y = k$), pooled reserves, and algorithmic price discovery?
+And what risks do liquidity providers face when asset prices diverge?
+To discover how code replaces centralized market makers, we proceed to **Automated Market Makers and Liquidity Pools**.

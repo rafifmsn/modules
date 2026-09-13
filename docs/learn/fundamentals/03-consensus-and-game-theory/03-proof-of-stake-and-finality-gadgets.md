@@ -1,12 +1,12 @@
 # Proof of Stake and Finality Gadgets
 
-Proof of Work secures decentralized consensus by binding voting power to thermodynamic energy consumption.
+In the previous module, we examined how Proof of Work ties consensus security to real-world thermodynamics and computational energy expenditure.
 However, this thermodynamic link imposes substantial physical realities: modern PoW networks consume tens of terawatt-hours of electrical power annually, and miners must constantly sell native tokens on open markets to pay off recurring fiat electricity bills.
 
 **Proof of Stake (PoS)** eliminates the requirement for competitive hash calculations.
 Instead of burning physical electricity through silicon processors, PoS secures the ledger using **virtual economic capital locked directly on-chain**.
 Participants deposit (stake) native cryptocurrency into a protocol-level smart contract as collateral.
-In return, they earn the legal right to propose blocks, participate in validation committees, and earn protocol rewards.
+In return, they earn the right to propose blocks, participate in validation committees, and earn protocol rewards.
 If a participant acts dishonestly or attempts to reorganize history, the protocol algorithmically destroys (slashes) their deposited collateral.
 
 ## The Architectural Rationale for Proof of Stake
@@ -40,13 +40,13 @@ Because validators do not need to liquidate rewards to pay electric utilities, t
 
 ### 3. Asymmetric Punitive Power (The Slashing Advantage)
 
-Suppose an adversary acquires 51 percent of the mining equipment on a Proof of Work chain and mounts a catastrophic double-spending reorganization:
-- The honest community can fork to a new mining algorithm, but the community **cannot physically reach into the attacker's warehouse to destroy their ASIC chips**.
-- The attacker retains their physical machines and can attack the next algorithm or sell the hardware on secondary markets to recoup their investment.
+Suppose Mallory acquires 51 percent of the mining equipment on a Proof of Work chain and mounts a catastrophic double-spending reorganization:
+- The honest community can fork to a new mining algorithm, but the community **cannot physically reach into Mallory's warehouse to destroy her ASIC chips**.
+- Mallory retains her physical machines and can attack the next algorithm or sell the hardware on secondary markets to recoup her investment.
 
-In Proof of Stake, the attacker's security asset **lives directly on the blockchain itself**:
-- If a validator attempts a double-spending reorganization or signs conflicting blocks, the protocol's cryptographic rules detect the betrayal.
-- The protocol's automated slashing engine burns the attacker's staked tokens permanently, destroying their wealth on-chain without requiring police or court intervention.
+In Proof of Stake, Mallory's security asset **lives directly on the blockchain itself**:
+- If Mallory attempts a double-spending reorganization or signs conflicting blocks, the protocol's cryptographic rules detect the betrayal.
+- The protocol's automated slashing engine burns Mallory's staked tokens permanently, destroying her wealth on-chain without requiring police or court intervention.
 
 ## Validator Lifecycle and Consensus Architecture
 
@@ -55,23 +55,23 @@ To understand how a modern Proof of Stake consensus engine operates, let us diss
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Staker as Prospective Validator
+    actor Alice as Alice (Prospective Validator)
     participant Dep as L1 Deposit Contract
     participant Beacon as Consensus Beacon Chain
     participant Comm as Attestation Committee
     participant State as Canonical World State
 
-    Staker->>Dep: Deposit exactly 32 ETH + BLS Public Key
+    Alice->>Dep: Deposit exactly 32 ETH + BLS Public Key
     Dep->>Beacon: Emit Deposit Event - Enter Churn Limit Queue
-    Beacon->>Beacon: Activate Validator - Assign Slot Schedule via RANDAO
-    Beacon->>Comm: Assign Proposer & Attester Roles for Epoch
+    Beacon->>Beacon: Activate Alice - Assign Slot Schedule via RANDAO
+    Beacon->>Comm: Assign Alice to Proposer & Attester Roles
     Comm->>Beacon: Propose Block - Broadcast BLS Aggregated Attestations
     Beacon->>State: Justify & Finalize Epoch Checkpoints
 ```
 
 ### 1. Registration and Activation Queues
 
-A participant becomes an active validator by sending exactly **32 ETH** to the official Ethereum deposit contract on Layer 1, providing their **BLS12-381 cryptographic public key** and withdrawal credentials.
+A participant like Alice becomes an active validator by sending exactly **32 ETH** to the official Ethereum deposit contract on Layer 1, providing her **BLS12-381 cryptographic public key** and withdrawal credentials.
 
 To prevent sudden massive capital inflows or outflows from destabilizing the consensus set, the protocol regulates entry and exit via a strict **Churn Limit Queue**:
 - Only a fixed number of validators (typically 8 to 16 validators per epoch) can enter or exit the active set per 6.4-minute cycle.
@@ -99,7 +99,7 @@ flowchart LR
 ### 3. RANDAO: On-Chain Randomness
 
 How does the protocol choose who proposes a block in each slot without a centralized coordinator?
-If the leader election were predictable days in advance, an attacker could launch a targeted denial-of-service attack against the specific IP address of the next upcoming proposer to halt the network.
+If the leader election were predictable days in advance, Mallory could launch a targeted denial-of-service attack against the specific IP address of the next upcoming proposer to halt the network.
 
 Ethereum uses **RANDAO** (Randomness DAO):
 - At every slot, the designated block proposer contributes entropy to a running randomness accumulator by evaluating and revealing a BLS signature on the current epoch number.
@@ -139,7 +139,7 @@ In naive Proof of Stake, creating a block or attestation requires only computing
 Because signing costs nothing, the economically rational strategy for every validator is to **vote on every competing branch simultaneously**:
 - If Branch A wins, you get paid.
 - If Branch B wins, you get paid.
-- If a malicious attacker attempts a double-spending fork, validators have zero financial incentive to defend the honest chain; they vote on both to maximize their rewards!
+- If Mallory attempts a double-spending fork, validators have zero financial incentive to defend the honest chain; they vote on both to maximize their rewards.
 
 If validators vote on all forks, the network can never resolve transient splits, and an attacker with a microscopic stake can easily rewrite history.
 
@@ -147,7 +147,7 @@ If validators vote on all forks, the network can never resolve transient splits,
 
 Modern Proof of Stake protocols permanently solved the Nothing-at-Stake problem by introducing explicit **Slashing Conditions**.
 
-If a validator signs two conflicting statements, any other node on the network can take the two conflicting digital signatures, package them together as cryptographic proof, and submit them to the consensus layer.
+If Mallory signs two conflicting statements, any other node on the network can take the two conflicting digital signatures, package them together as cryptographic proof, and submit them to the consensus layer.
 The protocol's built-in rules inspect the signatures, confirm that they originated from the same validator public key, and automatically execute punishments:
 
 ```mermaid
@@ -206,7 +206,7 @@ Casper FFG enforces a mathematical theorem:
 
 > Two conflicting checkpoints at the same height can never both achieve finalization unless at least one-third ($> 33.3\%$) of the entire active validator set signs contradictory attestations.
 
-If an adversary attempts to revert a finalized checkpoint to execute a double-spend, the protocol guarantees that at least one-third of the global staked capital will be identified and permanently burned:
+If Mallory attempts to revert a finalized checkpoint to execute a double-spend, the protocol guarantees that at least one-third of the global staked capital will be identified and permanently burned:
 
 $$\text{Attacker Cost} \ge \frac{1}{3} \times \text{Total Network Stake}$$
 
@@ -214,7 +214,7 @@ At an Ethereum staking level of 30 million ETH, reverting a finalized block cost
 
 ## The Inactivity Leak: Surviving Geopolitical Partitions
 
-What happens if an catastrophic real-world disaster (such as a global transatlantic fiber cut or state-level internet censorship) suddenly takes 40 percent of all validators offline?
+What happens if a catastrophic real-world disaster (such as a global transatlantic fiber cut or state-level internet censorship) suddenly takes 40 percent of all validators offline?
 
 Under classical BFT, because the remaining online validators hold only 60 percent of the stake, they can never reach the 66.7 percent supermajority required to finalize blocks.
 The blockchain would freeze permanently.
@@ -238,3 +238,13 @@ flowchart TD
 4. As the offline validators' staked balances are destroyed, their proportion of the global stake pool diminishes.
 5. Within several days or weeks, the relative stake share of the active online validators rises above the critical two-thirds threshold ($> 66.7\%$).
 6. The online partition resumes finalizing blocks autonomously, preserving liveness and self-healing the blockchain without manual intervention.
+
+## The Next Question: Beyond Proof of Work and Proof of Stake
+
+Proof of Work and Proof of Stake represent the dominant titans of decentralized consensus.
+However, distributed systems researchers have engineered an entire spectrum of alternative models designed to optimize for unique trade-offs:
+- What if consensus requires enterprise compliance and known legal identities rather than economic bonding (Proof of Authority)?
+- What if a network relies on cryptographic verifiable delay functions to encode the physical passage of time directly into state transitions, achieving 400ms block times without round-trip voting (Solana's Proof of History)?
+- What if we abandon linear sequential blockchains entirely in favor of multi-dimensional graphs where parallel blocks merge asynchronously (Directed Acyclic Graphs / DAGs)?
+
+To explore these alternative and hybrid paradigms, we proceed to **Alternative and Hybrid Consensus Models**.

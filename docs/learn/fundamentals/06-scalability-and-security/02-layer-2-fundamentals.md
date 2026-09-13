@@ -1,7 +1,7 @@
 # Layer 2 Fundamentals
 
-As Layer 1 blockchains achieve global adoption, block space demand outstrips supply, causing transaction fee spikes and execution latency.
-Scaling an L1 by altering base parameters degrades decentralization.
+In the previous module, we analyzed the Blockchain Trilemma and saw that monolithic chains hit physical hardware bottlenecks in bandwidth, CPU execution, and disk I/O.
+To achieve global throughput without excluding consumer node operators, execution must be decoupled from Layer 1 consensus.
 Layer 2 (L2) systems resolve this bottleneck by executing transactions off-chain while anchoring security, data availability, and settlement to an underlying Layer 1 blockchain.
 
 ## Defining a True Layer 2
@@ -64,7 +64,7 @@ sequenceDiagram
     L1-->>Bob: Disburse 1.5 BTC
 ```
 
-- **Dispute Resolution:** If Alice attempts to cheat by submitting an older state (e.g. State 1 where she had 0.9 BTC), Bob submits the newer signed State N within a dispute window. The contract enforces a penalty, confiscating Alice's entire deposit and awarding it to Bob.
+- **Dispute Resolution:** If Alice attempts to cheat by submitting an older state (such as State 1 where she had 0.9 BTC), Bob submits the newer signed State N within a dispute window. The contract enforces a penalty, confiscating Alice's entire deposit and awarding it to Bob.
 - **Limitations:** Channels require 100 percent capital lockup (illiquidity), require participants to remain online to monitor disputes (or hire Watchtowers), and cannot support shared, multi-party smart contract state (such as AMMs).
 
 ### 2. Plasma (Child Chains)
@@ -101,3 +101,18 @@ Because all raw transaction data is anchored permanently to Layer 1, any node ca
 | **Capital Efficiency** | Low (Capital locked in channels)| High | High | High |
 | **Withdrawal Delay** | Instant (Cooperative) / Days | Minutes (Bridge dependent) | 7-day challenge period | Instant (Proof generation time) |
 | **Hardware Overhead** | Minimal consumer device | High sidechain nodes | Standard sequencer | Intensive ZK proof generation |
+
+## The Next Question: How Do We Prove State Correctness?
+
+We have established that Rollups are the only off-chain architecture that fully inherits Layer 1 security by posting data availability directly to the base chain.
+However, this leads directly to the core dilemma of rollup engineering:
+When an off-chain sequencer submits a state root claiming that 5,000 transactions were executed correctly, how does Layer 1 know whether that claim is truthful?
+
+The industry has diverged into two competing cryptographic paradigms:
+1. **Optimistic Rollups:** Assume the sequencer is honest by default, but allow any verifier to submit **Fraud Proofs** within a 7-day challenge window (Arbitrum, Optimism).
+2. **Zero-Knowledge (ZK) Rollups:** Assume nothing, generating mathematical **Validity Proofs** (SNARKs or STARKs) that cryptographically guarantee state correctness before the block is accepted on Layer 1 (zkSync, Starknet, Scroll).
+
+How do interactive fraud-proving bisection games work?
+How do zero-knowledge circuits compress millions of arithmetic operations into a few hundred bytes?
+And what are the engineering trade-offs between EVM equivalence and mathematical provability?
+To explore the mechanics of state verification, we advance to **Rollup Architectures: Optimistic vs. ZK**.

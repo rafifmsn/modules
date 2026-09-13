@@ -1,9 +1,9 @@
 # Anatomy of a Block and Block Headers
 
-A blockchain is fundamentally an append-only, chronologically ordered distributed ledger.
+In Module 1, we established how cryptographic keys, digital signatures, and peer-to-peer gossip enable Alice to construct and broadcast an authenticated transaction across the globe without central servers.
 However, transactions are not added to the ledger one by one in real time.
 Recording and gossiping individual transactions across thousands of global nodes with individual consensus votes would overwhelm network bandwidth and lead to endless race conditions.
-Instead, transactions are packaged into discrete containers called **blocks**.
+Instead, transactions are grouped into discrete cryptographic containers called **blocks**.
 
 Understanding the internal anatomy of a block and its header is essential.
 The block header is where cryptography meets consensus: it contains the mathematical metadata that chains history together, commits to state transitions, and proves computational work or validator attestations.
@@ -149,24 +149,24 @@ $$\text{Hash}(B_n) = \text{SHA-256}\big(\text{SHA-256}(\text{Header}_n)\big)$$
 
 ### What Happens When an Attacker Attempts Tampering?
 
-Suppose an adversary attempts to modify a transaction inside Block 100 (for example, altering a payment of 1 BTC to 100 BTC):
+Suppose Mallory attempts to modify a historical transaction inside Block 100 (for example, altering a payment of 1 BTC to Bob into a payment of 100 BTC to herself):
 
 ```mermaid
 flowchart TD
-    Attack[Adversary Alters Tx in Block 100 Body] --> Step1[Merkle Root of Block 100 Changes]
+    Attack[Mallory Alters Tx in Block 100 Body] --> Step1[Merkle Root of Block 100 Changes]
     Step1 --> Step2[Header 100 Hash Changes Completely]
     Step2 --> Step3[Block 101 hashPrevBlock No Longer Matches Header 100!]
     Step3 --> Step4[Block 101 Breaks: Network Rejects It]
-    Step4 --> Recalc[Attacker Must Recalculate PoW for Block 100, 101, 102... to Tip!]
+    Step4 --> Recalc[Mallory Must Recalculate PoW for Block 100, 101, 102... to Tip!]
 ```
 
 1. Changing a single character in the transaction body alters the transaction's hash.
 2. The altered transaction hash propagates up the Merkle tree, producing a completely different `hashMerkleRoot`.
 3. The altered Merkle root changes the 80-byte header of Block 100, causing its hash $\text{Hash}(B_{100})$ to change completely.
 4. Block 101's header contains the *original* `hashPrevBlock` of Block 100.
-   Because the attacker's modified Block 100 hash no longer matches Block 101's pointer, the cryptographic link breaks.
+   Because Mallory's modified Block 100 hash no longer matches Block 101's pointer, the cryptographic link breaks.
 5. Every full node on the planet immediately detects the discrepancy and drops the block.
-6. To make the rest of the network accept the forged transaction, the attacker would have to re-mine Block 100, and then re-mine Block 101, Block 102, and every subsequent block up to the tip of the chain faster than the entire global honest network combined.
+6. To make the rest of the network accept the forged transaction, Mallory would have to re-mine Block 100, and then re-mine Block 101, Block 102, and every subsequent block up to the tip of the chain faster than the entire global honest network combined.
 
 This is the cryptographic foundation of **tamper evidence**: historical modifications become exponentially more difficult with each subsequent block appended to the chain.
 
@@ -208,4 +208,11 @@ Unlike Bitcoin's single transaction Merkle root, an Ethereum header contains **t
 - **`baseFeePerGas` (EIP-1559):** The minimum protocol fee per unit of gas required to include a transaction in this block, algorithmically adjusted based on the congestion of previous blocks.
 - **`prevRandao`:** The randomness output provided by the Proof of Stake consensus layer (Beacon Chain) used to generate verifiable on-chain pseudo-randomness.
 
-By encapsulating both historical links and global state commitments inside compact headers, modern blockchains provide an immutable, mathematically verifiable timeline of computation.
+## The Next Question: How Does a Transaction Travel from Wallet to State Root?
+
+We now understand the internal machinery of block headers, cryptographic chaining, and how state roots encapsulate the entire history of a blockchain.
+However, blocks do not generate themselves out of thin air.
+
+What actually happens to a transaction between the millisecond Alice clicks "send" in her browser wallet and the moment her transfer is permanently etched into a block header's state root?
+How does a transaction traverse the memory pool, survive network latency, pass validation filters, execute against node state, and generate an execution receipt?
+To trace this journey from inception to final settlement, we examine **The Transaction Lifecycle and State Transitions**.

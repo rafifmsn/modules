@@ -1,15 +1,15 @@
 # The Oracle Problem
 
-Smart contracts are often described as self-executing agreements: if an agreed condition occurs, the contract automatically executes the corresponding action.
-For example:
-- *"If the price of ETH drops below $2,000, liquidate the collateral."*
-- *"If flight UA102 is delayed by more than two hours, disburse flight insurance payouts."*
-- *"If Team A wins the championship, pay out the prediction market."*
-
-However, there is a fundamental paradox at the heart of blockchain architecture:
+In the previous module, we examined how Account Abstraction and smart contract accounts revolutionize user security, key recovery, and transaction batching.
+However, regardless of whether an account is controlled by a private key or a smart contract, all on-chain computation shares a fundamental limitation:
 **Smart contracts are completely blind, deaf, and disconnected from the real world.**
 
-A smart contract cannot execute an HTTP `GET` request to check an API.
+Smart contracts are often described as self-executing agreements: if an agreed condition occurs, the contract automatically executes the corresponding action:
+- *"If the price of ETH drops below $2,000, liquidate Alice's collateral."*
+- *"If flight UA102 is delayed by more than two hours, disburse flight insurance payouts to Bob."*
+- *"If Team A wins the championship, pay out the prediction market."*
+
+Yet a smart contract cannot execute an HTTP `GET` request to check an API.
 It cannot ping an airline database.
 It cannot read the stock price of Apple on NASDAQ.
 It cannot check the weather in New York City.
@@ -52,7 +52,7 @@ Therefore:
 
 ## Defining the Oracle
 
-In classical mythology, an oracle was a priest or priestess who served as an infallible conduit through whom the gods spoke to mortals.
+In classical mythology, an oracle was a priest or priestess who served as an conduit through whom the gods spoke to mortals.
 In blockchain engineering, an **Oracle** is an entity or network that bridges the physical, off-chain world and the on-chain execution environment:
 
 ```mermaid
@@ -62,7 +62,7 @@ flowchart LR
 ```
 
 An oracle performs three sequential roles:
-1. **Fetch:** Queries one or more external data sources (e.g., Bloomberg terminals, crypto exchange APIs, weather sensors).
+1. **Fetch:** Queries one or more external data sources (such as exchange APIs, weather sensors, or Bloomberg terminals).
 2. **Attest:** Formats the raw data and signs it using a cryptographic private key.
 3. **Commit:** Broadcasts a standard on-chain transaction calling an oracle contract, writing the verified data directly into the blockchain's persistent storage.
 
@@ -77,18 +77,18 @@ It inherits the security profile of that single server:
 flowchart TD
     subgraph The Centralized Oracle Threat
         Server["Single Off-Chain Server / API Key"] -->|Feeds Data| MultiBillion["$1,000,000,000 DeFi Lending Protocol"]
-        Attacker[Sophisticated Adversary] -->|Bribe Developer / Hack Server / DNS Hijack| Server
+        Attacker[Sophisticated Adversary: Mallory] -->|Bribe Developer / Hack Server / DNS Hijack| Server
         Attacker -.-> Drain["Drain $1 Billion with Zero Blockchain Cryptographic Failure!"]
     end
 ```
 
 If a decentralized lending protocol holds $1 billion in collateral, an attacker does not need to break Ethereum's cryptography or crack private keys.
 The attacker only needs to:
-- Hack the single AWS server running the price feed.
-- Bribe the server administrator with $10 million.
+- Hack the single server running the price feed.
+- Bribe the server administrator.
 - Execute a DNS spoofing or BGP routing hijack.
 
-If the oracle falsely reports that the price of ETH is $0.01, the smart contract's liquidation engine faithfully executes its automated code, liquidating millions of innocent users and selling their collateral to the attacker for pennies.
+If the oracle falsely reports that the price of ETH is $0.01, the smart contract's liquidation engine faithfully executes its automated code, liquidating millions of innocent users like Alice and selling their collateral to Mallory for pennies.
 **A decentralized smart contract is only as secure as the oracle that informs it.**
 
 ## Decentralized Oracle Networks (DONs)
@@ -120,7 +120,7 @@ flowchart TD
 1. **Multiple Independent Node Operators:**
    The network recruits dozens of independent, professional node operators (such as Swisscom, Deutsche Telekom, and specialized crypto infrastructure providers).
 2. **Multiple Independent Data Sources:**
-   Every node independently queries multiple institutional-grade data aggregators (CoinGecko, CoinMarketCap, Kaiko, Amberdata), ensuring no single exchange glitch distorts their report.
+   Every node independently queries multiple institutional-grade data aggregators (such as CoinGecko, CoinMarketCap, and Kaiko), ensuring no single exchange glitch distorts their report.
 3. **Medianization and Outlier Rejection:**
    The nodes submit their signed observations.
    The protocol discards outliers and calculates the **statistical median**:
@@ -153,9 +153,9 @@ flowchart TD
 ### 1. Push Oracles (Chainlink Classic)
 
 - **Mechanics:** The oracle network monitors prices off-chain.
-  When the price moves by more than a predefined deviation threshold (e.g., 0.5%) or a heartbeat timer expires (e.g., every 1 hour), the oracle network broadcasts a transaction to Layer 1, updating the on-chain storage variable.
-- **Pros:** Extremely simple for developers: a smart contract simply calls `latestRoundData()` to read the stored value in a single read operation.
-- **Cons:** Extremely expensive in gas fees for oracle operators, who must constantly pay Layer 1 fees even when no user is actively trading against that price feed.
+  When the price moves by more than a predefined deviation threshold (such as 0.5%) or a heartbeat timer expires (such as every 1 hour), the oracle network broadcasts a transaction to Layer 1, updating the on-chain storage variable.
+- **Pros:** Simple for developers: a smart contract calls `latestRoundData()` to read the stored value in a single read operation.
+- **Cons:** High gas costs for oracle operators, who must constantly pay Layer 1 fees even when no user is actively trading against that price feed.
 
 ### 2. Pull Oracles (Pyth Network, Chainlink Low-Latency)
 
@@ -166,7 +166,7 @@ flowchart TD
 
 ## Flash Loan Oracle Manipulation Attacks
 
-The most dangerous vulnerability in DeFi occurs when a protocol naively calculates asset prices by querying the current balance ratio of an **on-chain Automated Market Maker (AMM)** (like a Uniswap V2 pair):
+The most dangerous vulnerability in DeFi occurs when a protocol naively calculates asset prices by querying the current balance ratio of an **on-chain Automated Market Maker (AMM)** (such as a Uniswap V2 pair):
 
 $$\text{Price}_{\text{naive}} = \frac{\text{Reserve}_Y}{\text{Reserve}_X}$$
 
@@ -175,30 +175,35 @@ Because AMM spot prices depend strictly on current pool reserves, an attacker ca
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Attacker
+    actor Mallory as Attacker (Mallory)
     participant LendingPool as Aave (Flash Loan Provider)
     participant DEX as Uniswap V2 Pool
     participant Victim as Naive Vulnerable Lending Protocol
 
-    Attacker->>LendingPool: 1. Borrow $50,000,000 USDC via Flash Loan
-    Attacker->>DEX: 2. Dump $50,000,000 USDC into pool for Token ABC
+    Mallory->>LendingPool: 1. Borrow $50,000,000 USDC via Flash Loan
+    Mallory->>DEX: 2. Dump $50,000,000 USDC into pool for Token ABC
     Note over DEX: Token ABC spot price artificially spikes 100x!
-    Attacker->>Victim: 3. Deposit Token ABC as collateral
+    Mallory->>Victim: 3. Deposit Token ABC as collateral
     Note over Victim: Victim checks spot price via DEX.getReserves()!<br/>Believes Token ABC is worth 100x!
-    Attacker->>Victim: 4. Borrow all available ETH/USDC against inflated valuation
-    Attacker->>DEX: 5. Sell back Token ABC to recover USDC
-    Attacker->>LendingPool: 6. Repay $50,000,000 Flash Loan + 0.05% fee
-    Note over Attacker: Attacker walks away with $20M+ in stolen assets!
+    Mallory->>Victim: 4. Borrow all available ETH/USDC against inflated valuation
+    Mallory->>DEX: 5. Sell back Token ABC to recover USDC
+    Mallory->>LendingPool: 6. Repay $50,000,000 Flash Loan + 0.05% fee
+    Note over Mallory: Mallory walks away with $20M+ in stolen assets!
 ```
 
 ### The Attack Walkthrough:
 
-1. **Borrow:** The attacker borrows $50 million in USDC from a flash loan provider (which requires zero collateral, provided the loan is repaid within the same atomic transaction block).
-2. **Manipulate:** The attacker dumps the entire $50 million into a Uniswap pool, draining Token ABC and artificially spiking its spot price by 100x.
+1. **Borrow:** Mallory borrows $50 million in USDC from a flash loan provider (which requires zero collateral, provided the loan is repaid within the same atomic transaction block).
+2. **Manipulate:** Mallory dumps the entire $50 million into a Uniswap pool, draining Token ABC and artificially spiking its spot price by 100x.
 3. **Exploit:** The victim protocol checks Token ABC's price by reading the AMM's immediate reserves.
-   Believing Token ABC is worth 100x its true value, the protocol allows the attacker to borrow millions of dollars of real assets against virtually worthless collateral.
-4. **Unwind & Repay:** The attacker sells back Token ABC, restores pool reserves, and repays the flash loan.
+   Believing Token ABC is worth 100x its true value, the protocol allows Mallory to borrow millions of dollars of real assets against virtually worthless collateral.
+4. **Unwind & Repay:** Mallory sells back Token ABC, restores pool reserves, and repays the flash loan.
 The victim protocol is left with millions in irrecoverable bad debt.
+
+#### Real-World Battle Scars: Mango Markets and Harvest Finance
+This attack is not theoretical.
+In October 2022, an exploiter manipulated the oracle pricing of the MNGO token on Solana's **Mango Markets**, draining **$114 million** from the protocol's liquidity pools.
+Similarly, in October 2020, **Harvest Finance** suffered a **$34 million** flash loan drain because its vault accounting relied on the spot price of Curve pools rather than time-weighted average prices.
 
 ## The Defense: Uniswap V2 Time-Weighted Average Price (TWAP)
 
@@ -219,5 +224,23 @@ To calculate the average price over a time window $[t_1, t_2]$:
 
 $$\text{TWAP} = \frac{a_{t_2} - a_{t_1}}{t_2 - t_1}$$
 
-Because a flash loan exists for **zero seconds** within a single transaction block ($\Delta t = 0$), a flash loan attacker cannot alter the TWAP accumulator!
-Manipulating a 30-minute TWAP requires an attacker to hold millions of dollars of capital in a distorted state across hundreds of blocks, exposing them to massive arbitrage losses from other traders and making manipulation mathematically unprofitable.
+Because a flash loan exists for **zero seconds** within a single transaction block ($\Delta t = 0$), a flash loan attacker cannot alter the TWAP accumulator.
+Manipulating a 30-minute TWAP requires an attacker to hold millions of dollars of capital in a distorted state across hundreds of blocks, exposing them to massive arbitrage losses from other traders and making manipulation economically unviable.
+
+## The Next Question: How Do We Coordinate Human Institutions on Code?
+
+We have now conquered the computational and execution stack of blockchains:
+- How Turing-complete smart contracts emerged from Bitcoin's static script.
+- How the EVM manages volatile stack, linear memory, and persistent storage.
+- How gas economics meters execution and prevents denial-of-service collapse.
+- How programmable accounts and Account Abstraction eliminate private key vulnerabilities.
+- How decentralized oracle networks bridge real-world physical events into deterministic contracts.
+
+However, blockchains are not merely computational runtimes; they are **social, economic, and institutional coordination systems**.
+When code governs billions of dollars of capital, who decides how that code changes?
+How do **Decentralized Autonomous Organizations (DAOs)** coordinate thousands of anonymous human participants without corporate boards?
+How do we engineer **Tokenomics** that balance inflation, utility, and game-theoretic incentives without collapsing into Ponzi dynamics?
+How do we establish self-sovereign digital identity (DIDs) without dystopian biometric surveillance?
+And how do we store decentralized content permanently without corporate cloud providers?
+
+To explore how blockchains restructure human governance and digital coordination, we step into **Module 5: Decentralized Systems and Governance**.

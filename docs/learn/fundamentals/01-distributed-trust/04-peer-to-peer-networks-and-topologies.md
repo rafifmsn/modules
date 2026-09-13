@@ -1,7 +1,11 @@
 # Peer-to-Peer Networks and Network Topologies
 
-A blockchain is fundamentally a shared state machine that relies on complete synchronization across thousands of independent machines.
-However, before transactions can be validated, packaged into blocks, or evaluated by consensus rules, they must first physically propagate across the planet over the public internet.
+In the previous module, we examined how asymmetric cryptography empowers Alice to sign a transaction with her private key, proving her authority beyond mathematical doubt without passwords or central accounts.
+However, a signed transaction sitting on Alice's local laptop accomplishes nothing on its own.
+In a decentralized system without Amazon AWS, Cloudflare, or a corporate database administrator, how does Alice broadcast her transaction to thousands of independent computers across the globe?
+
+A blockchain is fundamentally a shared state machine that relies on synchronization across thousands of independent machines.
+Before transactions can be validated, packaged into blocks, or evaluated by consensus rules, they must physically propagate across the planet over the public internet.
 The communication substrate that makes this possible is the **Peer-to-Peer (P2P) network**.
 
 Without a resilient, decentralized network layer, even the most sophisticated cryptographic proofs and consensus algorithms would fail.
@@ -34,7 +38,7 @@ flowchart TD
 
 ### 1. The Client-Server Model
 
-Traditional Web2 platforms (Google, Visa, Amazon, Twitter) rely on the **client-server model**:
+Traditional Web2 platforms rely on the **client-server model**:
 - **Asymmetric Roles:** A centralized cluster of authoritative servers holds the database, runs business logic, and decides which requests to fulfill. End-user devices (clients) act as passive consumers with no administrative authority.
 - **Hierarchical Trust:** The client trusts the server completely. If the server goes offline, clients cannot interact with each other.
 - **Vulnerabilities:** Susceptible to coordinated DDoS attacks, physical ISP cable cuts, corporate deplatforming, and state-level regulatory coercion.
@@ -46,9 +50,17 @@ In a peer-to-peer network:
 - **No Central Coordinator:** There is no master server, no central directory, and no authoritative DNS registrar required to route packets.
 - **Organic Fault Tolerance:** If fifty percent of the nodes in a P2P network disconnect simultaneously, the remaining fifty percent continue routing transactions and maintaining the ledger without interruption.
 
+### Lessons from Peer-to-Peer History: Napster to BitTorrent
+
+The design of modern blockchain networks directly reflects lessons learned from early peer-to-peer file sharing:
+- **Napster (1999):** Pioneered P2P file transfers between users, but maintained a centralized index server to map which users held which songs. When a federal court issued an injunction against the central server, the entire network died overnight.
+- **Gnutella and BitTorrent (2001):** Eliminated the central index server entirely. BitTorrent introduced decentralized peer discovery and distributed hash tables, proving that a completely decentralized swarm could survive aggressive legal, regulatory, and technical countermeasures.
+
+Blockchains inherit this exact architectural resilience: by eliminating central broadcast servers, no single entity possesses the power to unplug the network.
+
 ## The Gossip Protocol (Epidemic Dissemination)
 
-How does a transaction broadcast by a laptop in Argentina reach a validator node in South Korea in a fraction of a second without a central broadcast server?
+How does a transaction broadcast by Alice in Argentina reach a validator node in South Korea in a fraction of a second without a central broadcast server?
 Blockchains use **Gossip Protocols**, mathematically modeled on the spread of biological epidemics (epidemic dissemination).
 
 ```mermaid
@@ -84,7 +96,7 @@ sequenceDiagram
    If yes, they discard the message to save network bandwidth.
    If no, they validate it, insert it into their own mempool, and gossip it to their respective peers.
 6. **Exponential Fan-Out:** In a well-connected random graph with average degree $d$, the number of informed nodes grows exponentially ($d^1, d^2, d^3...$).
-   The message reaches all $N$ nodes in $O(\log N)$ hops, achieving planetary consensus in under two seconds.
+   The message reaches all $N$ nodes in $\mathcal{O}(\log N)$ hops, achieving planetary dissemination in under two seconds.
 
 ## Node Discovery and Routing: The Kademlia DHT
 
@@ -106,7 +118,7 @@ flowchart TD
 ### The XOR Metric: The Mathematical Elegance of Kademlia
 
 In Kademlia, every node is assigned a 256-bit Node ID (derived from the hash of its cryptographic public key).
-The "distance" between any two nodes $x$ and $y$ is not their geographic physical distance, but their **bitwise exclusive-OR (XOR) distance**:
+The distance between any two nodes $x$ and $y$ is not their geographic physical distance, but their **bitwise exclusive-OR (XOR) distance**:
 
 $$d(x, y) = x \oplus y$$
 
@@ -124,7 +136,7 @@ Each bucket holds up to $k$ nodes (typically $k = 16$) that share a specific bit
 - Bucket $i$ holds nodes that share an $i$-bit prefix.
 
 Because nodes prioritize keeping long-lived, reliable connections in their buckets (using least-recently-seen replacement policies), Kademlia networks resist churn (nodes constantly connecting and disconnecting).
-Finding any specific node in the network requires at most $O(\log N)$ lookup steps.
+Finding any specific node in the network requires at most $\mathcal{O}(\log N)$ lookup steps.
 
 ### Bootnodes and Discovery Seeding
 
@@ -151,7 +163,7 @@ If it takes 15 seconds for a newly mined block to travel across the globe:
 ### Compact Blocks (BIP-152) and Graphene
 
 In naive protocols, when a miner finds a block, they broadcast the entire block containing thousands of full transactions.
-However, 99 percent of those transactions have **already been broadcast and received via the mempool** minutes earlier!
+However, 99 percent of those transactions have **already been broadcast and received via the mempool** minutes earlier.
 Broadcasting full blocks wastes redundant network bandwidth.
 
 Bitcoin resolved this with **Compact Blocks (BIP-152)**:
@@ -196,10 +208,10 @@ flowchart TD
 
 ### 1. The Eclipse Attack
 
-In an **Eclipse Attack**, an adversary isolates a specific target node from the rest of the honest network:
-- The attacker spins up hundreds of malicious nodes and monopolizes all of the victim's incoming and outgoing peer connections.
-- The victim node is now "eclipsed": it can only send and receive data that the attacker permits.
-- The attacker can feed the victim a fake, privately mined blockchain, tricking an exchange or merchant into accepting an unconfirmed payment and executing a double-spend.
+In an **Eclipse Attack**, an adversary like Mallory isolates a specific target node (say, Bob's node) from the rest of the honest network:
+- Mallory spins up hundreds of malicious nodes and monopolizes all of Bob's incoming and outgoing peer connections.
+- Bob's node is now "eclipsed": it can only send and receive data that Mallory permits.
+- Mallory can feed Bob a fake, privately mined blockchain, tricking an exchange or merchant into accepting an unconfirmed payment and executing a double-spend.
 
 #### Defenses against Eclipse Attacks:
 - **Bucket Diversification:** Restrict outgoing connections so that peers must come from diverse autonomous systems (ASNs) and different IPv4 `/16` subnets.
@@ -208,7 +220,7 @@ In an **Eclipse Attack**, an adversary isolates a specific target node from the 
 ### 2. Sybil Attacks at the Network Layer
 
 While Nakamoto consensus uses Proof of Work to prevent Sybil voting in block creation, an attacker can still launch a Sybil attack at the networking layer:
-- The attacker launches thousands of dummy nodes to manipulate peer discovery, slow down message propagation, or monitor transaction origins to deanonymize users.
+- The attacker launches thousands of dummy nodes to manipulate peer discovery, slow down message propagation, or monitor transaction origins to deanonymize users like Alice.
 - **Defense:** Strict peer connection caps, rate limiting on message gossip, and scoring algorithms that disconnect peers who broadcast invalid or duplicate data.
 
 ### 3. BGP Hijacking and Transit Partitions
@@ -216,3 +228,18 @@ While Nakamoto consensus uses Proof of Work to prevent Sybil voting in block cre
 Internet traffic relies on the Border Gateway Protocol (BGP) to route packets between autonomous networks.
 A malicious Internet Service Provider (ISP) or state actor can broadcast fraudulent BGP route announcements, intercepting traffic destined for major blockchain mining pools or splitting the global network into two geographically separated partitions.
 To defend against this, major networks deploy encrypted P2P tunnels, alternative transport protocols (like libp2p with Noise encryption), and independent satellite relays (such as the Blockstream Satellite network) that broadcast block headers directly from orbit.
+
+## The Foundation is Set: Moving from Cryptographic Network to Ledger Architecture
+
+We have now established the four foundational pillars of distributed trust:
+1. **The Double-Spending Solution:** Nakamoto's synthesis of thermodynamic cost and economic incentives.
+2. **Cryptographic Hashes and Merkle Trees:** Provable data integrity and logarithmic verification without trust.
+3. **Asymmetric Cryptography:** Unforgeable mathematical ownership and digital authorization.
+4. **Peer-to-Peer Networks:** Resilient, decentralized communication that survives physical and political censorship.
+
+However, having signed transactions propagating across a P2P mesh does not yet tell us how the ledger itself is organized in memory and on disk.
+What does the internal anatomy of a block look like?
+How do nodes compute state transitions?
+And why did Bitcoin choose a ledger of discrete unspent coins (the UTXO model) while Ethereum chose a global balance spreadsheet (the Account model)?
+
+To answer these fundamental structural questions, we enter **Module 2: Blockchain Architecture and State Models**.

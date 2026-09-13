@@ -1,8 +1,11 @@
 # Forks, Finality, and Reorganizations
 
-In a centralized database, establishing the "current state" of truth is straightforward: the central server's disk contains the canonical truth, and whatever timestamp the primary database assigns to a transaction represents its final order.
+In the previous module, we analyzed how blockchains organize internal state: from Bitcoin's discrete unspent transaction outputs (UTXOs) to Ethereum's global account balances.
+However, regardless of how state is stored, every full node on the network must agree on exactly which blocks form the one true, unbroken ledger of history.
 
-In a decentralized peer-to-peer network, however, there is no global clock and no master server.
+In a centralized database, establishing canonical truth is straightforward: the central database server contains the authoritative state, and whatever timestamp the primary database assigns to a transaction represents its final order.
+
+In a decentralized peer-to-peer network, there is no global clock and no master server.
 Thousands of independent nodes communicate across the public internet, where network latency, fiber-optic routing delays, and packet loss are continuous physical realities.
 Because message delivery is variable, different nodes observe events in different chronological orders.
 
@@ -74,11 +77,12 @@ $$\text{Valid}_{\text{new}} \not\subset \text{Valid}_{\text{old}}$$
 - **Permanent Chain Split Risk:** If 100 percent of the community agrees on the upgrade, everyone switches software and the old chain ceases to exist.
   However, if a faction of miners, exchanges, or users refuses to adopt the new rules, the blockchain permanently divides into two independent, competing ledgers sharing a common genesis history.
 - **Historical Case Studies:**
-  - **The DAO Fork (Ethereum, 2016):** An attacker exploited a reentrancy bug in The DAO smart contract, draining 3.6 million ETH.
+  - **The 2013 Bitcoin Database Split (March 2013):** Bitcoin Core 0.8 switched database backends from BerkeleyDB to LevelDB. A miner running 0.8 created a block with an unusually large number of transaction inputs. Version 0.8 nodes accepted the block, but older 0.7 nodes (constrained by BerkeleyDB locks) rejected it. The network split into two competing chains for six hours until mining pools coordinated in IRC chat to downgrade back to 0.7, demonstrating how unintended software deviations can trigger accidental hard forks.
+  - **The DAO Fork (Ethereum, 2016):** An attacker exploited a reentrancy vulnerability in The DAO smart contract, draining 3.6 million ETH.
     The community voted to execute an irregular state change hard fork to transfer the stolen funds to a recovery contract.
-    A minority ideological faction refused to alter ledger history, creating two permanent chains: **Ethereum (ETH)** and **Ethereum Classic (ETC)**.
-  - **The Block Size War (Bitcoin, 2017):** A disagreement over scaling resulted in a faction hard-forking Bitcoin to raise the base block size limit from 1 MB to 8 MB, splitting into **Bitcoin (BTC)** and **Bitcoin Cash (BCH)**.
-  - **The Merge (Ethereum, 2022):** A planned, unanimous hard fork that retired Proof of Work mining and transitioned Ethereum to the Proof of Stake Beacon Chain.
+    An ideological minority faction argued that "Code is Law" and refused to alter history, permanently preserving **Ethereum Classic (ETC)** alongside **Ethereum (ETH)**.
+  - **The Block Size War (Bitcoin, 2017):** Disagreements over transaction throughput led a faction of miners and developers to hard-fork Bitcoin to increase the base block limit from 1 MB to 8 MB, splitting into **Bitcoin (BTC)** and **Bitcoin Cash (BCH)**.
+  - **The Merge (Ethereum, 2022):** A planned, consensus-level hard fork that permanently deprecated Proof of Work mining and transitioned Ethereum to the Proof of Stake Beacon Chain.
 
 | Dimension | Soft Fork | Hard Fork |
 | :--- | :--- | :--- |
@@ -128,6 +132,16 @@ Eventually, Miner C discovers Block $N+1$ built on top of Block $N_A$ and broadc
    - They apply the state transitions of Block $N_A$ and Block $N+1$.
    - Block $N_B$ is stripped of its status and becomes an **Orphaned Block** (or stale block).
    - Any transactions that were inside Block $N_B$ but not in $N_A$ or $N+1$ are automatically restored to the mempool to be picked up in future blocks.
+
+### The Double-Spend Risk During Reorganizations
+
+Reorganizations are not just operational inconveniences; they are the primary mechanism for financial double-spend attacks:
+- Mallory deposits 1,000 coins into an exchange on Block $N_B$.
+- The exchange credits Mallory's account after only 1 confirmation block and allows Mallory to withdraw fiat currency or other tokens.
+- Simultaneously, Mallory secretly mines an alternative branch $[N_A \to N+1]$ where those same 1,000 coins are sent back to her own wallet.
+- When Mallory releases her longer branch, the network executes a reorg to $[N_A \to N+1]$, orphaning Block $N_B$.
+- The exchange's deposit is erased from canonical history, leaving the exchange defrauded.
+- This is precisely why exchanges require multiple confirmation blocks before crediting user balances.
 
 ## Fork-Choice Rules: How Nodes Choose the Canonical Chain
 
@@ -196,12 +210,12 @@ flowchart LR
 
 In Nakamoto consensus, **finality is never mathematically absolute; it is probabilistic**.
 
-Suppose your transaction is confirmed in Block $N$.
+Suppose Alice's transaction is confirmed in Block $N$.
 An attacker could secretly start mining an alternative private chain starting from Block $N-1$:
 - If the attacker controls less than 50 percent of the hash rate ($q < 0.5$), their probability of out-mining the honest network decays exponentially with every block added to the honest chain.
 - As shown by Satoshi Nakamoto in Section 11 of the Bitcoin whitepaper, after **6 confirmation blocks** (approximately 1 hour), the probability of an attacker with 10 percent hash rate catching up is less than $0.1\%$, and with 30 percent hash rate is less than $1.3\%$.
 
-For high-value transactions (such as real estate or multi-million dollar exchange deposits), exchanges wait for 30 to 60 confirmations to achieve near-certain economic security, even though small reorganization risks theoretically exist indefinitely under 51 percent attacks.
+For high-value transactions, exchanges wait for 30 to 60 confirmations to achieve near-certain economic security, even though small reorganization risks theoretically exist indefinitely under 51 percent attacks.
 
 ### 2. Deterministic and Economic Finality (Casper FFG)
 
@@ -218,3 +232,18 @@ Once a block is finalized:
 - The protocol's automated slashing engine immediately identifies the conflicting BLS signatures and **burns their staked collateral permanently** (amounting to billions of dollars of slashed capital).
 
 This elevates finality from an empirical probabilistic waiting game to an absolute **economic guarantee**: reversing a finalized transaction requires burning an astronomical, protocol-enforced economic penalty.
+
+## The Next Question: Why Do Rational Actors Play by the Rules?
+
+We have now established the structural mechanics of blockchains:
+- How block headers seal transaction payloads into tamper-evident chains.
+- How transactions traverse the lifecycle from client signing to state root mutation.
+- How state models partition data into unspent outputs or global accounts.
+- How fork-choice rules resolve network forks and establish probabilistic or economic finality.
+
+However, mechanical rules alone cannot secure a decentralized network.
+Software code can always be modified, forks can always be mined, and colluding validators can attempt to seize state.
+Why do thousands of anonymous, self-interested participants across the globe cooperate to maintain the exact same ledger instead of cheating?
+What prevents malicious actors from launching Sybil armies, executing selfish mining, or colluding to censor competitors?
+
+To understand how cryptography fuses with economics, thermodynamics, and game theory, we step into **Module 3: Consensus Mechanisms and Game Theory**.

@@ -1,5 +1,9 @@
 # From Static Ledgers to Programmable State
 
+In the previous module, we analyzed how consensus protocols allow distributed, untrusted participants to agree on an immutable, chronological order of blocks.
+However, agreeing on a sequence of raw bytes is only the first half of the decentralized revolution.
+The decisive question is: what do those bytes actually compute?
+
 Bitcoin demonstrated that a decentralized network of untrusted computers could achieve permanent, unforgeable consensus over a shared ledger of balances.
 However, Bitcoin was intentionally engineered as a **specialized, single-purpose application**: a secure, peer-to-peer electronic cash system.
 
@@ -32,7 +36,7 @@ The hallmark of Turing-complete languages is the ability to execute loops (`whil
 Bitcoin Script **deliberately lacks loop opcodes**:
 - The opcodes `OP_LOOP` and `OP_WHILE` do not exist.
 - Scripts evaluate strictly in a single, top-to-bottom pass over an execution stack.
-- **The Design Rationale:** Nakamoto recognized that if nodes must validate transactions before forwarding them, an attacker could broadcast a transaction containing an infinite loop (`while(true) {}`).
+- **The Design Rationale:** Nakamoto recognized that if nodes must validate transactions before forwarding them, an attacker like Mallory could broadcast a transaction containing an infinite loop (`while(true) {}`).
   Every full node on Earth evaluating that script would hang indefinitely, consuming 100 percent CPU and crashing the global financial network.
   By eliminating loops, Bitcoin guaranteed that every script terminates in finite, predictable time.
 
@@ -73,7 +77,7 @@ flowchart TD
 
 The **Colored Coins** design proposed "coloring" specific satoshis to represent real-world assets (such as gold ounces, company stock, or real estate titles).
 By tracking the specific provenance of an individual satoshi through the UTXO transaction graph, an off-chain ledger could treat that satoshi as a company share.
-However, because Bitcoin miners knew nothing about this "color," a user could accidentally spend their multi-thousand-dollar colored stock certificate as a standard transaction fee to a miner!
+However, because Bitcoin miners knew nothing about this "color," a user could accidentally spend their multi-thousand-dollar colored stock certificate as a standard transaction fee to a miner.
 
 ### Mastercoin (Omni Layer, 2013)
 
@@ -127,7 +131,7 @@ flowchart TD
 ```
 
 If a blockchain allows arbitrary loops, a validator **cannot know** whether a smart contract will run for 5 iterations or loop infinitely until it actually executes the code.
-If a malicious user submits an infinite loop:
+If Mallory submits an infinite loop:
 
 ```solidity
 while (true) {
@@ -143,8 +147,8 @@ Ethereum solved the Halting Problem through an economic and computational mechan
 
 Instead of allowing computation to run freely, Ethereum transforms computation into a scarce, metered economic commodity:
 1. Every individual low-level machine instruction (opcode) in the Ethereum Virtual Machine has a strict, deterministic cost measured in **units of gas** (e.g., adding two numbers costs 3 gas; writing a 32-byte word to disk costs 20,000 gas).
-2. When a user submits a transaction, they must declare a **`gasLimit`**: the maximum units of gas they are willing to purchase.
-3. The user pays for this gas upfront in native cryptocurrency (Ether).
+2. When Alice submits a transaction, she must declare a **`gasLimit`**: the maximum units of gas she authorizes the transaction to consume.
+3. Alice pays for this gas upfront in native cryptocurrency (Ether).
 
 ```mermaid
 flowchart TD
@@ -168,3 +172,15 @@ Because every step of computation consumes a finite amount of prepaid gas:
 - The virtual machine instantly halts execution, rolls back all state modifications (balances and storage revert to their pre-transaction values), and awards 100 percent of the consumed gas fee to the block proposer to compensate them for the CPU time spent executing the loop.
 
 Gas decoupled Turing completeness from the threat of denial-of-service attacks, creating a self-regulating, economically bounded environment for universal decentralized computation.
+
+## The Next Question: How Does the Virtual Machine Actually Execute?
+
+We have traced the philosophical evolution from Bitcoin's static stack to Ethereum's metered, Turing-complete world computer.
+However, this leads directly to the core engineering question:
+How does this decentralized virtual machine operate at the byte level?
+
+What does its architecture look like?
+How does it manage volatile stack memory, ephemeral linear byte-array memory, persistent key-value storage slots, and immutable calldata?
+How do opcodes interact with 256-bit words, and how do Solidity and Vyper compilers translate high-level business logic into raw bytecode?
+
+To examine the engine that powers decentralized applications, we enter **The Ethereum Virtual Machine (EVM)**.

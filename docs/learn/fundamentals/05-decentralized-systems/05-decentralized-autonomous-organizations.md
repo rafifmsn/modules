@@ -1,5 +1,9 @@
 # Decentralized Autonomous Organizations
 
+In the previous module, we explored how tokenomic models and vote-escrowed locking align economic incentives across long time horizons.
+However, tokens do not merely capture value; they allocate sovereign authority.
+When code manages hundreds of millions of dollars in protocol treasuries, adjusts risk parameters, and deploys smart contract upgrades, who makes those decisions?
+
 Throughout history, human organization has been structured around hierarchical legal frameworks: the joint-stock corporation, non-profit trusts, and government bureaucracies.
 These organizations are governed by legal corporate charters, boards of directors, and domestic courts.
 Enforcement relies on the physical legal system: if an executive embezzles corporate funds or violates a shareholder agreement, shareholders must hire attorneys, file lawsuits, and rely on judges and police to enforce property rights.
@@ -30,7 +34,7 @@ flowchart TD
     end
 
     subgraph DAO_Model ["Decentralized Autonomous Organization (DAO)"]
-        TokenHolders[Global Token Holders] -->|Cryptographic Votes| GovernanceContract[On-Chain Governance Contract]
+        TokenHolders[Global Token Holders: Alice, Bob, Charlie] -->|Cryptographic Votes| GovernanceContract[On-Chain Governance Contract]
         GovernanceContract -->|Automated Execution| Timelock[Timelock Controller]
         Timelock -->|Direct State Mutation| Treasury2[On-Chain Multi-Million Dollar Treasury]
     end
@@ -44,7 +48,7 @@ Major DAOs (such as Uniswap, Compound, and Aave) follow a structured multi-stage
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Proposer as Community Member (Proposer)
+    actor Proposer as Community Member (Alice)
     participant Forum as Discourse Forum (Off-Chain)
     participant Snapshot as Snapshot Voting (Gasless Off-Chain)
     participant GovContract as Compound GovernorBravo (On-Chain)
@@ -75,11 +79,11 @@ Before spending thousands of dollars in gas to post an on-chain proposal, the co
 
 ### Stage 2: On-Chain Proposal Submission (`propose`)
 
-To prevent spam, the user must hold a minimum threshold of governance tokens (e.g., 2,500,000 UNI) to call `propose()` on the **GovernorBravo** contract.
+To prevent spam, Alice must hold a minimum threshold of governance tokens (such as 2,500,000 UNI) to call `propose()` on the **GovernorBravo** contract.
 The proposer submits four synchronized arrays:
 1. `targets`: The smart contract addresses to call.
 2. `values`: The amount of native ETH to send.
-3. `signatures`: The function signatures to invoke (e.g., `transfer(address,uint256)`).
+3. `signatures`: The function signatures to invoke (such as `transfer(address,uint256)`).
 4. `calldatas`: The exact ABI-encoded parameters.
 
 ### Stage 3: Voting Delay and Snapshot Block
@@ -87,7 +91,7 @@ The proposer submits four synchronized arrays:
 Once submitted, the proposal enters a **Voting Delay** (typically 1 to 2 days).
 At the end of this delay, the contract records the **Snapshot Block**:
 - The voting power of every account is permanently locked to their balance at that specific historical block height.
-- This prevents attackers from seeing a contentious proposal, borrowing millions of tokens on secondary markets, voting on the proposal, and selling the tokens back within the same hour.
+- This prevents Mallory from seeing a contentious proposal, borrowing millions of tokens on secondary markets, voting on the proposal, and selling the tokens back within the same hour.
 
 ### Stage 4: Active Voting and Quorum
 
@@ -99,9 +103,9 @@ For a proposal to pass, it must fulfill two mathematical criteria:
 ### Stage 5: The Timelock Delay and Execution
 
 If approved, the proposal is queued into the **Timelock Controller**:
-- **Mandatory Cooling Period (e.g., 48 Hours):** Execution is intentionally delayed by two days.
+- **Mandatory Cooling Period (such as 48 Hours):** Execution is intentionally delayed by two days.
 - **Why?** The timelock is the ultimate safety valve for protocol users.
-  If a malicious proposal passes (e.g., draining the treasury or raising fees to 100%), the 48-hour delay allows liquidity providers and users to withdraw their capital safely from the protocol before the code executes.
+  If a malicious proposal passes (such as draining the treasury or raising fees to 100%), the 48-hour delay allows liquidity providers and users to withdraw their capital safely from the protocol before the code executes.
 - **Execution:** Once the timelock expires, anyone can call `execute()`.
   The contract executes the low-level calls, transferring funds or upgrading bytecode autonomously.
 
@@ -148,8 +152,8 @@ flowchart LR
 
 Quadratic voting gives immense leverage to broad community consensus over concentrated wealth.
 However, **Quadratic Voting possesses a fatal flaw on anonymous blockchains: it is trivially vulnerable to Sybil attacks!**
-If the whale splits their 10,000 tokens across 100 separate wallet addresses (100 tokens per wallet), their voting power jumps from 100 votes to 1,000 votes!
-Therefore, Quadratic Voting cannot function securely in permissionless environments without robust **Proof of Humanity or Decentralized Identity (DID)** systems (such as Worldcoin or Gitcoin Passport).
+If the whale splits their 10,000 tokens across 100 separate wallet addresses (100 tokens per wallet), their voting power jumps from 100 votes to 1,000 votes.
+Therefore, Quadratic Voting cannot function securely in permissionless environments without robust **Proof of Humanity or Decentralized Identity (DID)** systems (such as Gitcoin Passport).
 
 ## The MolochDAO Architecture: The Ragequit Defense
 
@@ -198,3 +202,24 @@ In February 2022, a malicious actor noticed that **Build Finance DAO** had low c
 - Upon execution, the attacker minted 1.1 million new tokens, drained all liquidity from the DEX pools, and completely destroyed the project.
 
 DAOs must maintain vigilant automated monitoring bots, high quorum requirements, and emergency veto multisigs (Security Councils) to protect protocol reserves from voter apathy.
+
+## The Next Question: How Do We Scale and Secure This Global Machine?
+
+We have now explored the full decentralized application stack:
+- How token standards mathematically encode sovereign digital property.
+- How automated market makers eliminate Wall Street middlemen via constant product curves.
+- How collateralized lending markets preserve automated solvency without credit bureaus.
+- How tokenomics and vote-escrowed locking structure long-term economic alignment.
+- How decentralized autonomous organizations automate institutional democracy on-chain.
+
+However, as these decentralized protocols expand to serve millions of global users, they collide directly with the fundamental bottleneck of decentralized computer science: **The Blockchain Scalability Trilemma**.
+
+Ethereum Layer 1 processes merely 15 to 30 transactions per second.
+When transaction demand surges, gas fees skyrocket, pricing out everyday retail users and rendering microtransactions impossible.
+
+How can blockchains scale throughput by orders of magnitude without sacrificing decentralization or cryptographic security?
+How do **Layer 2 Rollups** (Optimistic rollups with fraud proofs, and ZK-rollups with succinct validity proofs) execute thousands of transactions off-chain while settling securely on Layer 1?
+How do cross-chain bridges transfer value across distinct blockchains, and why are they the most heavily exploited targets in Web3?
+And how do security researchers audit smart contract bytecode to prevent catastrophic reentrancy hacks?
+
+To investigate the cutting edge of distributed systems performance and adversarial defense, we step into the final chapter: **Module 6: Scalability and Security**.
