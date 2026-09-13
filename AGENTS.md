@@ -7,7 +7,7 @@ All AI agents, automated contributors, and editors operating in this codebase mu
 
 Before starting any task, read and respect the following core files:
 
-- `VOICE.md`: The mandatory writing style and tone guide.
+- `VOICE.md`: The mandatory writing style, tone guide, and pedagogical depth standards.
   All content generation and editing must strictly follow these rules.
 - `CONTRIBUTING.md`: Authoring standards, directory structures, and pull request conventions.
 - `README.md`: Repository overview, prerequisite setup, and local build commands.
@@ -86,6 +86,20 @@ Follow these colocation rules when adding images or diagrams:
    Use SVG for vector architecture diagrams and flowcharts.
    Use WebP or optimized PNG for screenshots or raster graphics.
 
+## File and Directory Naming Standards
+
+Maintain strict structural consistency across all tracks and modules:
+
+1. **Two-Digit Zero-Padded Prefixes:**
+   Prefix all module directories and lesson files with two digits indicating sequence order (`01-`, `02-`, `03-`).
+   Example directory: `docs/learn/fundamentals/01-distributed-trust/`.
+   Example file: `02-cryptographic-hash-functions-and-merkle-trees.md`.
+2. **Lowercase Kebab-Case:**
+   All filenames and directories must use exclusively lowercase letters, numbers, and hyphens.
+   Never use uppercase letters, underscores, or spaces in filenames or asset paths.
+3. **Track and Module Entry Points:**
+   Each track directory must use `index.md` as its root overview (for example, `docs/learn/fundamentals/index.md`).
+
 ## Track Structure and Sidebar Navigation
 
 The curriculum is divided into three primary tracks under `docs/learn/`:
@@ -95,7 +109,7 @@ The curriculum is divided into three primary tracks under `docs/learn/`:
 - `protocol-engineering/`: Client implementations, custom rollup sequencers, and low-level protocol mechanics.
 
 When adding, renaming, or removing pages:
-1. Create or modify the Markdown file in the appropriate track folder.
+1. Create or modify the Markdown file in the appropriate track folder adhering to naming standards.
 2. Register the file path and link title in `docs/.vitepress/sidebar.ts`.
 3. Verify that the track's `index.md` syllabus links match the updated paths.
 

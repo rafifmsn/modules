@@ -31,6 +31,40 @@ Do not use generic, dramatic, or empty transitional phrases.
 - **Banned Words and Tropes:** Delve, dive into, testament to, realm, landscape, tapestry, beacon, paramount, leverage (as a lazy verb), crucial, foster, vibrant, empower.
 - **Concrete over Florid:** Use concrete facts and real technical terms instead of qualitative praise. Name the protocol, state the opcode, define the trade-off, and move on.
 
+## Pedagogical Depth and Narrative Continuity
+
+Technical accuracy alone is insufficient; curriculum modules should feel intellectually dense, purposeful, and interconnected rather than read like disconnected reference entries.
+
+### 1. The Golden Thread (Narrative Bridgeheads)
+
+- Connect sequential modules with thoughtful narrative bridgeheads rather than writing in isolated silos.
+- Where natural and applicable, open a module by highlighting the unresolved tension, physical bottleneck, or vulnerability left behind by preceding concepts.
+- Close modules with the emerging architectural trade-off or question that motivates the upcoming module.
+
+### 2. Contextual Anchoring and Battle Scars (Applied Judiciously)
+
+- **Judicious Real-World Anchoring:** Where appropriate, applicable, and historically accurate, ground abstract computer science breakthroughs in their broader context.
+  For example, connecting decentralized ledgers to ancient consensus mechanisms (such as Yap Island Rai stones or medieval tally sticks), or distributed fault tolerance to Cold War communication resilience and mission-critical flight systems.
+- **Production Scars over Pure Theory:** Frame protocol mechanics around how systems behave under adversarial pressure.
+  Reference real-world battle scars where applicable, such as historical governance flash-loan attacks, reentrancy drains, front-running and sandwich dynamics, or state concurrency trade-offs.
+- **Strict Boundary (No Synthetic Drama or Hallucinations):** Never force an analogy or manufacture dramatic historical narratives where they do not naturally belong.
+  Do not invent or embellish facts to fit a narrative arc.
+  If an algorithmic, mathematical, or architectural mechanism is best explained through direct technical analysis, keep it direct and focused. Depth must remain authentic, factual, and technically relevant.
+
+### 3. Standard Persona Cast
+
+When illustrating transactions, state transitions, cryptographic signatures, or game-theoretic attacks, use consistent actor personas so readers do not have to parse arbitrary names across modules:
+
+- **Alice and Bob:** Honest peers, standard transactors, token holders, or valid signers.
+- **Charlie and Dave:** Additional honest participants when multi-party scenarios (such as threshold multi-sigs or validator committees) require extra actors.
+- **Eve:** Passive adversary, eavesdropper, memory pool snooper, or front-running arbitrageur.
+- **Mallory:** Active Byzantine attacker, double-spender, malicious validator, or contract exploiter.
+
+### 4. Authoring Boundaries
+
+- **Working From a Detailed Draft:** Respect the technical scope and architectural requirements of the draft while applying voice standards, sentence-per-line formatting, and clear diagrammatic structures.
+- **Autonomous Authoring (Without a Draft):** Anchor content strictly in verifiable protocol specifications, production implementations, and mathematically sound principles. Do not invent fictitious opcodes, non-existent RPC methods, or unverified protocol claims.
+
 ## Writing Code and Technical Walkthroughs
 
 - **Immediate Usability:** When providing code, scripts, or configurations, provide fully functional, production-ready syntax rather than vague placeholders.
