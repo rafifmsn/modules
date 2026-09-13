@@ -1,5 +1,7 @@
 # The Ethereum Virtual Machine (EVM) Architecture
 
+![The Ethereum Virtual Machine (EVM) Architecture](./assets/4-2.jpg)
+
 In the previous module, we examined how Ethereum transformed the blockchain from a static ledger into a Turing-complete state machine regulated by gas metering.
 However, conceptualizing a "world computer" raises a direct systems question: what does this machine look like under the hood?
 

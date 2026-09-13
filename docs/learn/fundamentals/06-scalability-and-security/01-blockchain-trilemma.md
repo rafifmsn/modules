@@ -1,5 +1,7 @@
 # The Blockchain Trilemma
 
+![The Blockchain Trilemma](./assets/6-1.jpg)
+
 In the previous module, we examined how decentralized systems, automated market makers, lending pools, and DAOs coordinate global capital and algorithmic institutions.
 However, as these decentralized protocols expand to serve millions of global participants, they collide directly with a fundamental constraint of distributed systems: **The Blockchain Trilemma**.
 

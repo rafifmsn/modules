@@ -1,5 +1,7 @@
 # Peer-to-Peer Networks and Network Topologies
 
+![Peer-to-Peer Networks and Network Topologies](./assets/1-4.jpg)
+
 In the previous module, we examined how asymmetric cryptography empowers Alice to sign a transaction with her private key, proving her authority beyond mathematical doubt without passwords or central accounts.
 However, a signed transaction sitting on Alice's local laptop accomplishes nothing on its own.
 In a decentralized system without Amazon AWS, Cloudflare, or a corporate database administrator, how does Alice broadcast her transaction to thousands of independent computers across the globe?

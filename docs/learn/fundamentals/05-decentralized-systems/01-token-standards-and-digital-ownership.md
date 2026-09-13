@@ -1,5 +1,7 @@
 # Token Standards and Digital Ownership
 
+![Token Standards and Digital Ownership](./assets/5-1.jpg)
+
 In the previous module, we examined how the Ethereum Virtual Machine executes arbitrary bytecode, meters gas, empowers smart contract accounts, and interfaces with off-chain reality via decentralized oracles.
 Now we investigate the foundational economic primitives built on top of this virtual machine: the mathematical standardization of digital ownership.
 

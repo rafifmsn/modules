@@ -1,5 +1,7 @@
 # Rollup Architectures: Optimistic vs. Zero-Knowledge
 
+![Rollup Architectures: Optimistic vs. Zero-Knowledge](./assets/6-3.jpg)
+
 In the previous module, we established the foundational taxonomy of Layer 2 systems and saw that rollups are the only scaling architecture that fully inherits Layer 1 security by posting data availability directly to the base chain.
 However, once transaction data is published on-chain, a critical question remains:
 How does Layer 1 know whether the state root submitted by the rollup sequencer is truthful?

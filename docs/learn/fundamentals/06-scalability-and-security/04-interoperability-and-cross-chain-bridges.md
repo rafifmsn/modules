@@ -1,5 +1,7 @@
 # Interoperability and Cross-Chain Bridges
 
+![Interoperability and Cross-Chain Bridges](./assets/6-4.jpg)
+
 In the previous module, we examined rollup architectures and saw how Optimistic and Zero-Knowledge rollups scale execution off-chain while settling securely on Layer 1.
 However, as rollups and independent Layer 1 networks proliferate, they introduce a major operational challenge: **Liquidity Fragmentation**.
 

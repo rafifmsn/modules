@@ -1,5 +1,7 @@
 # The Byzantine Generals Problem
 
+![The Byzantine Generals Problem](./assets/3-1.jpg)
+
 In computer science, reaching agreement across a network of separate machines is one of the most thoroughly studied challenges.
 When all computers in a cluster are owned by a single corporation inside a private data center, the problem is relatively straightforward.
 Servers might occasionally crash, lose power, or suffer hardware failure, but no server is actively attempting to deceive its peers, lie about its database contents, or sabotage the system.

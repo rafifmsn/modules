@@ -1,5 +1,7 @@
 # Forks, Finality, and Reorganizations
 
+![Forks, Finality, and Reorganizations](./assets/2-4.jpg)
+
 In the previous module, we analyzed how blockchains organize internal state: from Bitcoin's discrete unspent transaction outputs (UTXOs) to Ethereum's global account balances.
 However, regardless of how state is stored, every full node on the network must agree on exactly which blocks form the one true, unbroken ledger of history.
 

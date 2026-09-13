@@ -1,5 +1,7 @@
 # Collateralized Lending and Protocol Solvency
 
+![Collateralized Lending and Protocol Solvency](./assets/5-3.jpg)
+
 In the previous module, we explored automated market makers and saw how constant product formulas replace centralized order books with pooled liquidity.
 However, spot trading is only one pillar of a functional financial ecosystem.
 The second foundational pillar is credit and lending.

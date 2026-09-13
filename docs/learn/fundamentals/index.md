@@ -1,5 +1,7 @@
 # Blockchain Fundamentals Track
 
+![Blockchain Fundamentals Track](./assets/fundamentals.jpg)
+
 The Blockchain Fundamentals track provides a rigorous conceptual and architectural foundation in distributed ledgers, cryptographic primitives, and decentralized protocols.
 It synthesizes core computer science principles with real-world blockchain mechanics, omitting speculative trading material in favor of protocol engineering concepts.
 

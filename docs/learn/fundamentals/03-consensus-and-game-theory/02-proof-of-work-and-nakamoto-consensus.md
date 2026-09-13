@@ -1,5 +1,7 @@
 # Proof of Work and Nakamoto Consensus
 
+![Proof of Work and Nakamoto Consensus](./assets/3-2.jpg)
+
 In the previous module, we examined the Byzantine Generals Problem and saw that classical BFT consensus requires a known, permissioned committee of participants ($n \ge 3f + 1$).
 However, this classical framework collapses on an open, permissionless network like the public internet, where anyone can download software, generate an IP address, and begin transmitting messages.
 This openness is the core strength of decentralized systems, but it presents a catastrophic vulnerability: **The Sybil Attack**.

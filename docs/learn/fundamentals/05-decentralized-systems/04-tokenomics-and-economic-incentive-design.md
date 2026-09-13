@@ -1,5 +1,7 @@
 # Tokenomics and Economic Incentive Design
 
+![Tokenomics and Economic Incentive Design](./assets/5-4.jpg)
+
 In the previous module, we examined collateralized lending protocols and saw that parameter management, bad debt absorption, and emergency recapitalization rely on native governance tokens.
 However, designing a token that maintains value and aligns incentives across thousands of independent actors is a profound game-theoretic challenge.
 

@@ -1,5 +1,7 @@
 # Proof of Stake and Finality Gadgets
 
+![Proof of Stake and Finality Gadgets](./assets/3-3.jpg)
+
 In the previous module, we examined how Proof of Work ties consensus security to real-world thermodynamics and computational energy expenditure.
 However, this thermodynamic link imposes substantial physical realities: modern PoW networks consume tens of terawatt-hours of electrical power annually, and miners must constantly sell native tokens on open markets to pay off recurring fiat electricity bills.
 

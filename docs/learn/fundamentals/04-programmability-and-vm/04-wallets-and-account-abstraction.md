@@ -1,5 +1,7 @@
 # Wallets and Account Abstraction
 
+![Wallets and Account Abstraction](./assets/4-4.jpg)
+
 In the previous module, we examined gas economics and saw that every state transition requires fuel paid in the native cryptocurrency of the network.
 However, in standard blockchain architecture, this requirement is bound tightly to a single private key.
 

@@ -1,5 +1,7 @@
 # Anatomy of a Block and Block Headers
 
+![Anatomy of a Block and Block Headers](./assets/2-1.jpg)
+
 In Module 1, we established how cryptographic keys, digital signatures, and peer-to-peer gossip enable Alice to construct and broadcast an authenticated transaction across the globe without central servers.
 However, transactions are not added to the ledger one by one in real time.
 Recording and gossiping individual transactions across thousands of global nodes with individual consensus votes would overwhelm network bandwidth and lead to endless race conditions.

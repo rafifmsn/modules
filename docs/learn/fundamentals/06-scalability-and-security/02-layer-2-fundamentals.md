@@ -1,5 +1,7 @@
 # Layer 2 Fundamentals
 
+![Layer 2 Fundamentals](./assets/6-2.jpg)
+
 In the previous module, we analyzed the Blockchain Trilemma and saw that monolithic chains hit physical hardware bottlenecks in bandwidth, CPU execution, and disk I/O.
 To achieve global throughput without excluding consumer node operators, execution must be decoupled from Layer 1 consensus.
 Layer 2 (L2) systems resolve this bottleneck by executing transactions off-chain while anchoring security, data availability, and settlement to an underlying Layer 1 blockchain.

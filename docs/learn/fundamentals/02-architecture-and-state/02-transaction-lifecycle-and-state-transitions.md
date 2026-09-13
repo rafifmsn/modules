@@ -1,5 +1,7 @@
 # Transaction Lifecycle and State Transitions
 
+![Transaction Lifecycle and State Transitions](./assets/2-2.jpg)
+
 In the previous module, we examined how block headers act as cryptographic envelopes that bind transaction payloads to consensus roots.
 However, blocks do not generate themselves spontaneously.
 To the end user, executing a blockchain transaction appears simple: Alice enters an address, clicks "Send" in her wallet, and watches her balance decrease while Bob's balance increases.

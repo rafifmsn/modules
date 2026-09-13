@@ -1,5 +1,7 @@
 # Gas Economics and Execution Halting
 
+![Gas Economics and Execution Halting](./assets/4-3.jpg)
+
 In the previous module, we examined the inner workings of the Ethereum Virtual Machine: how instructions manipulate the stack, allocate linear memory, and commit persistent storage to disk.
 However, computing resources on a decentralized blockchain are intensely scarce.
 Every instruction executed by a smart contract is not executed once on a central server; it is executed **redundantly by tens of thousands of independent validator computers worldwide**.

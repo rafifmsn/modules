@@ -1,5 +1,7 @@
 # Alternative and Hybrid Consensus Models
 
+![Alternative and Hybrid Consensus Models](./assets/3-4.jpg)
+
 In the previous module, we examined how Proof of Stake replaces thermodynamic hashing with bonded digital capital, using slashing conditions and finality gadgets to establish irreversible economic finality.
 While Nakamoto Proof of Work and Casper-style Proof of Stake dominate the largest market-capitalization blockchains, distributed systems researchers have engineered a rich ecosystem of alternative consensus architectures.
 

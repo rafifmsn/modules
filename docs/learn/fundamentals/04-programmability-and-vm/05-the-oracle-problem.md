@@ -1,5 +1,7 @@
 # The Oracle Problem
 
+![The Oracle Problem](./assets/4-5.jpg)
+
 In the previous module, we examined how Account Abstraction and smart contract accounts revolutionize user security, key recovery, and transaction batching.
 However, regardless of whether an account is controlled by a private key or a smart contract, all on-chain computation shares a fundamental limitation:
 **Smart contracts are completely blind, deaf, and disconnected from the real world.**

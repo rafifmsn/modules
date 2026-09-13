@@ -1,5 +1,7 @@
 # Ledger State Models: UTXO vs. Account Model
 
+![Ledger State Models: UTXO vs. Account Model](./assets/2-3.jpg)
+
 In the previous module, we traced how a transaction travels from client signing to block execution via the state transition function:
 
 $$\sigma_{t+1} = \Pi(\sigma_t, B_{t+1})$$

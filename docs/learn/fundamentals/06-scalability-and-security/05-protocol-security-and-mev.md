@@ -1,5 +1,7 @@
 # Protocol Security and Maximum Extractable Value
 
+![Protocol Security and Maximum Extractable Value](./assets/6-5.jpg)
+
 In the previous module, we examined the vulnerabilities of cross-chain bridges and saw how multi-hundred-million-dollar exploits occur when cryptographic verification fails or multi-sig keys are compromised.
 The reality of public blockchains is that they are deeply adversarial environments.
 Unlike traditional software where source code and databases sit protected behind corporate firewalls, smart contract bytecode, execution state, and pending transaction pools are open to the entire internet.

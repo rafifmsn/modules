@@ -1,5 +1,7 @@
 # Cryptographic Hash Functions and Merkle Trees
 
+![Cryptographic Hash Functions and Merkle Trees](./assets/1-2.jpg)
+
 At the core of every blockchain protocol lies an unassuming mathematical primitive: the cryptographic hash function.
 In the previous module, we established that Nakamoto consensus organizes transactions into sequential blocks to solve double-spending.
 However, this architecture immediately introduces an engineering crisis of scale: how can a decentralized node verify that thousands of transactions are authentic and untampered without scanning gigabytes of raw data line by line?

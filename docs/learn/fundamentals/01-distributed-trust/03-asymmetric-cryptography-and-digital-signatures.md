@@ -1,5 +1,7 @@
 # Asymmetric Cryptography and Digital Signatures
 
+![Asymmetric Cryptography and Digital Signatures](./assets/1-3.jpg)
+
 In the previous module, we examined how cryptographic hash functions and Merkle trees guarantee data integrity: once data is recorded, nobody can alter a single bit without breaking the root hash.
 However, data integrity alone does not solve ownership.
 If Alice creates a transaction paying Bob, and that transaction is hashed into a block, how do network nodes confirm that *Alice* authorized the transfer rather than Mallory forging an instruction in Alice's name?

@@ -1,5 +1,7 @@
 # Decentralized Autonomous Organizations
 
+![Decentralized Autonomous Organizations](./assets/5-5.jpg)
+
 In the previous module, we explored how tokenomic models and vote-escrowed locking align economic incentives across long time horizons.
 However, tokens do not merely capture value; they allocate sovereign authority.
 When code manages hundreds of millions of dollars in protocol treasuries, adjusts risk parameters, and deploys smart contract upgrades, who makes those decisions?

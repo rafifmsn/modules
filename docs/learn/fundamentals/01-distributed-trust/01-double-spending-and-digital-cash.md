@@ -1,5 +1,7 @@
 # The Double-Spending Problem and the History of Digital Cash
 
+![The Double-Spending Problem and the History of Digital Cash](./assets/1-1.jpg)
+
 Money is fundamentally a coordination game and a social technology for recording debt.
 Throughout human history, money has never been about the physical substance itself.
 Instead, money functions as a ledger: a shared, credible record of who owes what to whom across time and space.

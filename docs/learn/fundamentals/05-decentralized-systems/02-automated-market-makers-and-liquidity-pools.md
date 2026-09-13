@@ -1,5 +1,7 @@
 # Automated Market Makers and Liquidity Pools
 
+![Automated Market Makers and Liquidity Pools](./assets/5-2.jpg)
+
 In the previous module, we examined how token standards (ERC-20, ERC-721, ERC-1155) establish composable digital property on top of the virtual machine.
 However, once tokens exist on a shared ledger, users need a way to trade them permissionlessly.
 

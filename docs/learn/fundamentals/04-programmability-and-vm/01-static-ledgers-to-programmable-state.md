@@ -1,5 +1,7 @@
 # From Static Ledgers to Programmable State
 
+![From Static Ledgers to Programmable State](./assets/4-1.jpg)
+
 In the previous module, we analyzed how consensus protocols allow distributed, untrusted participants to agree on an immutable, chronological order of blocks.
 However, agreeing on a sequence of raw bytes is only the first half of the decentralized revolution.
 The decisive question is: what do those bytes actually compute?
