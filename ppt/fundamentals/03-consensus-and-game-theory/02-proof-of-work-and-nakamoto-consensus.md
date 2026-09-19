@@ -1,399 +1,415 @@
 # Proof of Work and Nakamoto Consensus
-Modul Presentasi: Consensus and Game Theory (03.2)
+Modul Presentasi: Fondasi Distributed Trust (03.2)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: Proof of Work and Nakamoto Consensus
 
 ### Konten Slide
-- **Topik:** Proof of Work and Nakamoto Consensus
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Mengikat konsensus digital pada hukum fisika termodinamika dan menyelaraskan insentif ekonomi penambang.
-- *Visual:* Ilustrasi rig penambangan silikon ASIC yang memancarkan daya komputasi dan energi listrik untuk mengamankan rantai blok kriptografis.
+Proof of Work and Nakamoto Consensus
+Consensus and Game Theory (03.2)
+Securing permissionless ledgers through thermodynamic expenditure, dynamic difficulty adjustment, and game-theoretic incentive alignment.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Selamat datang di modul kedua bab Consensus and Game Theory.
-- Menjelaskan bagaimana Satoshi Nakamoto memecahkan kebuntuan koordinasi jaringan terbuka tanpa izin.
-- Memahami pergeseran dari identitas virtual ke daya komputasi termodinamika riil.
+- Membuka modul kedua dari bab Consensus and Game Theory.
+- Menjelaskan bagaimana Satoshi Nakamoto menyatukan kriptografi, sistem terdistribusi, dan ekonomi perilaku.
+- Menyoroti konsep Proof of Work sebagai jangkar termodinamika yang mengamankan buku besar tanpa izin (permissionless).
 
 **Naskah Tutur (Voiceover Script):**
-Selamat datang kembali di modul kedua.
-Pada materi sebelumnya, kita sudah melihat bagaimana Byzantine Fault Tolerance klasik mensyaratkan kita mengetahui jumlah pasti partisipan di dalam komite.
-Namun, di internet terbuka tanpa izin, siapa saja bisa bergabung dan mengunduh perangkat lunak.
-Keterbukaan ini adalah kekuatan terbesar desentralisasi, tetapi sekaligus melahirkan celah keamanan paling mematikan: Sybil Attack.
-Hari ini kita akan membedah bagaimana Satoshi Nakamoto merancang Proof of Work sebagai jangkar termodinamika pertama di dunia digital.
-Kita akan lihat bagaimana matematika SHA-256, penyesuaian tingkat kesulitan, dan teori permainan ekonomi bersatu membentuk Nakamoto Consensus.
+Selamat datang di modul kedua dari bab Consensus and Game Theory: Proof of Work and Nakamoto Consensus.
+Pada modul sebelumnya, kita telah melihat bahwa algoritma BFT klasik menuntut kita mengetahui jumlah pasti partisipan sejak awal, sebuah syarat yang mustahil dipenuhi di internet terbuka.
+Hari ini kita akan membedah terobosan terbesar Satoshi Nakamoto: bagaimana ia mengikat validitas buku besar digital langsung ke hukum fisika termodinamika dan konsumsi energi di dunia nyata.
+Kita akan melihat bagaimana pencarian hash acak, penyesuaian kesulitan otomatis setiap 2.016 blok, serta insentif ekonomi blok subsidi menciptakan Nash Equilibrium yang memaksa penambang untuk bersikap jujur demi kelangsungan bisnis mereka sendiri.
 
 ---
 
-## Slide 2: Kerentanan Fatal Jaringan Terbuka: Serangan Sybil
+## Slide 2: The Fatal Flaw of Open Networks
 
 ### Konten Slide
-- **Dilema Demokrasi Digital Sederhana:**
-  - Jika sebuah protokol terbuka menerapkan prinsip "satu alamat IP sama dengan satu suara", sistem akan langsung hancur.
-  - Alamat IP dan identitas virtual tidak memiliki biaya kelangkaan fisik di dunia nyata.
-- **Skenario Eksploitasi Serangan Sybil:**
-  - Seorang penyerang dengan dana puluhan dolar dapat menyewa 100.000 mesin virtual di server komputasi cloud.
-  - Setiap mesin virtual mengklaim identitas unik dan membanjiri jaringan dengan suara palsu.
-  - Penyerang menguasai 99 persen hak suara kuorum dan mengesahkan transaksi belanja ganda secara instan.
-- **Kebutuhan Desain:** Protokol terbuka membutuhkan mekanisme distribusi hak konsensus yang tidak memercayai identitas manusia, alamat IP, ataupun otoritas pendaftaran sentral.
-- *Visual:* Diagram satu aktor jahat yang melipatgandakan dirinya menjadi ribuan instans virtual di cloud untuk menguasai kuorum pemungutan suara.
+The Fatal Flaw of Open Networks
+
+1. The Sybil Vulnerability
+- The "1 IP = 1 Vote" Fallacy: In a digital realm lacking physical scarcity, virtual identity is virtually free.
+- The Exploit: An attacker can spin up 100,000 virtual machines for pennies, claiming unique identities to flood the network with fake votes.
+- The Result: The attacker seizes 99% of quorum voting rights, instantly validating double-spend transactions.
+
+2. Douceur's Theorem (2002)
+- The Mathematical Proof: Microsoft Research's John Douceur formalized that open networks cannot survive Sybil attacks without a central identity authority.
+- The Pre-2008 Paradigm: To prevent Sybil attacks, systems required passports, KYC, or central servers-fundamentally breaking the core premise of decentralization.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Mengapa sistem pemungutan suara berbasis satu IP satu suara pasti gagal.
-- Identitas digital sangat murah untuk dipalsukan dalam jumlah masif.
-- Memperkenalkan konsep kerentanan Sybil Attack di jaringan terdistribusi.
+- Cacat mendasar jaringan terbuka: Kerentanan Sybil Attack.
+- Doktrin "1 IP = 1 Suara" gagal total karena identitas virtual sangat murah dibuat.
+- Teorema Douceur (2002): Mustahil mencegah Sybil di jaringan P2P tanpa otoritas verifikasi identitas sentral.
+- Paradigma sebelum 2008: Sistem terpaksa memakai paspor atau server sentral untuk mencegah kecurangan.
 
 **Naskah Tutur (Voiceover Script):**
-Mari kita bayangkan jika Satoshi Nakamoto membuat Bitcoin dengan sistem pemungutan suara sederhana: satu komputer atau satu alamat IP memiliki satu hak suara.
-Sistem seperti itu akan langsung tumbang dalam hitungan detik.
-Di dunia digital, membuat identitas baru tidak membutuhkan biaya kelangkaan fisik sama sekali.
-Seorang penyerang bisa membuka kartu kredit, menyewa ratusan ribu virtual machine murah di penyedia cloud, lalu membanjiri jaringan dengan ratusan ribu identitas palsu.
-Dengan menguasai mayoritas suara semu ini, penyerang bisa dengan mudah menyetujui transaksi palsu dan merampok dana pengguna lain.
-Celah eksploitasi di mana satu entitas memalsukan banyak identitas untuk membajak kuorum dinamakan Sybil Attack.
-Agar uang digital desentralistik bisa bertahan hidup, sistem harus menemukan cara membagikan kekuasaan tanpa pernah memercayai nama, wajah, atau alamat IP siapa pun.
+Sebelum Bitcoin lahir, seluruh upaya membangun uang digital di internet terbuka selalu terbentur satu dinding tebal: kerentanan Sybil Attack.
+Banyak pengembang awal mengira mereka bisa membuat pemungutan suara berbasis satu alamat IP satu suara.
+Ini adalah ilusi berbahaya.
+Di dunia digital yang tidak memiliki kelangkaan fisik, membuat identitas virtual adalah hal yang hampir gratis.
+Seorang penyerang dapat menyewa ratusan ribu mesin virtual di cloud hanya dengan biaya beberapa dolar, lalu membanjiri jaringan dengan jutaan suara palsu untuk merebut kuorum dan mengesahkan transaksi double-spending.
+Pada tahun 2002, peneliti Microsoft John Douceur menerbitkan pembuktian matematis yang dikenal sebagai Douceur's Theorem.
+Teorema ini membuktikan bahwa jaringan terbuka mustahil bertahan dari serangan Sybil tanpa adanya otoritas pendaftar identitas terpusat.
+Selama bertahun-tahun, akademisi mengira bahwa desentralisasi sejati di internet bebas adalah kemustahilan ilmiah.
 
 ---
 
-## Slide 3: Teorema John Douceur (2002) dan Pembuktian Sybil
+## Slide 3: The Nakamoto Solution: The Thermodynamic Anchor
 
 ### Konten Slide
-- **Karya Ilmiah John Douceur (2002):** Peneliti Microsoft Research memformalkan batas ketahanan identitas digital dalam makalah *The Sybil Attack*.
-- **Pernyataan Pembuktian Matematis:**
-  - *"Tanpa keberadaan otoritas sertifikasi identitas yang terpusat, jaringan terbuka terdistribusi tidak akan pernah bisa bertahan dari musuh yang memalsukan identitas virtual tanpa batas untuk mendominasi kuorum."*
-- **Konsekuensi Paradigma:**
-  - Ilmuwan komputer sempat meyakini bahwa sistem terbuka tanpa perantara bank atau pemerintah adalah hal yang mustahil secara teoritis.
-  - Jika ingin mencegah Sybil, Anda harus mewajibkan paspor, kartu identitas, atau server verifikasi terpusat.
-- *Visual:* Ilustrasi gerbang identitas sentral yang menjadi satu-satunya pelindung jaringan sebelum penemuan Nakamoto Consensus.
+The Nakamoto Solution: The Thermodynamic Anchor
+
+Bypassing Identity:
+Satoshi Nakamoto bypassed Douceur's Theorem not by improving identity verification, but by discarding identity entirely.
+
+One Hash, One Vote:
+The network does not care about your IP address, nationality, or node count.
+To submit a valid block, you must provide cryptographic proof of actual computational expenditure.
+
+The Thermodynamic Anchor:
+Computing hashes requires physical silicon chips (ASICs) and real electrical power (kilowatt-hours).
+This anchors voting rights to the unforgeable physical laws of thermodynamics, creating a hard marginal cost for network participation.
+Silicon ASIC Chip -> Physical Energy / kWh -> Cryptographic Hash.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- John Douceur membuktikan secara matematis bahwa jaringan terbuka tidak bisa aman dari Sybil tanpa server pusat.
-- Makalah ini sempat mematikan harapan para peneliti uang digital selama bertahun-tahun.
-- Paradigma yang berlaku: kalau mau mencegah Sybil, harus ada KTP atau sertifikat dari institusi sentral.
+- Solusi Nakamoto: Mengabaikan identitas sama sekali alih-alih mencoba memverifikasinya.
+- Prinsip One Hash, One Vote menggantikan One IP, One Vote.
+- Jangkar Termodinamika: Mengikat hak konsensus langsung ke energi listrik (kWh) dan chip silikon fisik.
+- Menciptakan biaya marjinal nyata yang mustahil dipalsukan di alam semesta.
 
 **Naskah Tutur (Voiceover Script):**
-Pada tahun 2002, seorang ilmuwan komputer di Microsoft Research bernama John Douceur menerbitkan makalah monumental berjudul The Sybil Attack.
-Douceur membuktikan sebuah teorema matematis yang sempat mematahkan semangat para pengembang sistem desentralisasi.
-Ia menyatakan bahwa tanpa adanya otoritas sentral yang bertugas memvalidasi identitas asli seseorang, sebuah sistem terbuka mustahil mempertahankan diri dari serangan identitas palsu.
-Kesimpulan ini sangat telak.
-Artinya, jika kalian ingin jaringan yang aman dari Sybil, kalian wajib memiliki server pendaftaran terpusat yang memeriksa identitas pengguna, seperti sistem paspor atau kartu tanda penduduk.
-Namun memiliki server sentral berarti melenyapkan esensi desentralisasi itu sendiri.
-Inilah dinding tebal yang menghalangi terwujudnya uang digital peer-to-peer selama bertahun-tahun.
+Satoshi Nakamoto memecahkan kebuntuan Teorema Douceur bukan dengan cara mempercanggih sistem identitas digital, melainkan dengan membuang konsep identitas sama sekali dari lapisan konsensus.
+Satoshi memperkenalkan prinsip *One Hash, One Vote*.
+Protokol Bitcoin tidak peduli siapa Anda, apa kewarganegaraan Anda, berapa alamat IP Anda, atau berapa banyak simpul virtual yang Anda nyalakan di komputer Anda.
+Satu-satunya bahasa yang diakui oleh protokol adalah bukti kriptografis bahwa Anda telah mengorbankan kerja komputasi nyata.
+Inilah yang disebut sebagai Jangkar Termodinamika.
+Menghitung hash SHA-256 menuntut mesin fisik berupa chip silikon ASIC dan konsumsi energi listrik riil dalam satuan kilowatt-jam.
+Anda bisa memalsukan satu juta akun email atau alamat IP dalam satu detik, tetapi Anda tidak bisa memalsukan satu watt listrik di alam semesta fisik.
+Hak suara konsensus pun resmi dikunci langsung ke hukum termodinamika bumi.
 
 ---
 
-## Slide 4: Solusi Nakamoto: Mengikat Hak Suara pada Hukum Termodinamika
+## Slide 4: The Cryptographic Engine: Pre-Image Search & Probability
 
 ### Konten Slide
-- **Melewati Batasan Identitas:** Satoshi Nakamoto menyelesaikan teka-teki Sybil bukan dengan memperbaiki verifikasi identitas, melainkan dengan membuang identitas sepenuhnya.
-- **Prinsip "Satu Hash Satu Suara":**
-  - Protokol tidak peduli siapa Anda, apa kewarganegaraan Anda, atau berapa juta node perangkat lunak yang Anda jalankan.
-  - Untuk mengajukan blok baru yang sah, Anda wajib menyertakan bukti kriptografis bahwa komputer Anda telah menghabiskan energi komputasi nyata.
-- **Jangkar Fisik Termodinamika:**
-  - Menghitung hash menuntut chip silikon fisik (ASIC) dan konsumsi daya listrik riil (kilowatt-hour).
-  - Hak suara diikat secara langsung ke hukum termodinamika dunia nyata, menciptakan biaya marjinal yang tidak bisa dipalsukan.
-- *Visual:* Konseptualisasi kabel listrik tegangan tinggi dari pembangkit listrik yang langsung mengalirkan daya ke dalam formula kriptografis blockchain.
+The Cryptographic Engine: Pre-Image Search & Probability
+
+The Pre-Image Search:
+Miners apply a double hash function to an 80-byte block header:
+Block Hash = SHA-256(SHA-256(Header))
+
+The Target (T):
+To be valid, the numerical value of the hash must be strictly less than the dynamic threshold (T).
+Visually, this requires extreme rarity: multiple leading zeroes (e.g., 00000000000000000002a4b5...).
+
+Pure Brute-Force:
+Due to SHA-256's one-way nature and avalanche effect, there is no mathematical shortcut.
+Miners must increment the nonce billions of times.
+
+Memoryless Poisson Process:
+Each hash calculation is an independent Bernoulli trial.
+A machine hashing for 10 hours has the exact same probability of success on its next hash as a machine turned on 1 second ago.
+Past work yields zero future advantage, ensuring absolute consensus fairness.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Satoshi tidak mencari cara memverifikasi KTP di internet, melainkan membuang konsep identitas.
-- Mengganti satu orang satu suara menjadi satu unit hash per detik satu suara.
-- Komputasi membutuhkan listrik nyata yang memiliki biaya fisik di dunia nyata.
+- Mesin kriptografis: Pencarian pre-image hash ganda SHA-256 pada header 80-byte.
+- Target kesulitan (T): Nilai numerik hash harus lebih kecil dari T (menghasilkan leading zeroes).
+- Brute-force murni akibat sifat satu arah dan Avalanche Effect.
+- Proses Poisson tanpa memori (Memoryless): Peluang berhasil selalu independen di setiap detik, menjamin keadilan mutlak antar-penambang.
 
 **Naskah Tutur (Voiceover Script):**
-Langkah jenius Satoshi Nakamoto bukanlah menemukan cara yang lebih canggih untuk memverifikasi siapa manusia di balik layar.
-Satoshi justru membuang konsep identitas manusia sepenuhnya dari protokol konsensus.
-Di dalam Bitcoin, jaringan sama sekali tidak peduli siapa kalian, apa alamat IP kalian, atau berapa banyak aplikasi wallet yang kalian pasang.
-Satoshi memperkenalkan prinsip satu hash satu suara.
-Untuk bisa mengajukan satu blok transaksi baru ke buku besar global, kalian harus menyerahkan bukti matematika bahwa kalian telah membakar energi komputasi.
-Menjalankan komputasi matematika ini menuntut chip fisik silikon di dunia nyata dan membakar daya listrik listrik riil dari gardu pembangkit.
-Karena energi listrik tidak bisa diciptakan dari ketiadaan dan memiliki biaya fisik di dunia nyata, hak suara dalam konsensus tidak bisa lagi dipalsukan dengan menyewa komputer virtual murah.
-Satoshi mengikat kebenaran digital langsung pada hukum termodinamika bumi.
+Bagaimana mesin Proof of Work ini bekerja secara mekanis?
+Para penambang mengambil 80 byte data header blok, lalu menghitung nilai hash ganda SHA-256 berulang kali sambil mengubah nilai nonce.
+Agar sebuah blok dinyatakan sah, nilai numerik dari hash tersebut harus berada di bawah ambang batas target kesulitan yang ditentukan protokol, yang secara visual kita kenal sebagai deretan angka nol di awal hash.
+Karena fungsi hash SHA-256 memiliki sifat satu arah dan efek Avalanche Effect yang sempurna, tidak ada jalan pintas atau rumus rahasia untuk menebak angka tersebut.
+Satu-satunya cara adalah mencoba miliaran kombinasi angka secara acak atau brute-force.
+Proses ini secara matematis mengikuti proses Poisson tanpa memori atau *Memoryless Poisson Process*.
+Setiap percobaan komputasi hash adalah peristiwa acak independen.
+Sebuah mesin tambang raksasa yang sudah menyala selama sepuluh jam memiliki probabilitas keberhasilan yang persis sama di detik berikutnya dengan mesin kecil yang baru dinyalakan satu detik lalu.
+Pekerjaan di masa lalu tidak memberikan akumulasi keunggulan tebakan, memastikan keadilan kompetisi konsensus yang setara bagi seluruh peserta.
 
 ---
 
-## Slide 5: Mekanisme Penambangan: Pencarian Pre-Image dan Target Hash
+## Slide 5: Network Heartbeat: Dynamic Difficulty Adjustment
 
 ### Konten Slide
-- **Teka-Teki Kriptografis (Pre-Image Search):**
-  - Penambang mengambil 80-byte header blok dan menghitung fungsi hash ganda:
-    $$\text{Block Hash} = \text{SHA-256}\big(\text{SHA-256}(\text{Header})\big)$$
-- **Kondisi Validitas Konsensus:**
-  - Hash 256-bit yang dihasilkan wajib bernilai lebih kecil secara numerik daripada ambang batas dinamis yang disebut **Target ($T$)**:
-    $$\text{Block Hash} < T$$
-- **Representasi Leading Zeroes:**
-  - Semakin kecil angka target $T$, semakin banyak deretan angka nol biner di awal karakter hash.
-  - Menemukan hash yang diawali belasan angka nol seperti $\mathtt{00000000000000000002a4b5\dots}$ adalah peristiwa yang luar biasa langka.
-- **Metode Brute-Force Murni:** Karena sifat *one-way* dan *avalanche effect* pada SHA-256, tidak ada jalan pintas selain menebak nilai *nonce* satu per satu secara acak.
-- *Visual:* Diagram siklus komputasi header: menguji nonce 0, mengecek target, menaikkan nonce, hingga menemukan hash yang valid.
+Network Heartbeat: Dynamic Difficulty Adjustment
+
+The Data Propagation Limit:
+If the Target remained static as millions of ASICs joined, blocks would be found in milliseconds.
+This would trigger catastrophic fork storms and storage bloat.
+
+The 600-Second Anchor:
+The protocol is engineered to maintain a strict average block discovery interval of 10 minutes (600 seconds) to ensure healthy data propagation globally.
+
+The 2016-Block Retargeting:
+Every two weeks (exactly 2,016 blocks), all global full nodes independently recalculate the difficulty target based on the actual time it took to mine the last 2,016 blocks:
+New Target = Old Target * (Actual Time / 1,209,600 seconds)
+
+Clamping Bounds:
+To prevent extreme manipulation, the adjustment ratio is hard-capped: it can only increase by a maximum of 4x or decrease to 1/4 per epoch.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Menjelaskan matematika di balik penambangan: double-SHA-256 pada header blok.
-- Hash yang dihasilkan harus lebih kecil dari angka Target.
-- Tidak ada rumus cepat: satu-satunya cara adalah menebak angka nonce secara brute-force.
+- Detak jantung jaringan: Mengapa interval blok harus stabil di 10 menit (600 detik).
+- Penyesuaian kesulitan otomatis setiap 2.016 blok (~2 minggu).
+- Rumus rasio penyesuaian: Waktu riil dibagi waktu target 1.209.600 detik.
+- Batas proteksi (clamping bounds): Perubahan dibatasi maksimal 4 kali lipat naik atau 1/4 turun.
 
 **Naskah Tutur (Voiceover Script):**
-Bagaimana cara sebuah komputer membuktikan kepada dunia bahwa ia telah melakukan kerja komputasi nyata?
-Komputer penambang menjalankan teka-teki kriptografi yang disebut pre-image search.
-Penambang merangkai delapan puluh byte data header blok, lalu menghitung fungsi hash ganda menggunakan algoritma SHA-256.
-Agar blok tersebut diakui sah oleh seluruh node di dunia, angka hash yang dihasilkan harus bernilai lebih kecil daripada batas angka Target yang ditetapkan protokol.
-Karena angka Target ini sangat kecil, secara visual hash blok yang valid akan terlihat diawali oleh belasan angka nol berturut-turut.
-Karena sifat fungsi hash SHA-256 yang satu arah dan tidak bisa dibalik, tidak ada rumus matematika atau kecerdasan buatan mana pun yang bisa memprediksi angka mana yang akan menghasilkan hash valid.
-Satu-satunya metode di muka bumi untuk menemukannya adalah brute-force: tebak angka nonce acak, hitung hash-nya, periksa apakah angkanya lebih kecil dari Target, dan ulangi miliaran kali per detik hingga berhasil.
+Namun, ada satu masalah besar: bagaimana jika jutaan mesin tambang baru mendadak bergabung ke jaringan?
+Jika target matematika bersifat kaku, daya komputasi yang melonjak akan membuat blok ditemukan dalam hitungan milidetik, memicu badai percabangan rantai dan ledakan data.
+Sebaliknya, jika separuh penambang mematikan mesin mereka, jaringan akan membeku.
+Untuk menjaga kestabilan, Bitcoin menciptakan mekanisme homeostatis yang disebut *Dynamic Difficulty Adjustment*.
+Protokol dirancang untuk mengunci interval penemuan blok rata-rata pada angka sepuluh menit atau enam ratus detik, waktu yang ideal agar blok dapat merambat mulus melintasi kabel bawah laut ke seluruh dunia.
+Setiap 2.016 blok atau sekitar dua pekan sekali, seluruh simpul di dunia secara otomatis menghitung ulang target kesulitan.
+Jika 2.016 blok sebelumnya ditemukan lebih cepat dari dua minggu, target diperkecil sehingga penambangan menjadi lebih sulit.
+Jika ditemukan lebih lambat, target dinaikkan.
+Untuk mencegah manipulasi ekstrem, protokol memasang batas pengaman: tingkat kesulitan hanya boleh melonjak maksimal empat kali lipat atau turun maksimal seperempat kali lipat dalam satu periode penyesuaian.
 
 ---
 
-## Slide 6: Karakteristik Matematis: Proses Poisson Tanpa Memori (Memoryless)
+## Slide 6: The Economic Engine: Nash Equilibrium in Mining
 
 ### Konten Slide
-- **Proses Acak Poisson (Bernoulli Trials):**
-  - Setiap perhitungan hash adalah uji coba independen dengan probabilitas sukses $p = \frac{T}{2^{256}}$.
-  - Hasil perhitungan hash saat ini sama sekali tidak memiliki korelasi dengan tebakan sebelumnya ataupun masa depan.
-- **Sifat Memoryless (Tanpa Memori):**
-  - Mesin penambang yang sudah menyala dan menghitung selama sepuluh jam berturut-turut memiliki peluang sukses yang sama persis di milidetik berikutnya dengan mesin yang baru dinyalakan satu detik lalu.
-  - Kerja masa lalu tidak bisa ditimbun atau diakumulasikan untuk menjamin kemenangan di masa depan.
-- **Dampak Keadilan Konsensus:**
-  - Menjamin seleksi pembuat blok berlangsung adil, terdesentralisasi, dan bebas manipulasi antrean.
-- *Visual:* Kurva distribusi probabilitas eksponensial proses Poisson yang menunjukkan ketidaktergantungan waktu antar-kejadian penemuan blok.
+The Economic Engine: Nash Equilibrium in Mining
+
+Profit-Maximizing Actors:
+Miners are not volunteers; they are driven purely by financial incentive, investing massive fiat Capital Expenditure (silicon) and Operational Expenditure (electricity).
+
+The Reward Architecture:
+Honest blocks earn the Coinbase Block Subsidy (newly minted coins) plus user Transaction Fees.
+
+Mathematical Honesty (Game Theory):
+- Honest Path (Valid Block): Block accepted by global full nodes -> Net Profit (Subsidy + Fees).
+- Cheat Path (Invalid Block, e.g., Fake Tx): Block instantly rejected by independent full nodes -> 100% OpEx Loss (electricity wasted with zero reward).
+
+Conclusion: Nash Equilibrium enforces honesty because cheating is economically suicidal.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Setiap tebakan hash berdiri sendiri sebagai percobaan independen.
-- Penambangan adalah proses acak Poisson yang tidak memiliki memori masa lalu.
-- Mesin yang menambang seharian tidak punya keunggulan probabilitas dibanding mesin yang baru colok listrik.
+- Penambang adalah aktor ekonomi rasional pemburu laba, bukan sukarelawan dermawan.
+- Struktur insentif: Subsidi blok Coinbase ditambah biaya transaksi pengguna.
+- Teori permainan Nash Equilibrium: Bersikap jujur menghasilkan laba bersih, berbuat curang menghasilkan kerugian listrik 100 persen tanpa imbalan.
 
 **Naskah Tutur (Voiceover Script):**
-Salah satu sifat matematis paling krusial dari penambangan Proof of Work adalah sifatnya yang merupakan proses Poisson tanpa memori atau memoryless.
-Setiap kali mesin penambang menghitung satu hash, itu adalah percobaan independen yang murni acak, seperti melempar dadu raksasa bersisi dua pangkat dua ratus lima puluh enam.
-Artinya, mesin penambang raksasa yang sudah bekerja keras membakar listrik selama sepuluh jam berturut-turut memiliki peluang yang persis sama untuk memenangkan blok berikutnya dengan laptop kecil yang baru dicolok ke listrik satu detik yang lalu.
-Kalian tidak bisa menabung atau menimbun hasil tebakan lama untuk dipakai curang di masa depan.
-Ketiadaan memori ini adalah kunci utama yang menjamin keadilan sistem konsensus.
-Tidak ada jadwal giliran yang bisa diprediksi, dan tidak ada peserta yang bisa mencurangi sistem dengan menyimpan kerja komputasi masa lalu secara sembunyi-sembunyi.
+Kejeniusan sejati Satoshi Nakamoto bukanlah pada algoritmanya, melainkan pada rancangan ekonominya.
+Penambang bukanlah relawan idealis yang beramal demi kemanusiaan.
+Penambang adalah entitas bisnis rasional yang menginvestasikan miliaran rupiah modal belanja perangkat keras dan tagihan listrik bulanan untuk mengejar laba.
+Satoshi menyelaraskan keserakahan ekonomi ini menjadi benteng keamanan protokol melalui konsep *Nash Equilibrium*.
+Penambang yang menambang blok jujur akan dihadiahi koin baru lewat subsidi Coinbase serta komisi biaya transaksi.
+Namun, apa yang terjadi jika penambang mencoba curang, misalnya menyisipkan transaksi palsu untuk mencuri saldo orang lain?
+Seluruh simpul penuh di dunia akan mendeteksi kecurangan matematika tersebut dan langsung menolak blok itu seketika.
+Blok penyerang menjadi sampah tak bernilai.
+Penambang tersebut menderita kerugian seratus persen biaya listrik yang telah ia bakar tanpa mendapatkan sepeser koin pun.
+Aturan ekonomi ini membuat tindakan berbuat curang menjadi bunuh diri finansial, menjadikan kejujuran sebagai satu-satunya strategi bisnis yang paling menguntungkan.
 
 ---
 
-## Slide 7: Dynamic Difficulty Adjustment: Mengendalikan Detak Jantung Jaringan
+## Slide 7: Hardware Evolution: The Race for Thermodynamic Efficiency
 
 ### Konten Slide
-- **Tantangan Fluktuasi Daya Komputasi:**
-  - Jika target $T$ bersifat statis dan kaku, penambahan jutaan mesin penambang baru akan membuat blok ditemukan dalam hitungan milidetik.
-  - Interval blok yang terlalu cepat memicu badai percabangan (*forks*) dan ledakan kapasitas penyimpanan data.
-- **Target Waktu Blok 10 Menit:** Protokol Bitcoin dirancang untuk mempertahankan interval rata-rata penemuan blok setiap 600 detik.
-- **Formula Penyesuaian Setiap 2.016 Blok:**
-  - Setiap dua minggu sekali (2.016 blok), seluruh full node di dunia menghitung ulang target secara mandiri:
-    $$T_{\text{baru}} = T_{\text{lama}} \times \left( \frac{\text{Waktu Nyata 2.016 Blok Terakhir}}{20.160 \text{ menit}} \right)$$
-- **Batas Pengaman (Clamping Bounds):** Rasio penyesuaian dibatasi maksimal naik 4 kali lipat atau turun hingga seperempat ($\frac{1}{4} \le \frac{T_{\text{baru}}}{T_{\text{lama}}} \le 4$).
-- *Visual:* Diagram umpan balik otomatis: hashrate global naik memicu Target mengecil (lebih sulit), menjaga interval blok kembali stabil ke 10 menit.
+Hardware Evolution: The Race for Thermodynamic Efficiency
+
+The Eras of Hashing:
+1. CPU Era (2009-2010): Standard consumer processors. Measured in kilohashes per second.
+2. GPU Era (2010-2012): Utilization of parallel Arithmetic Logic Units (ALUs). Achieved a 100x leap in speed.
+3. FPGA Era (2012-2013): Reconfigurable logic gates programmed specifically to optimize electrical efficiency.
+4. ASIC Era (2013-Present): Application-Specific Integrated Circuits. Permanent SHA-256 silicon circuits measured in terahashes and exahashes.
+
+Key Insight: Absolute Specialization:
+Modern ASICs cannot run basic computing tasks (cannot browse the web or run an OS), but possess unmatched, billion-fold thermodynamic efficiency exclusively for hashing.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Waktu blok harus dijaga rata-rata 10 menit demi stabilitas propagasi data.
-- Formula retarget dieksekusi independen oleh seluruh node setiap 2.016 blok (~2 minggu).
-- Pembatasan rasio penyesuaian maksimal 4x untuk mencegah manipulasi timestamp ekstrem.
+- Evolusi perangkat keras tambang: CPU -> GPU -> FPGA -> ASIC.
+- GPU melipatgandakan kecepatan 100 kali lipat lewat ribuan inti ALU paralel.
+- ASIC (2013-sekarang): Sirkuit terpadu silikon permanen khusus algoritma SHA-256.
+- Spesialisasi mutlak: ASIC tidak bisa menjalankan sistem operasi biasa, tapi efisiensi hashingnya miliaran kali lipat lebih hemat energi.
 
 **Naskah Tutur (Voiceover Script):**
-Bayangkan apa yang terjadi jika angka target kesulitan Bitcoin dibuat statis dan tidak pernah berubah sejak tahun 2009.
-Pada masa awal, hanya ada segelintir laptop yang menambang sehingga butuh waktu lama untuk menemukan blok.
-Namun hari ini, dengan jutaan chip penambang superkomputer di seluruh dunia, blok baru akan selesai dalam hitungan pecahan milidetik.
-Jika blok diproduksi secepat itu, jaringan internet global tidak akan sempat menyebarkannya, memicu percabangan rantai yang kacau balau.
-Untuk menjaga agar detak jantung Bitcoin tetap stabil rata-rata sepuluh menit per blok, Satoshi menyematkan mekanisme Dynamic Difficulty Adjustment.
-Setiap dua ribu enam belas blok, atau sekitar dua minggu sekali, setiap full node di dunia secara otomatis menghitung ulang target kesulitan.
-Jika penambang menemukan blok lebih cepat dari jadwal dua minggu, target diturunkan sehingga teka-teki menjadi lebih sulit.
-Jika penambang mematikan mesin dan blok melambat, teka-teki secara otomatis dipermudah kembali ke rata-rata sepuluh menit.
+Kompetisi ekonomi ini memicu perlombaan senjata perangkat keras paling dahsyat dalam sejarah komputasi.
+Pada tahun 2009, penambangan Bitcoin hanya menggunakan prosesor CPU komputer meja biasa dengan kecepatan kilohash per detik.
+Pada tahun 2010, para insinyur menyadari bahwa chip kartu grafis atau GPU memiliki ribuan inti aritmatika paralel yang mampu menghitung hash seratus kali lebih cepat dibanding CPU.
+Dua tahun kemudian, era beralih ke FPGA, chip yang gerbang logikanya dapat diprogram ulang khusus untuk komputasi hash.
+Dan puncaknya sejak tahun 2013 hingga hari ini adalah era ASIC atau *Application-Specific Integrated Circuit*.
+Chip ASIC adalah sirkuit silikon yang dipahat mati di pabrik semikonduktor murni hanya untuk mengeksekusi rumus matematika SHA-256.
+Sebuah chip ASIC tidak bisa dipakai mengetik dokumen, menjelajah internet, atau bermain game.
+Namun untuk urusan menghitung hash, efisiensi energi dan kecepatannya mencapai miliaran kali lipat lebih dahsyat dibanding komputer konvensional tercanggih di dunia.
 
 ---
 
-## Slide 8: Penyelarasan Insentif Ekonomi dan Nash Equilibrium
+## Slide 8: The Boundary of Security: 51% Reorganization Attacks
 
 ### Konten Slide
-- **Penambang Bukan Relawan:** Penambang beroperasi atas dasar motif keuntungan finansial murni (*profit-maximizing actors*).
-- **Struktur Biaya Nyata Penambang:**
-  - *Capital Expenditure (CapEx):* Pembelian perangkat keras mesin penambang silikon.
-  - *Operational Expenditure (OpEx):* Tagihan bulanan listrik pembangkit dan pendingin fasilitas.
-- **Arsitektur Imbalan Dua Jalur:**
-  - *Coinbase Block Subsidy:* Pencetakan koin baru di transaksi pertama blok (mengalami *halving* setiap 210.000 blok).
-  - *Transaction Fees:* Selisih nilai input dan output transaksi yang dibayar pengguna.
-- **Nash Equilibrium Penambangan Jujur:**
-  - Jika penambang mencoba berbuat curang dengan memasukkan transaksi palsu, full node akan langsung menolak blok tersebut.
-  - Penambang curang menanggung kerugian seratus persen biaya listrik tanpa mendapatkan imbalan sepeser pun.
-- *Visual:* Diagram pohon keputusan ekonomi penambang: jalur jujur menghasilkan laba bersih, jalur curang menghasilkan kerugian listrik mutlak.
+The Boundary of Security: 51% Reorganization Attacks
+
+The Majority Threshold:
+What happens if a single entity or cartel controls >50% of global hashrate?
+They compute Proof of Work faster than the entire combined honest network.
+
+The Attack Execution:
+1. Attacker sends a multi-million dollar deposit to an exchange on the public chain.
+2. Simultaneously, they secretly mine an isolated parallel chain omitting this deposit.
+3. The exchange confirms the public deposit and the attacker cashes out fiat currency.
+4. The attacker broadcasts their heavier, secret chain to the global network.
+
+The Longest-Chain Rule Override:
+Global nodes are mathematically bound to adopt the heaviest valid chain.
+The original deposit block is orphaned and wiped from history, executing a devastating double-spend.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Penambang mengeluarkan uang fiat nyata untuk membeli mesin dan membayar listrik.
-- Imbalan penambang: subsidi koin baru plus biaya transaksi.
-- Berbuat curang membuat penambang rugi 100 persen biaya listrik karena blok ditolak oleh full node.
+- Batas keamanan Nakamoto Consensus: Ambang batas mayoritas 51 persen hashrate.
+- Kartel 51 persen mampu menambang rantai privat lebih cepat dibanding gabungan seluruh penambang jujur dunia.
+- Menjelaskan eksekusi serangan double-spend 51 persen terhadap bursa kripto.
+- Rantai privat menimpa rantai publik melalui aturan Heaviest-Chain.
 
 **Naskah Tutur (Voiceover Script):**
-Proof of Work bukan semata-mata algoritma matematika, melainkan sebuah mesin insentif ekonomi berbasis teori permainan.
-Para penambang di jaringan Bitcoin tidak bekerja atas dasar kebaikan hati atau sifat sukarela.
-Mereka adalah pelaku bisnis yang ingin memaksimalkan keuntungan finansial.
-Mereka mengeluarkan modal besar untuk membeli chip penambang dan membayar tagihan listrik jutaan dolar setiap bulan dalam mata uang fiat.
-Satu-satunya cara untuk mengembalikan modal tersebut adalah jika blok yang mereka buat diterima secara sah oleh jaringan sehingga mereka berhak mencairkan imbalan blok dan biaya transaksi.
-Di sinilah letak kejeniusan Nash Equilibrium pada Nakamoto Consensus.
-Jika seorang penambang mencoba berbuat curang, misalnya mencoba membelanjakan koin orang lain, ribuan full node mandiri di seluruh dunia akan langsung membuang blok tersebut ke tempat sampah.
-Akibatnya, penambang curang itu membakar listrik secara sia-sia dan menanggung kerugian total tanpa menerima imbalan satu koin pun.
-Kejujuran dibuat jauh lebih menguntungkan daripada kecurangan secara matematis.
+Meskipun sistem ini sangat tangguh, Nakamoto Consensus memiliki satu batasan matematis mutlak: batas keamanan lima puluh satu persen.
+Apa yang terjadi jika sebuah entitas atau kartel penambang berhasil menguasai lebih dari lima puluh persen dari total hashrate dunia?
+Secara probabilitas matematika, kartel tersebut dijamin mampu menghasilkan blok lebih cepat dibandingkan gabungan seluruh penambang jujur lainnya di planet bumi.
+Dengan keunggulan ini, penyerang dapat mengeksekusi *51% Reorganization Attack*.
+Penyerang mendepositkan koin bernilai jutaan dolar ke sebuah bursa di rantai publik.
+Pada detik yang sama, mereka secara diam-diam menambang rantai privat rahasia yang tidak mencantumkan deposit tersebut.
+Begitu pihak bursa menganggap transaksi selesai dan mencairkan uang tunai ke tangan penyerang, penyerang menyiarkan rantai privat rahasianya yang sudah lebih panjang ke publik.
+Tunduk pada aturan Heaviest-Chain, seluruh komputer di dunia terpaksa membuang rantai lama dan mengadopsi rantai penyerang.
+Catatan deposit bursa terhapus selamanya dari sejarah, dan aksi pencurian double-spending berskala masif pun berhasil dilancarkan.
 
 ---
 
-## Slide 9: Batas Keamanan: Serangan Reorganisasi 51 Persen
+## Slide 9: Absolute Limits: The Power of a 51% Attacker
 
 ### Konten Slide
-- **Ambang Batas Keamanan Mayoritas:** Apa yang terjadi jika satu entitas atau kartel menguasai lebih dari separuh daya komputasi global ($q > 0.5$)?
-- **Mekanisme Serangan Reorganisasi Rahasia:**
-  - Penyerang mengirim transaksi deposit ratusan juta dolar ke bursa kripto di rantai publik.
-  - Secara bersamaan, penyerang menambang rantai tandingan secara rahasia di tempat terisolasi tanpa menyertakan deposit tersebut.
-  - Penyerang mencairkan uang tunai dari bursa setelah beberapa konfirmasi blok.
-  - Penyerang menyiarkan rantai rahasianya yang memiliki akumulasi kesulitan lebih tinggi ke publik.
-  - Node global mematuhi *longest-chain rule* dan mengadopsi rantai penyerang (*chain reorganization*), menghapus riwayat deposit awal.
-- *Visual:* Diagram urutan waktu serangan 51 persen: percabangan rantai publik vs rantai privat penyerang yang membatalkan deposit bursa.
+Absolute Limits: The Power of a 51% Attacker
+
+What They CAN Do:
+- Double-Spend: Reverse their own recent transactions to defraud counterparties.
+- Censorship: Intentionally refuse to include specific users' transactions in new blocks.
+- Monopolize Rewards: Sweep all newly created block subsidies and fees by continuously orphaning honest blocks.
+
+What They CANNOT Do:
+- Steal User Funds: Cannot move other users' coins without possessing their cryptographic private keys.
+- Alter Deep History: Cannot rewrite ancient transaction history buried deep before the fork point.
+- Change Consensus Rules: Cannot alter the 21-million supply cap or invalid emission schedules. Independent full nodes will instantly reject blocks violating core mathematics, regardless of hash power.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Serangan 51 persen terjadi jika penambang menguasai lebih dari 50 persen hashrate global.
-- Modus serangan: menambang rantai privat secara rahasia untuk membatalkan pembayaran (double-spending).
-- Memanfaatkan longest-chain rule untuk memaksa jaringan melakukan reorganisasi sejarah.
+- Membedah mitos serangan 51%: Apa yang bisa dan TIDAK BISA dilakukan penyerang.
+- Yang bisa dilakukan: Membalik transaksi mereka sendiri (double-spend), menyensor transaksi, dan memonopoli subsidi blok.
+- Yang TIDAK BISA dilakukan: Mencuri saldo orang lain (terkunci kunci privat), mengubah sejarah masa lalu yang dalam, dan mengubah aturan suplai 21 juta koin.
+- Simpul validator independen tetap menjadi hakim tertinggi yang menolak blok curang.
 
 **Naskah Tutur (Voiceover Script):**
-Meskipun arsitektur Nakamoto sangat tangguh, sistem ini memiliki batas keamanan fisik yang jelas, yaitu serangan lima puluh satu persen.
-Jika satu entitas tunggal atau kartel penambang berhasil menguasai lebih dari separuh total daya komputasi global, mereka bisa menghitung hash lebih cepat daripada gabungan seluruh penambang jujur di bumi.
-Dengan keunggulan ini, penyerang bisa melancarkan aksi reorganisasi rantai.
-Penyerang bisa mengirimkan dana deposit ratusan juta dolar ke bursa di rantai publik yang dilihat semua orang.
-Tetapi di ruang tertutup, penyerang secara diam-diam menambang rantai tandingan rahasia yang tidak mencatat pengiriman deposit tersebut.
-Begitu pihak bursa mengonfirmasi transaksi dan mencairkan uang tunai ke rekening penyerang, penyerang tiba-tiba menyiarkan rantai rahasianya ke internet.
-Karena rantai rahasia penyerang memiliki akumulasi bukti kerja yang lebih berat, aturan rantai terpanjang memaksa seluruh komputer di dunia beralih ke rantai tersebut.
-Transaksi deposit bursa terhapus dari sejarah, dan penyerang berhasil menggandakan uangnya.
+Banyak orang salah paham dan mengira bahwa jika seseorang menguasai lima puluh satu persen hashrate, mereka menjadi tuhan di blockchain yang bisa melakukan apa saja.
+Ini adalah mitos yang keliru secara teknis.
+Penyerang 51% memang dapat membalik transaksi mereka sendiri untuk menipu mitra dagang, menyensor transaksi pihak tertentu, dan memonopoli hadiah blok dengan membuang blok penambang lain.
+Namun, ada hal-hal mendasar yang mustahil dilakukan oleh penyerang 51%.
+Penyerang tidak bisa mencuri saldo koin milik pengguna lain, karena saldo tersebut dilindungi oleh kunci privat kriptografi asimetris yang tidak dapat dipalsukan oleh daya komputasi.
+Penyerang tidak bisa mengubah sejarah transaksi masa lalu yang tertimbun ribuan blok di belakang.
+Dan yang terpenting, penyerang tidak bisa mengubah aturan konsensus dasar seperti batas pasokan 21 juta Bitcoin.
+Jika penyerang mencetak blok yang melanggar aturan matematika, jutaan simpul validator independen di seluruh dunia akan langsung menolak blok tersebut sebagai data sampah, seberapa pun besarnya daya listrik yang telah dibakar oleh penyerang.
 
 ---
 
-## Slide 10: Apa yang Bisa dan Tidak Bisa Dilakukan Penyerang 51 Persen
+## Slide 10: The Honesty Vulnerability: Selfish Mining
 
 ### Konten Slide
-- **Mitos Serangan 51 Persen:** Banyak pihak salah mengira bahwa menguasai 51 persen daya komputasi memberikan kendali seperti tuhan (*god mode*).
-- **Tindakan yang BISA Dilakukan Penyerang:**
-  - Membatalkan transaksi pengeluaran milik penyerang sendiri dalam rentang waktu terdekat (*double-spending*).
-  - Melakukan sensor transaksi dengan menolak memasukkan transaksi pengguna tertentu ke dalam blok.
-  - Memonopoli pembuatan blok baru dan menyapu seluruh imbalan koin.
-- **Tindakan yang TIDAK PERNAH BISA Dilakukan Penyerang:**
-  - Mencuri saldo koin dari dompet pengguna lain (karena tidak memiliki kunci privat kriptografi).
-  - Mengubah riwayat transaksi kuno yang tertanam jauh di masa lalu sebelum titik percabangan.
-  - Mengubah aturan konsensus sistem (misalnya mencetak 100 juta koin di luar batas emisi).
-- *Visual:* Matriks pembatas dua kolom yang mempertegas batas wewenang fisik penambang vs aturan mutlak full node kriptografi.
+The Honesty Vulnerability: Selfish Mining
+
+The Eyal & Sirer Proof (2014):
+Cornell researchers proved that strict adherence to protocol honesty is not always the optimal game-theoretic strategy for large mining pools.
+
+The Tactic:
+A selfish pool discovers valid blocks but intentionally hides them to build a private lead.
+When the honest network finds a block, the selfish pool simultaneously broadcasts its longer secret chain.
+
+The Damage:
+This forces the network to adopt the selfish chain, "orphaning" the honest blocks and wasting the honest miners' electricity.
+This artificially inflates the selfish pool's proportional reward share.
+
+The Danger Threshold:
+Mathematically, this tactic becomes reliably profitable if a single pool commands between 25% and 33% of global hash power.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Klarifikasi mitos: menguasai 51 persen bukan berarti bisa berbuat segalanya.
-- Penyerang hanya bisa membatalkan transaksi miliknya sendiri dan menyensor blok.
-- Penyerang tidak bisa mencuri koin orang lain atau mengubah aturan emisi karena full node akan menolak.
+- Penemuan Selfish Mining oleh Eyal dan Sirer dari Cornell University (2014).
+- Membuktikan bahwa kepatuhan jujur pada protokol tidak selalu menjadi strategi optimal bagi kolam tambang besar.
+- Taktik: Menyembunyikan blok baru secara diam-diam, lalu menyiarkannya tepat saat penambang jujur menemukan blok untuk membuang energi mereka.
+- Ambang batas bahaya: Menguntungkan secara matematis jika kolam menguasai 25 hingga 33 persen hashrate dunia.
 
 **Naskah Tutur (Voiceover Script):**
-Sering kali ada kesalahpahaman besar di kalangan masyarakat bahwa penyerang lima puluh satu persen bisa mengacak-acak sistem sesuka hati layaknya admin bank.
-Ini adalah mitos yang keliru.
-Kalian harus memahami batasan tegas apa yang bisa dan tidak bisa dilakukan oleh penyerang mayoritas.
-Penyerang lima puluh satu persen memang bisa membatalkan transaksi belanja miliknya sendiri dan menyensor transaksi orang lain agar tidak masuk ke blok.
-Tetapi penyerang sama sekali tidak bisa mencuri saldo dari dompet kalian, karena mereka tidak memiliki tanda tangan kunci privat kalian.
-Penyerang juga tidak bisa mengubah aturan fundamental moneter, misalnya mencetak seratus juta koin baru dari ketiadaan.
-Mengapa?
-Karena ribuan full node milik pedagang dan pengguna biasa akan memvalidasi blok tersebut secara independen.
-Jika sebuah blok melanggar aturan matematika, full node akan langsung menolaknya mentah-mentah, tidak peduli seberapa besar daya komputasi yang dibakar di belakang blok tersebut.
+Pada tahun 2014, dua peneliti dari Cornell University, Ittay Eyal dan Emin Gun Sirer, mengguncang dunia kriptografi dengan menerbitkan makalah tentang *Selfish Mining*.
+Mereka membuktikan bahwa asumsi Satoshi Nakamoto bahwa penambang selalu paling untung bersikap jujur ternyata memiliki celah teori permainan.
+Dalam taktik selfish mining, sebuah kolam tambang besar yang menemukan blok baru sengaja menyembunyikan blok tersebut dari publik untuk membangun keunggulan di rantai rahasia.
+Tepat saat jaringan jujur berhasil menemukan blok tandingan, kolam selfish langsung menyiarkan rantai rahasianya yang lebih panjang.
+Akibatnya, blok milik penambang jujur terbuang menjadi orphan dan energi listrik mereka hangus sia-sia.
+Dengan taktik licik ini, kolam selfish berhasil memperbesar proporsi perolehan hadiah blok mereka secara tidak wajar.
+Makalah tersebut membuktikan bahwa taktik ini mulai menguntungkan bukan pada angka 51 persen, melainkan ketika sebuah kolam tambang berhasil menguasai antara dua puluh lima hingga tiga puluh tiga persen hashrate global.
 
 ---
 
-## Slide 11: Selfish Mining: Ketika Kejujuran Bukan Strategi Optimal
+## Slide 11: The Thermodynamic Cost & The Paradigm Shift
 
 ### Konten Slide
-- **Penemuan Eyal dan Sirer (2014):** Peneliti Cornell membuktikan bahwa penambangan jujur tidak selalu menjadi strategi optimal bagi kolam penambang besar.
-- **Mekanisme Serangan Selfish Mining:**
-  - Kolam penambang egois menemukan blok baru tetapi sengaja menyembunyikannya dari jaringan publik.
-  - Kolam terus menambang blok berikutnya di atas blok rahasianya untuk membangun keunggulan jarak.
-  - Saat jaringan jujur menemukan satu blok, penambang egois langsung menyiarkan rantai rahasianya ke internet.
-  - Rantai egois yang lebih panjang membuat blok penambang jujur hangus (*orphaned*), menyia-nyiakan listrik mereka.
-- **Batas Ambang Keuntungan:**
-  - Serangan ini terbukti menguntungkan secara matematis jika sebuah kolam menguasai 25 hingga 33 persen kekuatan hash global.
-- *Visual:* Alur percabangan waktu yang menggambarkan blok rahasia penambang egois menyalip blok jujur dan memicu orphan block.
+The Thermodynamic Cost & The Paradigm Shift
+
+The Thermodynamic Toll:
+Proof of Work flawlessly solves the Sybil vulnerability, but the physical anchor exacts a heavy systemic cost:
+- Global Footprint: Energy consumption rivaling medium-sized nations.
+- Industrial Centralization: The relentless hardware arms race centralizes mining into massive corporate data centers.
+- Fiat Sell-Pressure: Miners are forced to constantly sell block rewards into the open market to cover fiat electricity bills.
+
+The Core Question:
+Can we secure an open ledger without burning physical energy?
+Can on-chain digital capital replace real-world thermodynamic mass?
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Makalah Eyal dan Sirer 2014 membuktikan celah pada asumsi kejujuran penambang.
-- Taktik menyembunyikan blok baru untuk membuat listrik penambang jujur terbuang sia-sia.
-- Strategi ini menjadi menguntungkan jika sebuah mining pool menguasai minimal 25 persen hashrate.
+- Biaya sistemik Proof of Work: Konsumsi energi setara negara menengah dan tekanan sentralisasi industri.
+- Tekanan jual fiat: Penambang terpaksa terus menjual koin untuk membayar tagihan listrik operasional.
+- Pergeseran paradigma: Bisakah kita mengamankan buku besar tanpa membakar energi fisik?
 
 **Naskah Tutur (Voiceover Script):**
-Pada tahun 2014, dua peneliti bernama Ittay Eyal dan Emin Gün Sirer menerbitkan penelitian yang sempat mengguncang asumsi dasar Bitcoin.
-Mereka membuktikan bahwa bagi kolam penambang yang memiliki kekuatan besar, mengikuti aturan jujur bukanlah strategi yang paling menguntungkan.
-Strategi ini dikenal sebagai Selfish Mining.
-Ketika sebuah kolam penambang egois menemukan blok yang sah, mereka sengaja tidak menyiarkannya ke publik melainkan menyimpannya secara rahasia.
-Mereka kemudian diam-diam menambang blok kedua di atas blok rahasia tersebut.
-Begitu para penambang jujur di belahan dunia lain berhasil menemukan blok tandingan, penambang egois secara serentak merilis blok-blok rahasianya ke publik.
-Karena rantai mereka lebih panjang, jaringan mengadopsi blok mereka dan membuang blok penambang jujur ke tempat sampah.
-Daya listrik penambang jujur terbuang percuma, dan pangsa imbalan sang penambang egois meningkat secara proporsional.
-Eyal dan Sirer membuktikan trik ini mulai menguntungkan jika sebuah kolam menguasai antara dua puluh lima hingga tiga puluh tiga persen daya komputasi dunia.
+Proof of Work telah membuktikan dirinya selama lebih dari satu dekade sebagai mesin konsensus paling teruji di bumi.
+Namun, perlindungan termodinamika ini harus dibayar dengan biaya sistemik yang sangat mahal.
+Konsumsi listrik jaringan Proof of Work kini menyaingi kebutuhan energi negara-negara berkembang.
+Perlombaan perangkat keras ASIC memusatkan kekuatan tambang ke tangan konglomerasi pusat data raksasa di dekat pembangkit listrik murah.
+Selain itu, penambang terpaksa terus-menerus menjual koin hasil tambang mereka ke pasar fiat untuk membayar tagihan listrik bulanan.
+Kenyataan ini melahirkan pertanyaan rekayasa terbesar dekade ini: bisakah kita mengamankan konsensus buku besar tanpa membakar energi fisik?
+Bisakah modal aset digital di atas rantai menggantikan peran listrik termodinamika?
 
 ---
 
-## Slide 12: Evolusi Perangkat Keras: Dari CPU Konsumen ke Sirkuit ASIC
+## Slide 12: Bridge to the Next Module: Proof of Stake and Finality Gadgets
 
 ### Konten Slide
-- **Transformasi Industri Silikon (Empat Era Penambangan):**
-  - **1. Era CPU (2009-2010):** Penambangan berjalan di prosesor komputer desktop standar (satuan kilohashes per detik).
-  - **2. Era GPU (2010-2012):** Kartu grafis memanfaatkan ribuan Arithmetic Logic Units (ALUs) paralel, menghasilkan lompatan kecepatan 100 kali lipat.
-  - **3. Era FPGA (2012-2013):** Sirkuit gerbang logika terprogram (*reconfigurable gates*) untuk mengoptimalkan efisiensi energi listrik.
-  - **4. Era ASIC (2013-Sekarang):** *Application-Specific Integrated Circuits* mencetak sirkuit logika SHA-256 langsung di atas keping silikon permanen.
-- **Spesialisasi Absolut:** Chip ASIC tidak dapat menjalankan fungsi komputasi lain selain menghitung hash, tetapi bekerja miliaran kali lebih efisien dibanding prosesor umum.
-- *Visual:* Garis waktu visual evolusi perangkat keras: CPU desktop -> GPU gaming -> papan PCB FPGA -> rak server industri ASIC modern.
+Securing Consensus via Capital
+
+The Upcoming Exploration:
+The next evolution of decentralized consensus attempts to replace physical electricity with digital on-chain collateral (capital).
+
+Upcoming Challenges to Solve:
+- Overcoming the classic Nothing-at-Stake dilemma.
+- Designing automated cryptographic slashing to destroy attacker capital without courts.
+- The Gasper protocol: Pairing LMD-GHOST with Casper FFG.
+
+Next Module:
+Module 03.3: Proof of Stake and Finality Gadgets.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Paparkan empat fase evolusi perangkat keras penambangan: CPU, GPU, FPGA, hingga ASIC.
-- GPU memanfaatkan ribuan inti paralel ALU untuk menghitung hash lebih cepat.
-- ASIC adalah chip khusus yang hanya bisa menghitung algoritma SHA-256 tetapi memiliki efisiensi termodinamika tertinggi.
+- Mengantarkan peserta ke Modul 03.3: Proof of Stake and Finality Gadgets.
+- Pertanyaan kunci: Bagaimana modal digital (stake) menggantikan listrik tanpa menimbulkan celah Nothing-at-Stake?
+- Teaser materi modul 03.3: Hukuman Slashing otomatis, arsitektur Gasper, dan finalitas deterministik.
 
 **Naskah Tutur (Voiceover Script):**
-Tuntutan efisiensi energi dalam Proof of Work telah memicu revolusi besar dalam industri manufaktur semikonduktor dunia.
-Perjalanan ini terbagi ke dalam empat era perangkat keras.
-Pada era pertama di tahun 2009, penambangan dilakukan menggunakan CPU komputer rumah biasa dengan kecepatan kilohash per detik.
-Dua tahun kemudian, para penambang menyadari bahwa kartu grafis atau GPU memiliki ribuan inti ALU paralel yang sanggup menghitung ribuan hash secara serentak, melipatgandakan kecepatan hingga seratus kali lipat.
-Era ketiga berlanjut ke perangkat FPGA di mana para insinyur memprogram gerbang logika sirkuit khusus demi menghemat listrik.
-Hingga akhirnya kita memasuki era ASIC yang mendominasi sampai hari ini.
-ASIC adalah chip silikon yang dirancang mati di tingkat pabrik khusus untuk menjalankan algoritma SHA-256.
-Chip ini tidak bisa digunakan untuk mengetik dokumen, bermain gim, atau memutar video.
-Tetapi untuk urusan menghitung hash, efisiensi energinya miliaran kali lipat lebih unggul daripada prosesor komputer tercanggih di dunia.
-
----
-
-## Slide 13: Jembatan ke Modul Berikutnya: Mengamankan Ledger Tanpa Membakar Energi
-
-### Konten Slide
-- **Refleksi Modul 03.2:** Proof of Work berhasil menyelesaikan serangan Sybil dengan mengikat hak suara pada listrik dan perangkat keras fisik.
-- **Harga Mahal Jangkar Termodinamika:**
-  - Konsumsi energi listrik global yang setara dengan konsumsi listrik satu negara menengah.
-  - Perlombaan senjata perangkat keras khusus yang memicu sentralisasi fasilitas penambangan skala industri.
-  - Tekanan jual konstan di pasar terbuka karena penambang wajib membayar tagihan listrik bulanan dalam mata uang fiat.
-- **Tantangan Desain Baru:**
-  - Bisakah kita mengganti energi listrik fisik dengan modal kapital digital yang dikunci langsung di dalam buku besar (*on-chain collateral*)?
-  - Bagaimana Proof of Stake menyelesaikan dilema klasik *Nothing at Stake*?
-  - Bagaimana mekanisme *slashing* menghancurkan modal penyerang secara otomatis tanpa intervensi pengadilan?
-- *Visual:* Transisi simbolik dari cerobong energi termodinamika fisik menuju brankas kontrak pintar kriptografi Proof of Stake.
-
-### Catatan Presenter (Cheatsheet)
-**Quick Cues:**
-- Rangkum keunggulan PoW sekaligus beban biaya termodinamikanya yang mahal.
-- Muncul pertanyaan: bisakah keamanan dijamin tanpa harus membakar listrik bumi?
-- Teaser materi modul 03.3: Proof of Stake, Nothing-at-Stake, slashing, dan Casper FFG.
-
-**Naskah Tutur (Voiceover Script):**
-Proof of Work telah membuktikan diri sebagai benteng pertahanan yang sangat kokoh untuk mengamankan nilai moneter digital.
-Namun, keamanan termodinamika ini datang dengan kompensasi fisik yang luar biasa besar.
-Jaringan penambangan modern mengonsumsi puluhan terawatt-jam listrik setiap tahun, dan para penambang dipaksa terus menjual koin hasil tambangannya ke pasar untuk membayar tagihan listrik fiat mereka.
-Kenyataan ini memicu lahirnya pertanyaan radikal dalam ilmu komputer terdistribusi.
-Bisakah kita mempertahankan tingkat keamanan ekonomi yang setara tanpa harus membakar energi listrik sama sekali?
-Bisakah kita mengganti mesin fisik penambang dengan agunan modal digital yang dikunci langsung di dalam smart contract?
-Bagaimana Proof of Stake mengatasi masalah klasik di mana validator bisa memilih dua rantai sekaligus tanpa biaya?
-Dan bagaimana algoritma finalitas modern mengunci kepastian transaksi secara instan?
-Untuk memahami transisi terbesar dalam evolusi konsensus blockchain, di modul berikutnya kita akan membahas Proof of Stake and Finality Gadgets.
+Tantangan untuk melenyapkan ketergantungan pada energi fisik ini membawa kita ke modul berikutnya: Proof of Stake and Finality Gadgets.
+Di modul selanjutnya, kita akan membedah bagaimana protokol blockchain menggantikan mesin ASIC dengan modal deposit kripto sebesar 32 ether.
+Kita akan melihat bagaimana protokol mengatasi celah berbahaya *Nothing-at-Stake*, bagaimana hukuman matematis *Slashing* menghancurkan modal penyerang secara otomatis tanpa butuh hakim pengadilan, serta bagaimana sintesis protokol Gasper menghadirkan finalitas deterministik mutlak bagi jaringan global.
 Sampai jumpa di modul berikutnya.

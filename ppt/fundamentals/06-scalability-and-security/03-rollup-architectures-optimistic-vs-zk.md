@@ -3,19 +3,23 @@ Modul Presentasi: Scalability and Security (06.3)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: Rollup Architectures: Optimistic vs. Zero-Knowledge
 
 ### Konten Slide
-- **Topik:** Rollup Architectures: Optimistic vs. Zero-Knowledge
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Membedah dua filosofi pembuktian keabsahan eksekusi off-chain ke Layer 1 melalui Fraud Proofs dan Validity Proofs.
-- *Visual:* Ilustrasi kontras antara dua timbangan: timbangan deteksi kecurangan interaktif (Optimistic) vs kalkulasi pembuktian matematis instan (Zero-Knowledge).
+Rollup Architectures: Optimistic vs. Zero-Knowledge
+Module 06.3: Scalability and Security
+Track: Fundamentals of Distributed Trust
+
+Core Architectural Focus:
+- How Layer 1 verifies the correctness of off-chain execution without re-executing transactions.
+- Game-theoretic retrospective dispute resolution: Fraud Proofs, the 7-day challenge window, and interactive bisection.
+- Mathematical preventative verification: Validity Proofs, ZK-SNARKs vs ZK-STARKs, and state delta compression.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Selamat datang di modul ketiga: Optimistic vs ZK Rollups.
-- Inti pembahasan: bagaimana L1 memverifikasi kebenaran ribuan transaksi yang dikerjakan di L2.
-- Dua pendekatan: Optimistic (percaya dulu tapi ada masa sanggah) vs ZK (harus membuktikan bukti matematika mutlak di muka).
+- Membuka modul ketiga dari Chapter 06: Optimistic vs ZK Rollups.
+- Inti pembahasan: bagaimana Layer 1 memverifikasi kebenaran ribuan transaksi off-chain tanpa mengulang komputasi.
+- Dua pendekatan: Optimistic (percaya dulu tapi ada masa sanggah) vs ZK (harus menyertakan bukti matematika mutlak di muka).
 
 **Naskah Tutur (Voiceover Script):**
 Selamat datang di modul ketiga dari bab Scalability and Security.
@@ -29,19 +33,22 @@ Hari ini kita akan membedah mekanika internal, keunggulan teknis, dan trade-off 
 
 ---
 
-## Slide 2: Teka-teki Verifikasi State Off-Chain
+## Slide 2: The Off-Chain State Verification Dilemma
 
 ### Konten Slide
-- **Tantangan Verifikasi pada Layer 1:**
-  - Layer 1 tidak mengeksekusi ulang ribuan transaksi L2 karena hal itu akan melanggar tujuan penskalaan.
-  - Sequencer L2 hanya mengirimkan dua komponen ke L1: kumpulan data transaksi mentah (*data batch*) dan komitmen akar status terbaru (*proposed state root* $S_{t+1}$).
-- **Ancaman Sequencer Nakal (Mallory):**
-  - Apa yang mencegah operator sequencer memasukkan transaksi palsu yang mencetak satu miliar token ke dompet pribadinya?
-  - Jika Layer 1 langsung menelan klaim status tersebut begitu saja, seluruh sistem ekonomi akan runtuh.
-- **Dua Filosofi Solusi:**
-  - *Retrospektif (Optimistic):* Asumsikan benar, berikan insentif ekonomi bagi pihak lain untuk menyanggah jika ada kebohongan.
-  - *Preventif (Zero-Knowledge):* Tolak klaim status sampai disertai bukti matematis yang membuktikan bahwa seluruh aturan mesin virtual telah ditaati tanpa cela.
-- *Visual:* Sequencer menyetorkan State Root ke smart contract L1 dengan tanda tanya besar mengenai keabsahannya.
+The Off-Chain State Verification Dilemma
+
+The Verification Imperative:
+- Layer 1 cannot re-execute thousands of Layer 2 transactions, as doing so defeats the entire premise of scalability.
+- The off-chain sequencer submits only two payloads to Layer 1: compressed raw transaction calldata and a proposed state root commitment.
+
+The Malicious Sequencer Threat:
+- What prevents a rogue sequencer from including an invalid state transition that mints millions of tokens into its private account?
+- If Layer 1 blindly accepts state root commitments, decentralized trust collapses into centralized custody risk.
+
+Two Divergent Cryptographic Philosophies:
+- 1. Retrospective Verification (Optimistic): Assume sequencer assertions are valid, but establish an economic dispute window for independent parties to submit Fraud Proofs.
+- 2. Preventative Verification (Zero-Knowledge): Reject all state transitions until accompanied by an unforgeable mathematical Validity Proof establishing flawless compliance with VM rules.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -62,20 +69,24 @@ Mazhab kedua mengatakan: kita tidak percaya pada siapa pun; sequencer wajib meny
 
 ---
 
-## Slide 3: Dua Filosofi Verifikasi Kriptografi
+## Slide 3: Two Cryptographic Verification Philosophies: Fraud Proofs vs Validity Proofs
 
 ### Konten Slide
-- **Paradigma Optimistic (Fraud Proofs):**
-  - Status transaksi yang diserahkan sequencer diasumsikan valid secara *optimistik*.
-  - Membuka jendela waktu sanggahan (*challenge window*) selama 7 hari.
-  - Jika tidak ada sanggahan dari verifier independen, status difinalisasi secara permanen di Layer 1.
-  - Jika terjadi kecurangan, pengawas (*challenger*) menyetorkan bukti kecurangan untuk membatalkan blok dan menyita deposit sequencer.
-- **Paradigma Zero-Knowledge (Validity Proofs):**
-  - Status transaksi yang diserahkan sequencer dianggap tidak valid sampai terbukti sebaliknya.
-  - Komputer pembuat bukti (*prover*) menghasilkan bukti kriptografis ringkas (ZK-SNARK atau ZK-STARK).
-  - Kontrak verifikator di Layer 1 mengevaluasi persamaan matematika bukti tersebut secara deterministik.
-  - Menghasilkan finalitas instan begitu bukti valid diverifikasi di Layer 1.
-- *Visual:* Diagram alur paralel: Alur Optimistic dengan jendela sanggahan 7 hari vs Alur ZK dengan prover dan verifikasi instan on-chain.
+Two Cryptographic Verification Philosophies: Fraud Proofs vs Validity Proofs
+
+Optimistic Paradigm (Fraud Proofs):
+- Underlying Axiom: Presumption of innocence governed by economic game theory.
+- Execution claims are optimistically accepted as valid upon submission.
+- Opens a mandatory 7-day challenge window before state finalization.
+- If no dispute is raised by independent verifiers, state transitions finalize permanently on Layer 1.
+- If invalid execution is detected, verifiers submit a Fraud Proof to revert the block and slash the sequencer bond.
+
+Zero-Knowledge Paradigm (Validity Proofs):
+- Underlying Axiom: Zero trust governed by deterministic mathematical certainty.
+- Execution claims are considered invalid until proven otherwise.
+- Off-chain provers generate succinct cryptographic proofs (ZK-SNARKs or ZK-STARKs).
+- Layer 1 on-chain verifier contracts evaluate algebraic polynomial equations in constant time.
+- Yields immediate, deterministic finality the instant the proof is verified on-chain.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -96,17 +107,19 @@ Begitu kontrak verifikator di Layer 1 memastikan persamaan aljabar di dalam bukt
 
 ---
 
-## Slide 4: Arsitektur Optimistic Rollup: Menjamin Kejujuran Lewat Insentif
+## Slide 4: Optimistic Rollup Architecture: Incentivizing Honesty
 
 ### Konten Slide
-- **Komponen Inti Arsitektur Optimistic (Arbitrum One, Optimism Mainnet):**
-  - *Sequencer:* Menjalankan execution client (berbasis Geth/Erigon), memproses transaksi instan, dan mempublikasikan data batch ke Layer 1.
-  - *L1 Rollup Smart Contract:* Menerima batch calldata/blobs, mencatat usulan state root, dan mengelola staking jaminan sequencer.
-  - *Verifier / Challenger Nodes:* Simpul pengawas independen (seperti Bob) yang terus mengunduh batch data dari L1 dan merekonstruksi status secara lokal.
-- **Asumsi Kepercayaan 1-of-N (Honest Verifier Assumption):**
-  - Keamanan jaringan dijamin absolut selama terdapat **minimal satu** simpul pengawas yang jujur dan aktif di seluruh dunia.
-  - Pengawas memiliki insentif ekonomi besar: jika berhasil membuktikan kecurangan sequencer, pengawas menerima sebagian besar modal jaminan sequencer yang disita (*slashed bond*).
-- *Visual:* Arsitektur interaksi antara Sequencer, L1 Contract, dan Challenger Node independen.
+Optimistic Rollup Architecture: Incentivizing Honesty
+
+Core Architectural Components:
+- Sequencer: Runs an execution client (derived from Geth or Erigon), batches transactions, and publishes compressed data to Layer 1.
+- L1 Rollup Contract: Receives calldata/blobs, registers proposed state roots, and manages bonded sequencer stakes.
+- Verifier / Challenger Nodes: Independent auditing nodes that download data batches from Layer 1 and reconstruct L2 state locally.
+
+The 1-of-N Honest Verifier Assumption:
+- Security is mathematically guaranteed as long as at least one honest, active verifier exists anywhere in the world.
+- Economic Slashing Mechanism: Sequencers must lock substantial economic bonds; if a verifier proves fraud, the sequencer stake is slashed and awarded to the challenger.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -120,25 +133,29 @@ Setiap hari, sequencer mengumpulkan transaksi pengguna, mengeksekusinya di mesin
 Agar sequencer tidak berbuat curang, protokol mewajibkan sequencer mengunci sejumlah modal uang jaminan yang sangat besar di kontrak Layer 1.
 Di sisi lain, ada ribuan komputer pengawas independen bernama challengers, salah satunya Bob.
 Bob mengunduh data mentah dari Layer 1, mengeksekusi ulang transaksinya di komputernya sendiri, dan mencocokkan apakah state root hasil perhitungannya sama dengan angka yang disetor sequencer.
-Sistem ini bersandar pada asumsi keamanan yang sangat kuat: *1-of-N honest verifier*.
+Sistem ini bersandar pada asumsi keamanan yang sangat kuat: 1-of-N honest verifier.
 Artinya, dari ribuan node pengawas di seluruh penjuru bumi, kita hanya butuh satu saja peserta yang jujur dan menyala untuk menggagalkan upaya pencurian sequencer.
 Jika Bob menemukan kebohongan, Bob bisa melaporkannya dan berhak membawa pulang hadiah uang jaminan sequencer yang disita.
 
 ---
 
-## Slide 5: Mengapa Jendela Sanggahan Harus 7 Hari?
+## Slide 5: The 7-Day Challenge Window: Economic Finality and Censorship Defense
 
 ### Konten Slide
-- **The 7-Day Challenge Window:**
-  - Seluruh penarikan dana dari Layer 2 menuju Layer 1 pada Optimistic Rollup wajib tertahan selama 7 hari kalender.
-- **Alasan Keamanan di Balik Penundaan 7 Hari:**
-  - **1. Pertahanan terhadap Serangan Sensor L1:**
-    - Jika sequencer nakal mencoba menyetor status palsu, mereka bisa mencoba menyuap penambang atau validator Layer 1 untuk menyensor transaksi sanggahan Bob (*censorship attack*).
-    - Jendela 7 hari memberi waktu yang sangat longgar bagi komunitas untuk mendeteksi sensor, menaikkan gas fee, atau melakukan reorganisasi sosial.
-  - **2. Penanganan Kemacetan Jaringan (Network Congestion):**
-    - Jika Layer 1 mengalami kepadatan ekstrem, transaksi sanggahan Bob mungkin membutuhkan waktu puluhan jam untuk masuk ke dalam blok.
-- **Dampak bagi Pengguna:** Pengguna biasa (Alice) harus menunggu 7 hari untuk mencairkan aset lewat jembatan resmi, atau membayar biaya diskon ke market maker jembatan pihak ketiga.
-- *Visual:* Garis waktu 7 hari dengan simulasi upaya penyerang menyensor sanggahan yang akhirnya digagalkan oleh durasi jendela waktu.
+The 7-Day Challenge Window: Economic Finality and Censorship Defense
+
+The 7-Day Dispute Delay:
+- All asset withdrawals from Layer 2 to Layer 1 on Optimistic Rollups are subject to a mandatory 7-day time lock.
+
+Security Rationale Behind the 7-Day Window:
+- 1. Defense Against Layer 1 Censorship Attacks:
+- A malicious sequencer could attempt to bribe Layer 1 miners/validators to censor challenger dispute transactions.
+- A 7-day window makes sustained, unbroken censorship economically and practically impossible on a decentralized base layer.
+- 2. Absorbing Extreme Network Congestion:
+- Ensures challengers have sufficient time to land proof transactions on Layer 1 even during multi-day gas fee spikes.
+
+User Impact:
+- Standard bridge withdrawals require 7 days, though liquidity providers and cross-chain fast bridges offer instant liquidity for a fee.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -158,29 +175,31 @@ Tujuh hari memberi kepastian absolut bahwa kebenaran pasti memiliki celah waktu 
 
 ---
 
-## Slide 6: Sanggahan Interaktif: Multi-Round Bisection
+## Slide 6: Interactive Dispute Resolution: Multi-Round Bisection Game
 
 ### Konten Slide
-- **Masalah Komputasi di L1:** Mengeksekusi ulang seluruh blok transaksi yang bermasalah di Layer 1 akan melebihi batas kapasitas gas (*block gas limit*).
-- **Inovasi Arbitrum Nitro: Interactive Bisection Game:**
-  - Sengketa diselesaikan melalui permainan catur interaktif antara sequencer (Mallory) dan penantang (Bob) di kontrak Layer 1.
-- **Tahapan Permainan Bagi-Dua (Bisection):**
-  - 1. Mallory mengklaim rentang eksekusi $N$ instruksi menghasilkan status X; Bob menyanggah bahwa hasilnya adalah status Y.
-  - 2. Keduanya membagi rentang eksekusi menjadi dua: $\frac{N}{2}, \frac{N}{4}, \dots, 1$.
-  - 3. Dalam $\mathcal{O}(\log N)$ putaran, mereka berhasil mengisolasi titik perselisihan hingga ke **satu instruksi opcode EVM tunggal** (misalnya instruksi `ADD` atau `SSTORE`).
-  - 4. Kontrak pintar di Layer 1 hanya perlu mengeksekusi satu opcode tunggal tersebut di mesin virtual L1 untuk menentukan siapa yang berbohong.
-- *Visual:* Diagram pohon pencarian biner membelah jutaan instruksi menjadi satu opcode tunggal yang dieksekusi di L1.
+Interactive Dispute Resolution: Multi-Round Bisection Game
+
+The L1 Gas Limit Constraint:
+- Re-executing an entire disputed block of thousands of transactions on Layer 1 would far exceed block gas limits.
+
+The Multi-Round Interactive Bisection Protocol:
+- Instead of replaying full blocks, the sequencer (Mallory) and challenger (Bob) engage in an on-chain binary search game.
+- 1. Mallory claims N execution steps yield state X; Bob asserts they yield state Y.
+- 2. The parties bisect the execution trace iteratively: N/2, N/4, down to 1.
+- 3. Within O(log N) rounds (roughly 25-30 interactions), they isolate the exact single EVM opcode instruction where their computations diverge.
+- 4. The Layer 1 smart contract executes only that single one-step instruction inside a minimal on-chain emulator to determine the honest party.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
 - Masalah: L1 tidak sanggup mengeksekusi ulang seluruh blok transaksi yang disengketakan.
-- Solusi Arbitrum: Bisection game membelah eksekusi secara biner hingga tersisa 1 instruksi saja.
+- Solusi Arbitrum Nitro: Bisection game membelah eksekusi secara biner hingga tersisa 1 instruksi saja.
 - Kompleksitas O(log N): jutaan instruksi bisa dipersempit hanya dalam sekitar 20 sampai 30 putaran interaktif.
 
 **Naskah Tutur (Voiceover Script):**
 Ketika Bob mendeteksi bahwa sequencer menyetor status palsu, bagaimana cara membuktikannya ke Layer 1?
 Layer 1 tidak mungkin menjalankan ulang seluruh transaksi yang ada di dalam blok tersebut, karena biaya gasnya akan melebihi batas blok Ethereum.
-Arbitrum memecahkan masalah ini dengan penemuan yang sangat jenius bernama *interactive multi-round bisection game*.
+Arbitrum memecahkan masalah ini dengan penemuan yang sangat jenius bernama interactive multi-round bisection game.
 Bayangkan seperti permainan tebak angka biner.
 Mallory mengklaim bahwa setelah satu juta instruksi komputer dijalankan, status akhirnya adalah A.
 Bob membantah dan mengatakan status akhirnya adalah B.
@@ -192,51 +211,57 @@ Di putaran terakhir, kontrak pintar di Layer 1 hanya perlu mengeksekusi satu ins
 
 ---
 
-## Slide 7: Arsitektur Zero-Knowledge Rollup: Kebenaran Matematis Instan
+## Slide 7: Zero-Knowledge Rollup Architecture: Instant Mathematical Certainty
 
 ### Konten Slide
-- **Prinsip Utama ZK Rollup (Starknet, zkSync Era, Scroll):**
-  - Mengganti pengawasan berbasis sengketa dengan kalkulasi bukti matematis yang kebal manipulasi (*cryptographic validity proofs*).
-- **Alur Pembuatan Bukti (Pipeline):**
-  - **1. Execution Engine:** Memproses ribuan transaksi off-chain dan mencatat jejak eksekusi lengkap (*execution trace*).
-  - **2. Witness Generation & Arithmetization:** Mengonversi jejak register CPU dan mutasi memori menjadi sistem persamaan polinomial aljabar (representasi R1CS, Plonkish, atau AIR).
-  - **3. Cryptographic Prover:** Menghitung bukti ringkas $\pi$ menggunakan kluster hardware berdaya komputasi tinggi.
-  - **4. L1 Verifier Contract:** Memverifikasi persamaan bukti di Layer 1 secara deterministik dalam waktu konstan.
-- *Visual:* Pipeline ZK Rollup: Transaksi -> Execution Trace -> Arithmetization Polinomial -> Prover Kluster -> Bukti Ringkas $\pi$ -> Kontrak Verifikasi L1.
+Zero-Knowledge Rollup Architecture: Instant Mathematical Certainty
+
+The Validity Proof Paradigm:
+- Replaces optimistic fraud detection with proactive, tamper-proof mathematical verification.
+
+The Proving Pipeline Architecture:
+- 1. Execution Engine: Processes off-chain transactions and produces a complete execution trace recording all register states and memory transitions.
+- 2. Arithmetization: Compiles execution traces into systems of multivariate algebraic polynomials (using R1CS, Plonkish, or AIR arithmetization frameworks).
+- 3. Cryptographic Prover: High-performance compute clusters solve polynomial constraints and generate a succinct cryptographic proof.
+- 4. L1 Verifier Contract: Evaluates pairing or polynomial commitments on Layer 1 in constant deterministic time, verifying thousands of transactions in milliseconds.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
 - Paradigma ZK: dari eksekusi kode menjadi persamaan polinomial aljabar.
-- Execution trace mencatat semua pergerakan register CPU.
-- Hasil akhirnya adalah bukti ringkas pi yang membuktikan kebenaran matematika seluruh transaksi.
+- Execution trace mencatat semua pergerakan register CPU dan memori.
+- Hasil akhirnya adalah bukti ringkas yang membuktikan kebenaran matematika seluruh transaksi.
 
 **Naskah Tutur (Voiceover Script):**
 Sekarang mari kita alihkan perhatian kita ke kubu kedua: Zero-Knowledge Rollup.
 Arsitektur ZK Rollup seperti Starknet dan zkSync bekerja dengan cara yang sama sekali berbeda dari Optimistic Rollup.
 Mereka tidak menggunakan sistem sanggahan dan tidak ada uang jaminan yang dipertaruhkan.
-Ketika transaksi masuk, mesin eksekusi Layer 2 mencatat seluruh riwayat komputasi ke dalam apa yang disebut *execution trace*.
+Ketika transaksi masuk, mesin eksekusi Layer 2 mencatat seluruh riwayat komputasi ke dalam apa yang disebut execution trace.
 Execution trace ini mencatat setiap pergerakan register prosesor, pembacaan memori, dan perubahan saldo.
-Kemudian, compiler khusus mengubah seluruh jejak komputasi tersebut menjadi sistem persamaan aljabar polinomial raksasa lewat proses bernama *arithmetization*.
+Kemudian, compiler khusus mengubah seluruh jejak komputasi tersebut menjadi sistem persamaan aljabar polinomial raksasa lewat proses bernama arithmetization.
 Sebuah komputer berkekuatan tinggi bernama Prover kemudian memecahkan persamaan tersebut dan menghasilkan satu bukti matematika ringkas bersimbol pi.
 Bukti pi ini membuktikan secara absolut bahwa ada sekumpulan transaksi sah yang berhasil mengubah status lama menjadi status baru sesuai dengan aturan mesin virtual.
 Bukti inilah yang dikirim ke kontrak verifikator di Layer 1.
 
 ---
 
-## Slide 8: Anatomi Primitif: ZK-SNARK vs ZK-STARK
+## Slide 8: Primitive Anatomy: ZK-SNARKs vs ZK-STARKs
 
 ### Konten Slide
-- **Dua Pilar Kriptografi Bukti Validitas:**
+Primitive Anatomy: ZK-SNARKs vs ZK-STARKs
 
-| Parameter Rekayasa | ZK-SNARK | ZK-STARK |
-| :--- | :--- | :--- |
-| **Kepanjangan** | Succinct Non-Interactive Argument of Knowledge | Scalable Transparent Argument of Knowledge |
-| **Ukuran Bukti (Proof Size)** | Sangat ringkas (ratusan byte) | Lebih besar (puluhan hingga ratusan kilobyte) |
-| **Biaya Verifikasi L1** | Sangat murah dan konstan ($\approx 200.000$ gas) | Lebih mahal akibat ukuran payload yang lebih besar |
-| **Trusted Setup** | Membutuhkan upacara setup awal (Groth16) / Universal (PLONK) | **Zero Trusted Setup** (Transparan murni) |
-| **Ketahanan Pasca-Kuantum** | Rentan terhadap komputer kuantum (Kurva eliptik) | **Kebal Komputer Kuantum** (Fungsi hash & kode Reed-Solomon) |
+Comparative Cryptographic Foundations:
 
-- *Visual:* Perbandingan grafis ukuran bukti dan sifat kriptografis antara ZK-SNARK dan ZK-STARK.
+1. ZK-SNARKs (Succinct Non-Interactive Argument of Knowledge):
+- Proof Size: Ultra-compact (roughly 200 to 400 bytes).
+- L1 Verification Cost: Very cheap and constant gas usage (around 200,000 gas).
+- Setup Assumption: Historical variants require trusted setup ceremonies; modern universal setups (PLONK) reduce setup fragility.
+- Quantum Resistance: Vulnerable to future quantum computing attacks (elliptic curve cryptography).
+
+2. ZK-STARKs (Scalable Transparent Argument of Knowledge):
+- Proof Size: Larger payload (dozens to hundreds of kilobytes).
+- L1 Verification Cost: Higher gas cost due to larger data submission sizes.
+- Setup Assumption: Zero trusted setup required; entirely transparent.
+- Quantum Resistance: Inherently post-quantum secure (relies purely on collision-resistant hash functions and Reed-Solomon error-correcting codes).
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -251,30 +276,33 @@ Kelebihan utama SNARK adalah buktinya sangat ringkas, hanya berukuran beberapa r
 Karena buktinya kecil, biaya gas untuk memverifikasinya di smart contract Layer 1 sangat murah, hanya sekitar dua ratus ribu gas.
 Namun kelemahannya, sebagian besar sistem SNARK membutuhkan upacara pembuatan kunci awal yang disebut trusted setup, dan secara teoritis rentan terhadap serangan komputer kuantum di masa depan.
 Keluarga kedua adalah STARK, yang dipelopori oleh tim Starkware.
-Huruf T pada STARK berarti *Transparent*.
+Huruf T pada STARK berarti Transparent.
 STARK sama sekali tidak membutuhkan trusted setup dan hanya bersandar pada fungsi hash kriptografis serta kode koreksi kesalahan Reed-Solomon.
 Ini membuat STARK sepenuhnya kebal terhadap ancaman komputer kuantum.
 Namun komprominya, ukuran bukti STARK jauh lebih besar, mencapai puluhan kilobyte, yang membuat biaya penulisan datanya di Layer 1 sedikit lebih mahal.
 
 ---
 
-## Slide 9: Finalitas Instan dan Kompresi Ekstrem pada ZK Rollup
+## Slide 9: Instant Finality and Extreme Data Compression in ZK Rollups
 
 ### Konten Slide
-- **Finalitas Instan Tanpa Penundaan:**
-  - Begitu kontrak pintar di Layer 1 memverifikasi bukti validitas $\pi$, status transaksi langsung sah dan final secara permanen.
-  - Alice dapat menarik asetnya kembali ke Layer 1 dalam hitungan menit hingga beberapa jam (hanya dibatasi oleh interval waktu pembuatan bukti).
-- **Efisiensi Kompresi Data Ekstrem:**
-  - Pada Optimistic Rollup, setiap transaksi yang diunggah ke L1 wajib menyertakan tanda tangan digital ECDSA agar verifier independen dapat memeriksa keabsahan otorisasi.
-  - Pada ZK Rollup, jutaan tanda tangan digital diverifikasi secara off-chain di dalam rangkaian sirkuit ZK.
-  - Sequencer ZK hanya perlu menerbitkan **perubahan status akhir (state deltas)** ke Layer 1, tanpa perlu menyertakan tanda tangan pengguna.
-- *Visual:* Ilustrasi kompresi data: 10.000 transaksi penuh pada Optimistic Rollup vs Ringkasan State Deltas padat pada ZK Rollup.
+Instant Finality and Extreme Data Compression in ZK Rollups
+
+Deterministic Instant Finality:
+- Once the Layer 1 verifier contract successfully validates the validity proof, state transitions achieve immediate economic finality.
+- Withdrawals to Layer 1 take minutes to hours (bounded strictly by proof generation frequency) rather than 7 days.
+
+Extreme State Delta Compression:
+- Optimistic Rollups must post every transaction signature to Layer 1 so verifiers can check signer authorizations during fraud disputes.
+- ZK Rollups verify signatures entirely inside the off-chain ZK circuit.
+- The ZK sequencer only publishes net final state mutations (state deltas) to Layer 1, omitting individual signatures and intermediate states entirely.
+- Massively reduces on-chain data footprint and scales throughput exponentially.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
 - Keunggulan terbesar ZK: tidak ada masa tunggu 7 hari.
-- Penarikan dana Alice bisa selesai secepat bukti ZK di-generate dan diverifikasi di L1.
-- Kompresi dahsyat: ribuan signature dibuang dan diganti satu bukti matematika.
+- Penarikan dana bisa selesai secepat bukti ZK di-generate dan diverifikasi di L1.
+- Kompresi dahsyat: ribuan signature dibuang dan diganti satu bukti matematika ringkas.
 
 **Naskah Tutur (Voiceover Script):**
 Inilah yang membuat banyak peneliti menganggap ZK Rollup sebagai cawan suci skalabilitas blockchain.
@@ -290,21 +318,32 @@ Data yang harus diunggah ke blockchain menjadi jauh lebih sedikit, yang membuat 
 
 ---
 
-## Slide 10: Matriks Perbandingan Mendalam: Optimistic vs. ZK
+## Slide 10: Deep Comparison Matrix: Optimistic vs Zero-Knowledge
 
 ### Konten Slide
-- **Tabel Komparasi Arsitektural Lengkap:**
+Deep Comparison Matrix: Optimistic vs Zero-Knowledge
 
-| Dimensi Rekayasa | Optimistic Rollups | Zero-Knowledge Rollups |
-| :--- | :--- | :--- |
-| **Model Kepercayaan** | Asumsi verifier jujur $1$-of-$N$ | Kebenaran matematis kriptografis murni |
-| **Biaya Verifikasi L1** | Sangat rendah pada kondisi normal (Hanya update root) | Biaya gas tetap per verifikasi bukti ($\approx 200\text{k} - 400\text{k}$ gas) |
-| **Beban Komputasi Prover** | Sangat ringan (Cukup CPU server komoditas) | Sangat berat (Membutuhkan kluster akselerator GPU/FPGA/ASIC) |
-| **Latensi Penarikan Dana** | Wajib menunggu jendela sanggahan 7 hari | Cepat, selesai setelah verifikasi bukti ($\approx 15 \text{ menit} - 2 \text{ jam}$) |
-| **Kesetaraan EVM** | Sangat tinggi (Fork langsung dari codebase Geth) | Sangat kompleks (Membutuhkan sirkuit zkEVM Type 1 sampai Type 4) |
-| **Efisiensi Kompresi Data** | Moderat (Wajib menyertakan signatures) | Ekstrem (Hanya menyertakan mutasi state delta akhir) |
+Comprehensive Architectural Trade-offs:
 
-- *Visual:* Peta perbandingan keunggulan teknis antara Optimistic (mudah diimplementasikan) vs ZK (unggul dalam finalitas matematis).
+1. Trust Assumption:
+- Optimistic: 1-of-N honest verifier game-theoretic assumption.
+- Zero-Knowledge: Pure cryptographic and mathematical truth.
+
+2. On-Chain L1 Verification Cost:
+- Optimistic: Negligible during normal operations (only updating root pointers).
+- Zero-Knowledge: Fixed gas cost per batch proof verification (approx. 200k-400k gas).
+
+3. Off-Chain Prover Computational Overhead:
+- Optimistic: Very low (commodity server CPUs).
+- Zero-Knowledge: Extremely high (GPU, FPGA, or ASIC hardware acceleration clusters).
+
+4. L1 Withdrawal Finality Delay:
+- Optimistic: Mandatory 7-day challenge period.
+- Zero-Knowledge: Fast, finalized upon proof verification (approx. 15 minutes to 2 hours).
+
+5. EVM Compatibility & Equivalence:
+- Optimistic: Native bytecode equivalence (direct fork of Geth).
+- Zero-Knowledge: Highly complex arithmetization (zkEVM Types 1 through 4).
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -324,25 +363,28 @@ Namun dari sisi teoritis jangka panjang, ZK Rollup unggul di setiap lini: tidak 
 
 ---
 
-## Slide 11: Konsekuensi Arsitektural: Fragmentasi Likuiditas
+## Slide 11: Architectural Consequences: Liquidity and State Fragmentation
 
 ### Konten Slide
-- **Paradoks Kesuksesan Penskalaan:**
-  - Keberhasilan peluncuran puluhan Layer 2 berhasil meningkatkan throughput total industri hingga puluhan ribu transaksi per detik.
-  - Namun, hal ini menciptakan masalah fragmentasi baru: **Liquidity & State Fragmentation**.
-- **Kondisi Ekosistem Saat Ini:**
-  - Pengguna, aset modal, dan aplikasi DeFi kini terpecah-pecah ke dalam pulau-pulau yang terisolasi.
-  - Likuiditas modal terperangkap di Arbitrum, Optimism, Base, zkSync, Solana, dan Ethereum L1.
-- **Dilema Pengguna (Alice):**
-  - Alice memiliki 10.000 USDC di Arbitrum, namun kolam pinjaman dengan imbal hasil terbaik berada di Base.
-  - Bagaimana Alice dapat memindahkan nilai dan instruksi komputasi melintasi dua mesin virtual yang sepenuhnya terpisah tanpa harus kembali ke L1?
-- *Visual:* Peta kepulauan terisolasi (Island of Liquidity) yang menggambarkan terputusnya aliran modal antar rantai yang berbeda.
+Architectural Consequences: Liquidity and State Fragmentation
+
+The Scaling Paradox:
+- Deploying dozens of independent Rollup execution environments expands global throughput to tens of thousands of TPS.
+- However, it fragments users, assets, and liquidity into isolated execution islands.
+
+The Island of Liquidity Dilemma:
+- Capital is trapped across Arbitrum, Optimism, Base, zkSync, and Ethereum L1.
+- Broken Composability: Smart contracts on one rollup cannot synchronously interact with smart contracts on another rollup in a single atomic transaction.
+
+The Cross-Domain Challenge:
+- A user holding USDC on Arbitrum who wants to access a lending market on Base must route value across disconnected state machines.
+- Necessitates cross-chain bridging infrastructure to restore economic fluidity.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Keberhasilan rollup memicu masalah baru: kepulauan likuiditas.
-- Modal dan likuiditas terpecah di berbagai L2 dan L1 alternatif.
-- Alice terjebak: uangnya ada di rantai A, tapi aplikasi yang ingin dipakainya ada di rantai B.
+- Keberhasilan rollup memicu masalah baru: kepulauan likuiditas (islands of liquidity).
+- Modal dan likuiditas terpecah di berbagai L2 dan L1 independen.
+- Pengguna terjebak: aset ada di rantai A, tetapi aplikasi yang ingin dipakai berada di rantai B.
 
 **Naskah Tutur (Voiceover Script):**
 Penskalaan melalui Layer 2 telah membawa industri kita melangkah sangat jauh.
@@ -358,23 +400,27 @@ Inilah yang melahirkan kebutuhan akan jembatan lintas rantai atau cross-chain br
 
 ---
 
-## Slide 12: Jembatan ke Modul Berikutnya (Cross-Chain Bridges)
+## Slide 12: Transition to Module 06.4: Interoperability and Cross-Chain Bridges
 
 ### Konten Slide
-- **Tantangan Rekayasa Berikutnya:**
-  - Blockchain publik secara desain adalah mesin status yang berdaulat dan terisolasi (*sovereign isolated state machines*).
-  - Ethereum tidak bisa membaca memori Solana, dan Arbitrum tidak bisa secara otomatis membaca status internal Optimism.
-- **Pertanyaan Kritis Lintas Rantai:**
-  - Bagaimana protokol jembatan mengoordinasikan transfer nilai lintas rantai independen?
-  - Apa perbedaan antara model Lock-and-Mint, Burn-and-Mint, dan Liquidity Networks?
-  - Mengapa Vitalik Buterin memperingatkan bahwa jembatan lintas rantai menghadapi batas keamanan fundamental yang tidak dialami oleh rollup?
-  - Mengapa kontrak jembatan menjadi target peretasan terbesar dalam sejarah keuangan global?
-- **Materi Modul Berikutnya:** **Interoperability and Cross-Chain Bridges**.
-- *Visual:* Ilustrasi jembatan gantung digital yang menghubungkan dua jurang tebing blockchain yang rawan diserang badai peretas.
+Transition to Module 06.4: Interoperability and Cross-Chain Bridges
+
+Bridging the Sovereign Divide:
+- Blockchains are by design sovereign, isolated state machines incapable of observing external environments.
+- Ethereum cannot read Solana state, and Arbitrum cannot natively verify Optimism state transitions.
+
+Core Questions for Module 06.4:
+- How do bridge protocols coordinate value and state transfer between sovereign consensus domains?
+- What are the mechanics of Lock-and-Mint, Burn-and-Mint, and Liquidity Networks?
+- Why did Vitalik Buterin declare that cross-chain bridges have fundamental security limits that rollups do not share?
+- Why have bridge smart contracts become the target of the largest hacks in financial history, losing billions of dollars?
+
+Next Up:
+- Module 06.4: Interoperability and Cross-Chain Bridges: Connecting Fragmented Ecosystems.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Rangkuman transisi: dari penskalaan internal rollup ke komunikasi lintas rantai.
+- Rangkuman transisi: dari penskalaan internal rollup ke komunikasi antar-jaringan.
 - Menyoroti kerentanan fatal jembatan: peretasan ratusan juta dolar.
 - Teaser modul 6.4: Interoperability and Cross-Chain Bridges.
 

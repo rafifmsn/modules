@@ -3,17 +3,22 @@ Modul Presentasi: Scalability and Security (06.5)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: Protocol Security and Maximum Extractable Value: The Dark Forest Blueprint
 
 ### Konten Slide
-- **Topik:** Protocol Security and Maximum Extractable Value (MEV)
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Membedah kerentanan kode smart contract tingkat rendah, dinamika predator transaksi di mempool publik, serta arsitektur Proposer-Builder Separation untuk menjaga desentralisasi konsensus.
-- *Visual:* Ilustrasi perisai keamanan siber kriptografis berdampingan dengan radar pemindai bot transaksi MEV di mempool.
+Protocol Security and Maximum Extractable Value: The Dark Forest Blueprint
+Module 06.5: Scalability and Security
+Track: Fundamentals of Distributed Trust
+
+Core Architectural Focus:
+- The absolute adversarial reality of immutable public smart contract execution.
+- Classical virtual machine vulnerabilities: Reentrancy, arithmetic bugs, and access control breaches.
+- The game theory of Maximal Extractable Value (MEV), predatory mempool bots, and Proposer-Builder Separation (PBS).
+- Modern protocol defense: Property-based invariant fuzzing, formal verification, and order flow auctions.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Selamat datang di modul penutup dari Trek Fundamentals: Protocol Security and MEV.
+- Membuka modul kelima sekaligus modul penutup dari Trek Fundamentals: Protocol Security and MEV.
 - Modul ini menggabungkan dua topik krusial: keamanan kode smart contract dan keamanan teori permainan urutan transaksi.
 - Memahami mengapa menulis kode di blockchain sangat berbeda dengan membuat aplikasi web konvensional.
 
@@ -29,16 +34,19 @@ Kedua adalah pertarungan teori permainan di ruang tunggu transaksi yang dikenal 
 
 ---
 
-## Slide 2: Realitas Lingkungan Adversarial Blockchain
+## Slide 2: The Adversarial Reality of Public Blockchains
 
 ### Konten Slide
-- **Perbedaan Paradigma Keamanan Perangkat Lunak:**
-  - *Sistem Tradisional (Web2):* Kode berada di server tertutup, database dilindungi firewall, transaksi bersifat privat, dan transaksi curang dapat dibatalkan melalui intervensi bank atau pengadilan.
-  - *Sistem Desentralisasi (Web3):* Bytecode terbuka untuk umum, status akun transparan global, eksekusi bersifat deterministik dan tidak dapat dibatalkan (*immutable*).
-- **The Dark Forest (Hutan Gelap Mempool):**
-  - Ribuan bot algoritmis mengawasi setiap transaksi yang belum dikonfirmasi selama 24 jam sehari secara otomatis.
-  - Setiap kesalahan logika sekecil apa pun akan langsung dieksploitasi dalam hitungan detik tanpa peringatan dan tanpa jalur hukum untuk memulihkan dana.
-- *Visual:* Perbandingan grafis antara benteng Web2 dengan firewall vs Hutan Gelap Web3 dengan radar bot pemangsa otomatis.
+The Adversarial Reality of Public Blockchains
+
+The Software Security Paradigm Shift:
+- Traditional Web2 Environment: Code resides on private servers, databases are shielded by enterprise firewalls, and fraudulent actions can be reversed via database rollback or legal intervention.
+- Decentralized Web3 Environment: Bytecode is publicly decompilable, storage state is globally visible, and execution is deterministic and permanent (immutable).
+
+The Dark Forest of the Public Mempool:
+- Thousands of autonomous algorithmic bots continuously inspect every unconfirmed transaction in real time.
+- Any logical bug, unhedged slippage, or exploitable function parameter is attacked within milliseconds of mempool entry.
+- Zero recourse: No emergency rollback hotline, no customer support, and no legal mechanism to claw back exploited capital.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -57,16 +65,22 @@ Jika kalian membuat satu saja kesalahan logika pada smart contract kalian, bot p
 
 ---
 
-## Slide 3: Kerentanan Klasik Smart Contract: Reentrancy Attack
+## Slide 3: Classic Smart Contract Vulnerabilities: Reentrancy Attacks
 
 ### Konten Slide
-- **Definisi Reentrancy:** Celah keamanan yang terjadi ketika sebuah kontrak memanggil alamat eksternal sebelum menyelesaikan pembaruan status internalnya sendiri.
-- **Mekanisme Pembajakan Alur Kontrol (Control Flow Hijacking):**
-  - Kontrak target mentransfer koin ke alamat penyerang (Mallory).
-  - Pengiriman koin otomatis memicu fungsi penampung (*fallback / receive function*) pada smart contract milik Mallory.
-  - Alih-alih menerima dana secara pasif, kode Mallory sengaja memanggil kembali (*re-enter*) fungsi penarikan `withdraw()` pada kontrak target sebelum saldo akunnya disetel ke nol.
-- **Kasus Historis Terkenal:** The DAO Hack (2016) yang menguras 3,6 juta ETH dan memicu hard fork perpecahan antara Ethereum dan Ethereum Classic.
-- *Visual:* Sequence diagram loop reentrancy: Target memeriksa saldo -> Kirim nilai -> Fallback Mallory memanggil withdraw lagi secara rekursif hingga dana ludes.
+Classic Smart Contract Vulnerabilities: Reentrancy Attacks
+
+Definition of Reentrancy:
+- A critical vulnerability occurring when a contract performs an external state call before completing its own internal state balance updates.
+
+The Control Flow Hijacking Mechanism:
+- 1. Target Vault Contract checks user balance and sends ether to the caller contract (Mallory).
+- 2. The ether transfer triggers Mallory's fallback / receive function.
+- 3. Mallory's malicious fallback function immediately re-invokes the vault's withdraw() function before the original balance was zeroed out.
+- 4. The vault checks the balance again (which remains un-updated) and transfers ether again, repeating recursively until the vault is completely drained.
+
+Historical Significance:
+- The DAO Hack (2016): Drained 3.6 million ETH, resulting in the contentious hard fork splitting Ethereum from Ethereum Classic.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -78,30 +92,32 @@ Jika kalian membuat satu saja kesalahan logika pada smart contract kalian, bot p
 Mari kita pelajari kerentanan kode yang paling legendaris dalam sejarah Ethereum: Serangan Reentrancy.
 Inilah bug yang meruntuhkan The DAO pada tahun 2016 dan menyebabkan perpecahan antara Ethereum dan Ethereum Classic.
 Bagaimana serangan ini bekerja?
-Bayangkan ada sebuah kontrak pintar brankas yang memiliki fungsi penarikan dana bernama `withdraw()`.
+Bayangkan ada sebuah kontrak pintar brankas yang memiliki fungsi penarikan dana bernama withdraw().
 Ketika pengguna memanggil fungsi ini, kontrak memeriksa apakah saldo pengguna cukup.
 Jika cukup, kontrak mengirimkan koin ke alamat pengguna, dan baru di baris terakhir saldo pengguna disetel menjadi nol.
 Di sinilah letak bencana komputasinya.
 Di Ethereum, mengirim koin ke alamat smart contract lain otomatis menyerahkan kendali eksekusi ke fungsi fallback kontrak penerima tersebut.
 Penyerang seperti Mallory tidak membuat dompet biasa, melainkan membuat smart contract jahat.
-Begitu koin pertama dikirimkan ke kontraknya, fungsi fallback Mallory langsung memanggil ulang fungsi `withdraw()` di kontrak brankas sebelum baris penyetelan saldo ke nol sempat dieksekusi.
+Begitu koin pertama dikirimkan ke kontraknya, fungsi fallback Mallory langsung memanggil ulang fungsi withdraw() di kontrak brankas sebelum baris penyetelan saldo ke nol sempat dieksekusi.
 Kontrak brankas mengira ini adalah penarikan baru, melihat saldonya masih utuh, dan mengirimkan koin lagi.
 Proses ini berputar terus secara rekursif hingga seluruh isi brankas terkuras habis.
 
 ---
 
-## Slide 4: Garis Pertahanan Reentrancy: CEI Pattern & Mutex Guards
+## Slide 4: Lines of Defense Against Reentrancy: CEI Pattern and Mutex Guards
 
 ### Konten Slide
-- **1. Pola Checks-Effects-Interactions (CEI):**
-  - Standar mutlak dalam penulisan smart contract yang aman.
-  - **Checks:** Validasi seluruh persyaratan input dan saldo akun menggunakan `require()`.
-  - **Effects:** Perbarui seluruh variabel status internal dan kurangi saldo akun pemanggil terlebih dahulu.
-  - **Interactions:** Lakukan panggilan eksternal atau transfer koin ke luar kontrak sebagai langkah paling akhir.
-- **2. ReentrancyGuard (Kunci Mutex / Semaphore):**
-  - Mengimplementasikan pengunci status sementara (seperti pustaka OpenZeppelin `nonReentrant`).
-  - Menandai variabel boolean pengunci sebelum fungsi berjalan, dan membalikkan transaksi (*revert*) jika ada pemanggilan kembali sebelum eksekusi pertama tuntas.
-- *Visual:* Perbandingan kode rentan (Interaction sebelum Effects) vs Kode aman mematuhi CEI Pattern disertai ilustrasi gembok Mutex.
+Lines of Defense Against Reentrancy: CEI Pattern and Mutex Guards
+
+1. The Checks-Effects-Interactions (CEI) Pattern:
+- The non-negotiable standard pattern for writing secure smart contract functions.
+- Checks: Validate all caller permissions, parameter bounds, and balance preconditions using require() statements.
+- Effects: Mutate internal contract state and debit the user balance first.
+- Interactions: Perform external contract calls, ether transfers, or token transfers as the final step.
+
+2. ReentrancyGuard (Mutex Semaphore Locks):
+- Employs a state lock variable (e.g., OpenZeppelin nonReentrant modifier).
+- Flags an internal boolean status before execution begins and reverts any nested re-entry attempts before the initial execution completes.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -118,27 +134,30 @@ Pertama, periksa semua syarat dan pastikan pemanggil punya hak.
 Kedua, ubah status internal di database kalian terlebih dahulu: kurangi saldo pengguna menjadi nol sekarang juga.
 Ketiga, baru lakukan interaksi ke dunia luar dengan mentransfer koin.
 Dengan pola ini, jika penyerang mencoba memanggil ulang fungsi tersebut secara rekursif, saldo internal mereka sudah bernilai nol pada pengecekan kedua, sehingga transaksi langsung dibatalkan.
-Pertahanan kedua adalah memasang gembok pengunci atau Mutex Guard, seperti modifier `nonReentrant` dari OpenZeppelin.
+Pertahanan kedua adalah memasang gembok pengunci atau Mutex Guard, seperti modifier nonReentrant dari OpenZeppelin.
 Gembok ini menandai bahwa fungsi sedang berjalan.
 Jika ada instruksi yang mencoba masuk kembali ke pintu fungsi yang sama sebelum eksekusi pertama selesai, sistem akan seketika menolaknya.
 
 ---
 
-## Slide 5: Kerentanan Aritmatika dan Kontrol Akses
+## Slide 5: Arithmetic Failures and Access Control Vulnerabilities
 
 ### Konten Slide
-- **Kerentanan Aritmatika (Overflow & Underflow):**
-  - *Di bawah Solidity 0.8.0:* Angka integer berputar tanpa error (*silent wraparound*); mengurangi 1 dari nilai nol pada `uint256` menghasilkan angka raksasa $2^{256} - 1$.
-  - *Solidity 0.8.0 ke atas:* Kompilator menyertakan pengecekan otomatis bawaan yang langsung membatalkan transaksi (*revert*) jika terjadi overflow, kecuali di dalam blok `unchecked { ... }`.
-- **Kegagalan Kontrol Akses (Access Control Failures):**
-  - Lupa menetapkan batasan pemanggil (*visibility & access modifiers*) pada fungsi penting seperti pengaturan pemilik, pencetakan token, atau inisialisasi kontrak.
-  - **Tragedi Parity Multi-Sig (2017):** Fungsi inisialisasi pustaka dompet tidak dilindungi; penyerang memanggil `initWallet()`, mengangkat diri menjadi pemilik, lalu memanggil `selfdestruct()`, membekukan 513.774 ETH secara permanen.
-- *Visual:* Ilustrasi putaran roda angka aritmatika wrap-around dan pintu brankas tanpa gembok kontrol akses.
+Arithmetic Failures and Access Control Vulnerabilities
+
+Arithmetic Overflow & Underflow:
+- Pre-Solidity 0.8: Unchecked integer arithmetic silently wrapped around; subtracting 1 from 0 in uint256 produced 2^256 - 1.
+- Required explicit SafeMath library wrappers to prevent catastrophic balance inflation.
+- Solidity 0.8+: Native compiler-level overflow checks automatically revert transactions unless explicitly placed inside an unchecked block for gas optimization.
+
+Access Control Failures:
+- Forgetting visibility specifiers or authorization guards on critical state-altering functions (minting, ownership transfers, contract initialization).
+- Parity Multi-Sig Hack (November 2017): Unprotected wallet library initialization function allowed an attacker to call initWallet(), seize ownership, and execute selfdestruct(), permanently freezing 513,774 ETH.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
 - Dulu butuh pustaka SafeMath untuk mencegah overflow, sekarang Solidity 0.8+ sudah otomatis menangani ini.
-- Bahaya blok `unchecked` jika dipakai sembarangan demi menghemat gas.
+- Bahaya blok unchecked jika dipakai sembarangan demi menghemat gas.
 - Kasus Parity Multi-Sig: keteledoran kontrol akses membekukan setengah juta ETH selamanya.
 
 **Naskah Tutur (Voiceover Script):**
@@ -146,27 +165,31 @@ Dua kerentanan klasik lain yang sering menghancurkan protokol adalah masalah ari
 Dulu, sebelum versi Solidity 0.8, variabel angka di smart contract mengalami masalah putaran diam atau overflow dan underflow.
 Jika variabel bernilai nol dikurangi satu, angkanya tidak menjadi minus satu, melainkan melompat menjadi angka maksimum dua pangkat 256 dikurang satu.
 Pengembang dulu terpaksa menggunakan pustaka SafeMath untuk setiap operasi matematika.
-Kini, kompiler modern Solidity otomatis membatalkan transaksi jika ada overflow, kecuali pengembang sengaja mematikannya di dalam blok `unchecked` demi menghemat gas.
+Kini, kompiler modern Solidity otomatis membatalkan transaksi jika ada overflow, kecuali pengembang sengaja mematikannya di dalam blok unchecked demi menghemat gas.
 Kerentanan berikutnya adalah kelalaian kontrol akses.
 Banyak pengembang lupa memberi modifier pembatas pada fungsi vital seperti inisialisasi atau penarikan dana.
 Kasus paling tragis terjadi pada dompet Parity Multi-Sig tahun 2017.
 Sebuah fungsi inisialisasi perpustakaan kode dibiarkan terbuka untuk siapa saja.
-Seorang pengguna sengaja memanggil fungsi tersebut, mengangkat dirinya menjadi pemilik perpustakaan, lalu memicu instruksi bunuh diri `selfdestruct()`.
+Seorang pengguna sengaja memanggil fungsi tersebut, mengangkat dirinya menjadi pemilik perpustakaan, lalu memicu instruksi bunuh diri selfdestruct().
 Akibatnya, perpustakaan kode itu lenyap dari blockchain, dan 513.000 koin ETH di ratusan dompet multi-sig membeku selamanya tanpa bisa dicairkan hingga hari ini.
 
 ---
 
-## Slide 6: Pengantar Maximal Extractable Value (MEV)
+## Slide 6: Introduction to Maximal Extractable Value (MEV)
 
 ### Konten Slide
-- **Definisi Formal (Phil Daian et al., 2019 - *Flash Boys 2.0*):**
-  - Nilai maksimum yang dapat diekstraksi dari produksi blok di luar hadiah blok reguler (*block reward*) dan biaya gas standar.
-  - Diekstraksi melalui kewenangan menyertakan, mengecualikan, atau **mengubah urutan kronologis transaksi** di dalam sebuah blok.
-- **Sifat Transparan Mempool Publik:**
-  - Sebelum transaksi dimasukkan ke dalam blok resmi, transaksi berada di mempool publik dan dapat dibaca oleh seluruh dunia.
-  - Siapa pun dapat melihat niat perdagangan, jumlah token, dan batas toleransi harga (*slippage*) dari transaksi yang tertunda.
-- **Pergeseran Istilah:** Semula disebut *Miner Extractable Value* pada era Proof of Work, kini diperluas menjadi *Maximal Extractable Value* pada era Proof of Stake.
-- *Visual:* Diagram penambang atau validator mengatur urutan transaksi dari antrean mempool untuk meraup keuntungan pribadi.
+Introduction to Maximal Extractable Value (MEV)
+
+Formal Definition (Phil Daian et al., 2019 - Flash Boys 2.0):
+- The maximum value that can be extracted from block production in excess of standard block subsidies and gas fees.
+- Extracted via the arbitrary discretion to include, exclude, or reorder transactions within a proposed block.
+
+The Transparent Mempool Condition:
+- Transactions waiting in the public mempool are completely visible to all network participants.
+- Searcher bots inspect pending trades, slippage thresholds, trade sizes, and oracle updates before inclusion.
+
+Terminology Evolution:
+- Originally termed Miner Extractable Value under Proof of Work, broadened to Maximal Extractable Value under Proof of Stake consensus architectures.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -176,7 +199,7 @@ Akibatnya, perpustakaan kode itu lenyap dari blockchain, dan 513.000 koin ETH di
 
 **Naskah Tutur (Voiceover Script):**
 Sekarang kita beralih dari keamanan kode ke wilayah yang jauh lebih dinamis: Maximal Extractable Value atau MEV.
-Konsep ini pertama kali diformalkan pada tahun 2019 oleh peneliti Phil Daian dalam makalah terkenal berjudul *Flash Boys 2.0*.
+Konsep ini pertama kali diformalkan pada tahun 2019 oleh peneliti Phil Daian dalam makalah terkenal berjudul Flash Boys 2.0.
 MEV adalah total keuntungan finansial maksimum yang bisa diperas dari sebuah blok, melebihi hadiah blok dan biaya gas biasa, dengan cara memanipulasi urutan transaksi di dalam blok tersebut.
 Kenapa ini bisa terjadi?
 Karena di blockchain publik, sebelum transaksi kalian resmi masuk ke dalam blok, transaksi itu mengapung di mempool publik.
@@ -186,19 +209,24 @@ Kewenangan mengatur urutan waktu ini membuka peluang ekonomi raksasa bagi siapa 
 
 ---
 
-## Slide 7: Strategi Ekstraksi MEV: Front-Running, Back-Running, dan Likuidasi
+## Slide 7: MEV Extraction Strategies: Front-Running, Back-Running, and Liquidations
 
 ### Konten Slide
-- **1. Front-Running:**
-  - Bot pengintai (*searcher*) mendeteksi transaksi bernilai untung besar di mempool publik (misalnya transaksi pembelian besar atau likuidasi).
-  - Bot menyalin parameter transaksi tersebut dan menyiarkannya dengan biaya prioritas gas (*priority gas fee*) yang lebih tinggi agar ditambang lebih awal oleh validator.
-- **2. Back-Running:**
-  - Bot mendeteksi transaksi besar yang akan mengubah rasio harga di sebuah kolam AMM.
-  - Bot menempatkan transaksinya persis di belakang transaksi korban untuk menangkap peluang arbitrase harga seketika di bursa lain.
-- **3. Likuidasi Otomatis:**
-  - Ratusan bot memantau protokol peminjaman seperti Aave dan Compound selama 24 jam sehari.
-  - Begitu harga agunan jatuh, bot-bot ini berlomba dalam lelang gas (*Priority Gas Auctions / PGA*) untuk mengeksekusi likuidasi dalam blok yang sama dan mengklaim bonus likuidasi.
-- *Visual:* Bagan tiga jalur strategi MEV: Front-running (menyalip), Back-running (membuntuti), dan Likuidasi (lelang gas kilat).
+MEV Extraction Strategies: Front-Running, Back-Running, and Liquidations
+
+Three Primary MEV Typologies:
+
+1. Front-Running:
+- A searcher bot detects a profitable transaction in the mempool (e.g., an unexploited arbitrage or mispriced asset).
+- The bot copies the transaction payload and broadcasts it with a higher priority gas fee, ensuring the validator includes the bot's transaction ahead of the original sender.
+
+2. Back-Running:
+- A bot detects a large trade that will shift the price curve on an AMM pool.
+- The bot places its transaction immediately after the victim trade to capture the resulting price discrepancy across external exchanges.
+
+3. Automated Liquidations:
+- Searcher bots continuously monitor lending markets (Aave, Compound).
+- When a borrower position breaches collateral thresholds, bots compete in Priority Gas Auctions (PGA) to execute liquidation calls and claim liquidation bonuses.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -221,16 +249,21 @@ Likuidasi ini sebenarnya membantu sistem tetap sehat, tetapi perang penawaran ga
 
 ---
 
-## Slide 8: Serangan Predator: The Sandwich Attack
+## Slide 8: Predatory Mechanics: The Sandwich Attack
 
 ### Konten Slide
-- **Target Sasaran:** Pedagang ritel (seperti Alice) yang menukar token di bursa terdesentralisasi dengan menyetel batas toleransi harga (*slippage tolerance*) yang terlalu longgar.
-- **Tiga Tahap Serangan Menjepit (The Sandwich):**
-  - **1. Front-Run Buy:** Bot pengintai (Eve) mendeteksi rencana pembelian token X oleh Alice; Eve menyalip dengan membeli token X terlebih dahulu, mendorong harga token X naik hingga ke batas toleransi maksimal Alice.
-  - **2. Victim Swap:** Transaksi Alice dieksekusi tepat di tengah pada harga terburuk yang diizinkan oleh pengaturan toleransinya.
-  - **3. Back-Run Sell:** Pada milidetik yang sama persis di dalam blok yang identik, Eve langsung menjual kembali seluruh token X miliknya pada harga tinggi yang baru saja dipompa oleh pembelian Alice.
-- **Hasil Akhir:** Eve mengeruk keuntungan tanpa risiko pasar, sementara Alice menderita kerugian finansial akibat mendapatkan jumlah token yang jauh lebih sedikit.
-- *Visual:* Sequence diagram Sandwich Attack: Eve Buy -> Alice Victim Swap (diapit di tengah) -> Eve Sell (mengekstraksi margin keuntungan).
+Predatory Mechanics: The Sandwich Attack
+
+The Vulnerability:
+- Retail traders submitting swaps with excessively loose slippage tolerance settings (e.g., 2 to 5 percent).
+
+The Three-Step Sandwich Execution:
+- 1. Front-Run Buy: Searcher bot (Eve) detects Alice's large purchase order; Eve buys the target asset first, driving the spot price up to Alice's maximum acceptable slippage boundary.
+- 2. Victim Swap: Alice's trade executes at the artificially inflated, worst-possible allowable price.
+- 3. Back-Run Sell: In the very same block, Eve instantly sells her acquired tokens at the newly inflated price created by Alice's capital inflow.
+
+Outcome:
+- Eve locks in risk-free arbitrage profit; Alice suffers immediate financial losses by receiving significantly fewer tokens than market equilibrium.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -252,18 +285,21 @@ Eve mengantongi keuntungan bersih secara bebas risiko, sementara Alice mendapatk
 
 ---
 
-## Slide 9: Bahaya Sentralisasi MEV pada Tingkat Konsensus
+## Slide 9: The Consensus Centralization Threat of MEV
 
 ### Konten Slide
-- **Ancaman terhadap Fondasi Desentralisasi:**
-  - Pada masa awal Proof of Stake dan Proof of Work, penambang dan validator mengekstraksi MEV secara mandiri melalui infrastruktur internal.
-- **Ketimpangan Ekonomi Staker Rumahan vs Kartel Institusional:**
-  - Validator perorangan (*solo home stakers*) tidak memiliki kapabilitas algoritmis untuk bersaing memburu MEV dan hanya menerima imbal hasil dasar (misalnya 4 persen APR).
-  - Kartel data center besar bermitra dengan firma perdagangan frekuensi tinggi (*HFT firms*) untuk mengekstrak MEV, mendongkrak imbal hasil mereka menjadi 10 hingga 15 persen APR.
-- **Efek Domino Sentralisasi:**
-  - Modal staking global secara rasional akan mengalir meninggalkan staker rumahan dan terkonsentrasi ke segelintir operator elite yang mampu memaksimalkan MEV.
-  - Konsensus jaringan berisiko terpusat menjadi oligarki validator terkoordinasi.
-- *Visual:* Grafik jurang ketimpangan imbal hasil antara Solo Staker vs Kartel MEV institusional yang memicu sentralisasi modal.
+The Consensus Centralization Threat of MEV
+
+The Threat to Validator Decentralization:
+- In early PoW/PoS regimes, validators and miners extracted MEV directly using proprietary infrastructure.
+
+Economic Disparity Between Solo Stakers and Institutional Cartels:
+- Solo home stakers running standard clients cannot build high-frequency algorithmic extraction engines, receiving only baseline staking APR (approx. 4 percent).
+- Institutional node operators partner with high-frequency trading (HFT) searchers, boosting staking yields to 10 to 15 percent APR.
+
+The Centralization Death Spiral:
+- Capital rationally flows away from independent home validators into a handful of elite institutional staking cartels capable of extracting maximal MEV.
+- Decentralized consensus degrades into an oligopoly of data center operators.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -284,18 +320,22 @@ Lama-kelamaan, seluruh jaringan akan dikuasai oleh kartel data center, dan impia
 
 ---
 
-## Slide 10: Arsitektur Modern MEV: PBS dan MEV-Boost
+## Slide 10: Modern MEV Architecture: Proposer-Builder Separation (PBS) and MEV-Boost
 
 ### Konten Slide
-- **Proposer-Builder Separation (PBS):**
-  - Solusi arsitektural Ethereum untuk mendemokratisasi hasil MEV dan menyelamatkan staker rumahan.
-  - Memisahkan tugas **penyusunan blok (*block building*)** dari tugas **pengusulan blok (*block proposing*)**.
-- **Empat Aktor dalam Pipeline MEV-Boost:**
-  - **1. Searchers:** Bot algoritmis (seperti Eve) mencari peluang arbitrase, mengemas transaksi menjadi berkas (*bundles*), dan mengirimkannya ke Builders.
-  - **2. Block Builders:** Server spesialis berkekuatan tinggi merangkai ribuan transaksi publik dan bundles menjadi calon blok paling bernilai maksimal, lalu mengajukan lelang harga.
-  - **3. Relays:** Pihak penengah netral (*escrow*) yang memvalidasi isi blok dan mencegah kecurangan antar-pihak sebelum blok ditandatangani.
-  - **4. Block Proposers (Validators):** Staker biasa (Charlie) tidak perlu melihat isi transaksi di dalam blok; Charlie cukup menandatangani header dari Builder yang memberikan tawaran bagi hasil ekonomi tertinggi.
-- *Visual:* Alur kerja PBS: Searchers -> Builders -> MEV-Boost Relays -> Solo Proposer Charlie menandatangani blok.
+Modern MEV Architecture: Proposer-Builder Separation (PBS) and MEV-Boost
+
+The PBS Solution:
+- Decouples the computationally intensive task of block building from the consensus task of block proposing.
+
+Four Key Actors in the MEV-Boost Pipeline:
+- 1. Searchers: Identify arbitrage opportunities, package transactions into private bundles, and submit them to Builders.
+- 2. Block Builders: Compile bundles and public transactions into optimal blocks, bidding aggressively in an open auction.
+- 3. Relays: Neutral escrow agents that validate block correctness and data availability, withholding raw block bodies until the proposer signs the block header.
+- 4. Block Proposers (Validators): Solo stakers simply select and sign the highest-paying block bid delivered by relays without needing custom MEV infrastructure.
+
+Outcome:
+- Democratizes MEV rewards across all network validators, preserving solo validator economic viability.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -316,18 +356,21 @@ Melalui PBS, staker rumahan tetap bisa mendapatkan imbal hasil kompetitif yang s
 
 ---
 
-## Slide 11: Pertahanan Protokol Modern: Fuzzing dan Verifikasi Formal
+## Slide 11: Modern Protocol Defense: Invariant Fuzzing and Formal Verification
 
 ### Konten Slide
-- **Evolusi Keamanan di Luar Audit Manual:**
-  - Audit kode manual oleh manusia terbukti tidak cukup untuk menangani kompleksitas ekosistem DeFi modern.
-- **1. Property-Based & Invariant Fuzzing (Foundry, Echidna):**
-  - Pengembang mendefinisikan kondisi matematika mutlak (*invariants*) yang wajib berlaku selamanya (misalnya: *"Total cadangan kas protokol harus selalu sama dengan total klaim token pengguna"*).
-  - Mesin fuzzer otomatis membombardir smart contract dengan jutaan kombinasi transaksi acak untuk menemukan kondisi di mana invarian tersebut jebol.
-- **2. Formal Verification (Certora, Halmos):**
-  - Mengonversi logika kode smart contract menjadi proposisi matematika formal.
-  - Menggunakan mesin pembukti matematis (*mathematical theorem provers*) untuk membuktikan secara absolut bahwa kode tidak memiliki celah logika tersembunyi.
-- *Visual:* Ilustrasi radar fuzzer memecahkan ribuan skenario eksekusi dan simbol pembuktian matematika formal pada smart contract.
+Modern Protocol Defense: Invariant Fuzzing and Formal Verification
+
+Beyond Manual Human Code Audits:
+- Manual code reviews fail to uncover multi-contract composability bugs and complex arithmetic edge cases.
+
+1. Property-Based & Invariant Fuzzing (Foundry, Echidna):
+- Developers define system invariants: mathematical truths that must hold across all execution paths (e.g., protocol collateralization ratio >= minimum threshold).
+- Automated fuzzers generate millions of pseudo-random transaction sequences to aggressively identify inputs that break system invariants.
+
+2. Formal Verification (Certora, Halmos):
+- Compiles smart contract bytecode into formal mathematical specifications.
+- Mathematical theorem provers mathematically prove that code adheres strictly to its specification under all possible parameter spaces.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -348,19 +391,21 @@ Ini adalah standar keamanan tertinggi yang diadopsi oleh protokol bernilai milia
 
 ---
 
-## Slide 12: Perlindungan Pengguna: Private Mempools & Order Flow Auctions
+## Slide 12: End-User Protection: Private Mempools and Order Flow Auctions
 
 ### Konten Slide
-- **Menyelamatkan Pengguna dari Hutan Gelap:**
-  - Mengapa pengguna biasa harus membiarkan transaksi mereka diserang oleh bot di mempool publik?
-- **1. Private RPC Endpoints (Flashbots Protect):**
-  - Pengguna mengarahkan dompet mereka ke jalur koneksi privat (*private RPC*).
-  - Transaksi dikirim langsung ke Block Builders terpercaya tanpa pernah disiarkan ke mempool publik.
-  - Sepenuhnya menghilangkan risiko serangan Sandwich Attack dan Front-Running karena bot predator tidak bisa melihat transaksi yang belum selesai.
-- **2. Order Flow Auctions (MEV-Share, MEV-Blocker):**
-  - Jika transaksi pengguna menciptakan nilai arbitrase yang tak terhindarkan, protokol melelang hak arbitrase tersebut kepada searchers secara terkontrol.
-  - Sebagian besar nilai keuntungan yang diekstrak (hingga 90 persen) dikembalikan secara otomatis langsung ke kantong dompet pengguna asli dalam bentuk *MEV cashback*.
-- *Visual:* Diagram pengguna memotong jalur mempool publik berbahaya lewat pipa terlindung Private RPC menuju Block Builder disertai cashback.
+End-User Protection: Private Mempools and Order Flow Auctions
+
+Shielding Retail Users from the Dark Forest:
+
+1. Private RPC Endpoints (Flashbots Protect, MEV Blocker):
+- Transactions are routed directly to trusted Block Builders via private connections, bypassing the public mempool entirely.
+- Eliminates Front-Running and Sandwich Attacks because predatory bots cannot inspect transactions prior to inclusion.
+
+2. Order Flow Auctions (OFAs) & MEV Rebates:
+- Protocols auction the right to back-run non-malicious user order flow.
+- Up to 90 percent of extracted arbitrage profit is automatically returned directly to the user's wallet as an MEV cashback refund.
+- Converts predatory externalities into direct economic value for everyday participants.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -382,20 +427,22 @@ Kita berhasil mengubah ancaman predator menjadi nilai tambah bagi pengguna.
 
 ---
 
-## Slide 13: Puncak Kurikulum Fundamentals: Menatap Masa Depan
+## Slide 13: Culmination of Track 1 Fundamentals: Gateway to Engineering
 
 ### Konten Slide
-- **Pencapaian Menuntaskan Trek Fundamentals:**
-  - Anda telah menuntaskan seluruh fondasi teoretis, arsitektural, dan teori permainan dari sistem terdesentralisasi:
-    - *01. Distributed Trust:* Dari batu Rai Yap hingga terobosan konsensus Nakamoto.
-    - *02. Architecture & State:* Anatomi blok, model UTXO vs Account, dan mempool.
-    - *03. Consensus & Game Theory:* Ketahanan Proof of Work, Proof of Stake, dan finalitas ekonomi.
-    - *04. Virtual Machine & Gas:* Mesin Turing-complete, opcode EVM, dan batas komputasi gas.
-    - *05. Decentralized Finance:* Standar token, likuiditas AMM, lending, dan tata kelola DAO.
-    - *06. Scalability & Security:* Trilemma, Layer 2 rollups, jembatan lintas rantai, dan pertahanan MEV.
-- **Gerbang Menuju Trek Rekayasa Spesialis:**
-  - Anda kini memiliki kerangka berpikir yang kokoh untuk melangkah ke trek pembangunan teknis: **Builder Foundations** dan **Protocol Engineering**.
-- *Visual:* Peta kurikulum enam bab yang telah selesai dipelajari, membuka pintu gerbang menuju pembangunan smart contract dan rekayasa protokol tingkat lanjut.
+Culmination of Track 1 Fundamentals: Gateway to Engineering
+
+Complete Mastery of Distributed Trust Foundations:
+- 01. Distributed Trust: From Yap Rai stones to Nakamoto consensus.
+- 02. Architecture & State: Block anatomy, UTXO vs Account models, and mempool mechanics.
+- 03. Consensus & Game Theory: Proof of Work, Proof of Stake, and economic finality.
+- 04. Virtual Machine & Gas: Turing completeness, EVM opcodes, and computational gas bounds.
+- 05. Decentralized Systems: Token standards, AMM liquidity pools, collateralized lending, and DAO governance.
+- 06. Scalability & Security: The Trilemma, Layer 2 rollups, cross-chain bridges, and MEV defense.
+
+The Gateway to Engineering Mastery:
+- You now possess the rigorous theoretical and game-theoretic framework required for real-world protocol development.
+- Next Track: Builder Foundations (Production Smart Contract Development with Foundry) and Protocol Engineering.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**

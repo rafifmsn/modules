@@ -1,24 +1,27 @@
 # Peer-to-Peer Networks and Network Topologies
+
 Modul Presentasi: Fondasi Distributed Trust (01.4)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: Peer-to-Peer Networks and Network Topologies
 
 ### Konten Slide
-- **Topik:** Peer-to-Peer Networks and Network Topologies
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Arsitektur jaringan mesh terdesentralisasi, protokol gossip, penemuan simpul Kademlia DHT, serta mitigasi serangan level jaringan.
-- *Visual:* Visualisasi topologi mesh global yang menghubungkan ribuan simpul komputer independen tanpa server pusat.
+
+PEER-TO-PEER NETWORKS AND NETWORK TOPOLOGIES
+Fundamentals of Distributed Trust (Module 01.4)
+The physical communication backbone, decentralized gossip protocols, and network resilience.
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
+
 - Membuka modul keempat sekaligus modul penutup bab Distributed Trust.
 - Menjelaskan pentingnya lapisan jaringan komunikasi P2P sebagai pondasi fisik blockchain.
 - Menghubungkan tanda tangan kriptografis dari modul sebelumnya ke mekanisme distribusi data global.
 
 **Naskah Tutur (Voiceover Script):**
-Selamat datang di modul keempat dari trek Fundamentals.
+Selamat datang di modul keempat dari trek Fundamentals of Distributed Trust.
 Pada modul-modul sebelumnya, kita sudah membedah solusi double-spending, integritas pohon Merkle, dan tanda tangan digital.
 Kita tahu bagaimana Alice dapat membuat transaksi dan membuktikan otoritasnya secara matematis.
 Namun secanggih apa pun kriptografi yang kita gunakan, transaksi yang hanya tersimpan di komputer lokal Alice tidak akan pernah bernilai jika tidak sampai ke validator di belahan bumi lain.
@@ -29,440 +32,410 @@ Hari ini kita akan membedah bagaimana protokol gossip bekerja, bagaimana simpul 
 
 ---
 
-## Slide 2: Pergeseran Paradigma Arsitektur: Client-Server vs. Peer-to-Peer
+## Slide 2: The Peer-to-Peer Paradigm
 
 ### Konten Slide
-- **Model Tradisional Client-Server (Web2):**
-  - *Peran Asimetris:* Server sentral memegang kendali basis data, mengeksekusi logika bisnis, dan menentukan otorisasi akses; perangkat pengguna (*clients*) hanya menjadi konsumen pasif.
-  - *Hierarki Kepercayaan:* Pengguna wajib percaya penuh pada integritas operator server sentral.
-  - *Titik Lemah Struktural:* Rentan terhadap serangan DDoS terkoordinasi, putusnya kabel ISP utama, penutupan sepihak (*deplatforming*), dan pemaksaan regulasi negara.
-- **Model Jaringan Jala Peer-to-Peer (Mesh P2P):**
-  - *Peran Simetris (Servents):* Setiap simpul bertindak secara simultan sebagai peminta data (*client*) sekaligus penyedia data (*server*).
-  - *Ketiadaan Koordinator Sentral:* Tidak membutuhkan server master, direktori terpusat, atau pendaftar DNS tunggal untuk merutekan paket data.
-  - *Ketahanan Bawaan (Organic Fault Tolerance):* Jika 50 persen simpul terputus serentak, separuh jaringan lainnya tetap beroperasi memproses transaksi tanpa henti.
-- *Visual:* Diagram komparasi arsitektur: Topologi bintang Client-Server (dengan satu server pusat raksasa) vs Topologi jala P2P Mesh (koneksi terdistribusi antar-simpul setara).
+
+Evolution of Network Topologies and Organic Fault Tolerance
+
+Client-Server (Web2):
+
+- Architecture: Centralized Star Topology.
+- Role Asymmetry: Central server controls database and access; devices are passive clients.
+- Vulnerability: Single point of failure. Susceptible to coordinated DDoS, cable cuts, and regulatory takedowns.
+
+Hybrid P2P (e.g., Napster, 1999):
+
+- Architecture: Direct transfer with Central Index.
+- Mechanic: Peers transfer payloads directly but rely on a central server to track file locations.
+- Vulnerability: Structural fragility. Seizing the index server instantly collapses the entire network.
+
+Pure P2P Mesh (Blockchain / BitTorrent):
+
+- Architecture: Decentralized Distributed Hash Table (DHT).
+- Role Symmetry: Every node is a Servent (Server + Client).
+- Organic Fault Tolerance: Zero central coordinators. 50% of global nodes can go offline simultaneously without halting transaction processing.
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
-- Bandingkan model client-server Web2 dengan P2P mesh.
-- Pada model P2P, setiap simpul bertindak sebagai client sekaligus server (servent).
+
+- Bandingkan model client-server Web2, hybrid P2P Napster, dan P2P mesh murni.
+- Pada model P2P murni, setiap simpul bertindak sebagai client sekaligus server (servent).
 - Ketahanan organik: separuh simpul mati di dunia, sistem tetap berjalan lancar.
 
 **Naskah Tutur (Voiceover Script):**
 Untuk memahami cara kerja blockchain, kita harus melihat perbedaan mendasar antara internet konvensional dan jaringan terdesentralisasi.
-Seluruh aplikasi Web2 yang kita pakai hari ini dibangun di atas model *client-server*.
+Seluruh aplikasi Web2 yang kita pakai hari ini dibangun di atas model client-server.
 Di arsitektur ini, ada jurang pemisah yang lebar antara pengguna dan server.
 Pusat data raksasa milik Amazon AWS atau Google memegang basis data utama dan memegang kuasa mutlak untuk melayani atau memblokir pengguna.
 Jika server utama mereka mengalami gangguan teknis atau terkena serangan siber, jutaan pengguna di seluruh dunia seketika lumpuh tidak bisa bertransaksi.
-Sebaliknya, blockchain dibangun di atas model Peer-to-Peer.
-Di jaringan P2P, semua komputer memiliki derajat yang setara dan disebut sebagai *servent*, singkatan dari server dan client.
-Setiap simpul meminta data dari tetangganya sekaligus melayani permintaan data dari simpul lain.
+Pada tahun 1999, Napster memelopori transfer langsung antar-komputer, namun masih bergantung pada satu server indeks pusat untuk melacak letak file.
+Ketika pengadilan federal Amerika menutup server indeks tersebut, seluruh jaringan Napster langsung musnah dalam semalam.
+Melihat kegagalan itu, blockchain mengadopsi model Pure P2P Mesh yang diwarisi dari BitTorrent.
+Di jaringan P2P murni, semua komputer memiliki derajat yang setara dan disebut sebagai servent, singkatan dari server dan client.
 Tidak ada komputer master atau direktur lalu lintas sentral.
-Arsitektur ini memiliki sifat *organic fault tolerance*.
-Bahkan jika lima puluh persen komputer di jaringan P2P mendadak mati karena pemadaman listrik massal, sisa lima puluh persen simpul lainnya akan tetap melanjutkan pencatatan ledger tanpa terhenti satu detik pun.
+Arsitektur ini memiliki sifat organic fault tolerance: bahkan jika lima puluh persen komputer di jaringan mendadak mati, sisa simpul lainnya akan tetap melanjutkan pencatatan ledger tanpa henti.
 
 ---
 
-## Slide 3: Pembelajaran Historis P2P: Dari Napster ke BitTorrent
+## Slide 3: Epidemic Dissemination
 
 ### Konten Slide
-- **Evolusi Sistem Berbagi Berkas Terdesentralisasi:** Desain blockchain modern mengadopsi pelajaran arsitektur dari sejarah sistem P2P era awal.
-- **Napster (1999) - P2P Hibrida:**
-  - Memelopori transfer berkas MP3 langsung antar-perangkat pengguna.
-  - *Kelemahan Fatal:* Mengandalkan server indeks terpusat untuk mencatat berkas mana yang disimpan oleh pengguna tertentu.
-  - *Kejatuhan:* Ketika pengadilan memerintahkan penutupan server indeks pusat, seluruh jaringan mati dalam semalam.
-- **Gnutella & BitTorrent (2001) - P2P Murni:**
-  - Menghilangkan peran server indeks terpusat sepenuhnya.
-  - Memperkenalkan Distributed Hash Table (DHT) dan sistem kawanan (*swarms*) mandiri.
-  - *Daya Tahan:* Mampu bertahan dari tuntutan hukum, pemblokiran ISP agresif, dan intervensi regulasi selama puluhan tahun.
-- *Visual:* Bagan sejarah evolusi P2P: Napster (server indeks sentral runtuh) berevolusi menjadi BitTorrent (kawanan DHT tahan sensor) yang menginspirasi arsitektur jaringan blockchain.
+
+Global broadcast via the Gossip Protocol
+
+The Broadcast Challenge:
+No central broadcast server exists.
+Transactions must reach global validators in seconds using limited bandwidth.
+
+Biological Virus Model:
+Nodes do not broadcast to the entire world.
+A node transmits data only to a localized subset of immediate peers (typically 8 to 12 connections).
+
+Logarithmic Scalability:
+Peers validate and forward to their own peers.
+In a random graph of degree d, the message infects the entire global network of N nodes in a strict complexity of O(log N) network hops.
+Exponential Fan-Out: d^1, d^2, d^3...
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
-- Napster membuktikan bahaya server indeks terpusat: perusahaannya dituntut, jaringannya mati.
-- BitTorrent menyempurnakannya dengan desentralisasi penuh lewat DHT.
-- Blockchain mengadopsi ketahanan BitTorrent agar tidak bisa dimatikan oleh entitas mana pun di dunia.
+
+- Menjelaskan Gossip Protocol yang meniru penyebaran virus biologis.
+- Simpul hanya mengirim transaksi ke 8 sampai 12 tetangga langsungnya.
+- Penyebaran eksponensial mencapai seluruh jaringan global dalam O(log N) langkah jaringan.
 
 **Naskah Tutur (Voiceover Script):**
-Inovasi jaringan blockchain tidak lahir di ruang hampa.
-Satoshi Nakamoto dan para pengembang awal mengambil pelajaran berharga dari sejarah perang teknologi *file sharing* di era 2000-an.
-Eksperimen P2P pertama yang meledak secara massal adalah Napster pada tahun 1999.
-Napster memungkinkan jutaan pengguna bertukar lagu secara langsung dari komputer ke komputer.
-Namun, arsitektur Napster memiliki satu kelemahan arsitektural: mereka masih menggunakan satu server indeks terpusat untuk melacak siapa menyimpan lagu apa.
-Ketika pengadilan federal Amerika Serikat mengeluarkan surat perintah penyitaan terhadap server indeks tersebut, seluruh jaringan Napster langsung musnah dalam satu malam.
-Melihat kegagalan itu, generasi berikutnya seperti Gnutella dan BitTorrent lahir dengan arsitektur P2P murni.
-BitTorrent menghapus server sentral sepenuhnya dan menggantinya dengan Distributed Hash Table atau DHT.
-BitTorrent membuktikan kepada dunia sains komputer bahwa sistem tanpa pusat pengendali dapat bertahan puluhan tahun melawan sensor hukum terkeras di dunia.
-Arsitektur inilah yang diwarisi oleh Bitcoin dan Ethereum, memastikan tidak ada satu tombol power pun yang dapat mematikan jaringan.
+Tanpa adanya server siaran terpusat seperti Cloudflare, bagaimana sebuah transaksi baru disiarkan ke puluhan ribu validator global dalam beberapa detik?
+Blockchain menggunakan mekanisme yang disebut Gossip Protocol atau Epidemic Dissemination.
+Protokol ini meniru cara kerja penyebaran virus biologis di alam nyata.
+Ketika laptop Alice memancarkan sebuah transaksi, ia tidak mengirimkannya ke seluruh dunia sekaligus karena hal itu akan membuat koneksi internetnya macet seketika.
+Alice hanya mengirimkan transaksi tersebut ke lingkaran kecil tetangga langsungnya, biasanya berkisar antara delapan hingga dua belas simpul.
+Simpul tetangga yang menerima pesan akan memvalidasi keabsahan data tersebut, lalu meneruskannya kembali ke lingkaran tetangga mereka masing-masing.
+Melalui pola percabangan eksponensial ini, pesan menyebar secara berlipat ganda dari d pangkat satu, d pangkat dua, hingga d pangkat tiga.
+Dalam grafik acak berderajat d, transaksi akan menginfeksi seluruh jaringan global berukuran N simpul dalam kompleksitas O(log N) lompatan jaringan saja.
 
 ---
 
-## Slide 4: Protokol Gossip dan Epidemic Dissemination
+## Slide 4: Transaction Ingestion Mechanics
 
 ### Konten Slide
-- **Tantangan Siaran Global:** Bagaimana transaksi Alice di Argentina sampai ke validator di Korea Selatan dalam hitungan detik tanpa server siaran sentral?
-- **Model Penyebaran Epidemi Biologis:** Protokol Gossip dimodelkan secara matematis dari cara virus biologis menyebar di dalam populasi padat.
-- **Karakteristik Penyebaran:**
-  - Simpul tidak menyiarkan data ke seluruh komputer di dunia secara serentak.
-  - Simpul hanya meneruskan data ke sejumlah kecil tetangga langsung (*peers*), biasanya 8 hingga 12 simpul terdekat.
-- **Skalabilitas Fan-Out Eksponensial:**
-  - Pada graf acak dengan derajat $d$, jumlah simpul yang terinfeksi informasi bertambah secara eksponensial ($d^1, d^2, d^3, \dots$).
-  - Pesan menjangkau seluruh $N$ simpul global hanya dalam kompleksitas $\mathcal{O}(\log N)$ lompatan (*hops*).
-- *Visual:* Sequence diagram alur Gossip Protocol: Alice menyiarkan ke 2 peer, masing-masing menyiarkan ke 8 peer lain, menghasilkan gelombang eksponensial ke seluruh dunia.
+
+Step-by-step lifecycle of P2P payload processing
+
+Pipeline:
+
+1. Message Origination: Incoming transaction payload from user.
+2. Local Audit: Strict verification on zero trust.
+3. Mempool Ingestion: Validated transactions queued for block inclusion.
+4. Targeted Announcements (inv): Compact hash broadcast to neighbors.
+5. Message Deduplication: Filter prevents redundant payload downloads.
+
+Core Rules:
+
+1. Strict Local Audit:
+   Nodes operate on zero trust. Incoming transactions face rigorous checks: byte format validity, cryptographic signature verification, and sufficient sender balances. Invalid data is instantly dropped.
+2. Mempool Ingestion:
+   Validated transactions are deposited into the Mempool, the local memory pool holding pending transactions awaiting block inclusion.
+3. Targeted Announcements (inv):
+   Nodes broadcast a compact inventory message (inv) containing only the transaction hash to neighbors.
+4. Message Deduplication:
+   Receiving nodes cross-reference the hash against their local Mempool. If already present, the payload is ignored, aggressively conserving global bandwidth.
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
-- Masalah siaran: tidak ada server broadcast sentral di blockchain.
-- Solusi: Protokol Gossip yang meniru cara virus biologis menular.
-- Penyebaran eksponensial: hanya butuh $O(\log N)$ lompatan untuk mencapai seluruh penjuru bumi dalam hitungan detik.
+
+- Alur pemrosesan muatan transaksi di tingkat simpul P2P.
+- Audit lokal ketat berbasis zero-trust (tanda tangan dan saldo diperiksa).
+- Mempool menampung transaksi valid sebelum masuk blok.
+- Pesan inv menyiarkan hash ringkas untuk deduplikasi data dan efisiensi bandwidth.
 
 **Naskah Tutur (Voiceover Script):**
-Sekarang bayangkan Alice menandatangani transaksi pembayaran di Argentina.
-Bagaimana cara pesan tersebut sampai ke komputer validator di Korea Selatan dalam waktu kurang dari dua detik tanpa ada server siaran sentral?
-Jawabannya adalah Protokol Gossip.
-Protokol ini dirancang menggunakan model matematika penularan epidemi biologis.
-Ketika laptop Alice menyiarkan transaksi, Alice tidak mengirimkannya ke puluhan ribu komputer di dunia sekaligus karena bandwidth-nya tidak akan sanggup.
-Alice hanya menyebarkannya ke segelintir tetangga terdekat yang terhubung dengan kliennya, biasanya delapan hingga dua belas simpul.
-Setiap simpul tetangga yang menerima pesan itu akan memeriksa keabsahan datanya, lalu membisikkan data tersebut ke delapan tetangga mereka masing-masing.
-Pola penularan ini menciptakan efek pelipatgandaan eksponensial yang sangat dahsyat.
-Dari delapan menjadi enam puluh empat, lalu lima ratus dua belas, dan seterusnya.
-Dalam teori graf acak, pesan transaksi ini dapat menjangkau puluhan ribu simpul di seluruh planet bumi hanya dalam waktu logaritmik, yaitu $O(\log N)$ lompatan jaringan.
-Penyebaran global terjadi secara otomatis dalam hitungan sepersekian detik.
+Ketika sebuah paket transaksi tiba di pintu gerbang sebuah simpul, simpul tersebut menjalankan protokol verifikasi yang sangat disiplin.
+Langkah pertama adalah Strict Local Audit.
+Simpul blockchain selalu beroperasi dengan prinsip zero trust.
+Simpul akan memeriksa format byte data mentah, memverifikasi keabsahan tanda tangan kriptografis, dan memastikan pengirim memiliki saldo yang cukup.
+Jika ada satu parameter saja yang tidak valid, paket data akan langsung dibuang ke tempat sampah tanpa diproses lebih lanjut.
+Langkah kedua adalah Mempool Ingestion: transaksi yang lolos audit dimasukkan ke dalam Mempool, yaitu ruang penampungan memori lokal untuk menunggu giliran dikemas ke dalam blok oleh penambang atau validator.
+Langkah ketiga adalah Targeted Announcements.
+Simpul tidak langsung memborbardir tetangganya dengan muatan data penuh.
+Simpul hanya mengirimkan pesan inventaris ringkas atau pesan inv yang hanya memuat hash transaksi tersebut.
+Langkah keempat adalah Message Deduplication.
+Simpul penerima memeriksa hash tersebut ke dalam basis data Mempool miliknya sendiri.
+Jika hash tersebut sudah ada di komputernya, simpul penerima akan mengabaikannya.
+Teknik deduplikasi ini secara agresif menjaga bandwidth internet global dari pemborosan data berulang.
 
 ---
 
-## Slide 5: Siklus Hidup Transaksi di Jaringan P2P (Mempool & Deduplikasi)
+## Slide 5: Node Discovery & Kademlia DHT
 
 ### Konten Slide
-- **Alur Propagasi Transaksi Langkah demi Langkah:**
-  1. *Originasi Pesan:* Alice membuat transaksi bertanda tangan dan mengirimkannya ke simpul terhubung (*outbound peers*).
-  2. *Validasi Lokal Ketat:* Simpul penerima tidak langsung meneruskan data secara membabi buta; simpul wajib memeriksa format byte, tanda tangan kriptografis, dan ketersediaan saldo pengirim.
-  3. *Mempool Ingestion:* Transaksi yang valid dimasukkan ke dalam **Mempool** (kolam memori penampung transaksi tertunda).
-  4. *Targeted Announcement (Pesan `inv`):* Simpul mengumumkan ketersediaan transaksi baru kepada rekan-rekannya menggunakan hash transaksi ringkas.
-  5. *Deduplikasi Pesan:* Simpul penerima memeriksa mempool lokal; jika transaksi sudah pernah diterima, pesan diabaikan demi menghemat bandwidth jaringan.
-- *Visual:* Diagram alur transaksi melewati tahap Validasi Lokal -> Masuk Mempool -> Siaran hash `inv` -> Permintaan data `getdata` -> Penerimaan payload penuh.
+
+Locating peers without centralized directories
+
+Distributed Hash Table (DHT):
+A decentralized database mapping network state.
+Every node generates a permanent, 256-bit Node ID derived from its public key hash.
+Physical geography is ignored.
+
+The XOR Distance Metric:
+Distance between Node x and Node y is calculated via bitwise exclusive-OR:
+d(x, y) = x XOR y
+This satisfies all axioms of geometric metric space: identity, symmetry, and triangle inequality.
+
+Logarithmic Routing:
+Routing tables are partitioned into K-Buckets by bit-prefix similarity.
+Finding any specific node globally requires a maximum of O(log N) iterative lookups.
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
-- Node tidak percaya begitu saja: setiap transaksi yang lewat diperiksa validitasnya.
-- Mempool adalah ruang tunggu transaksi sebelum dibungkus ke dalam blok.
-- Sistem pesan `inv` dan deduplikasi mencegah pemborosan kuota internet antar-node.
+
+- Kademlia DHT memetakan jaringan tanpa buku telepon atau server sentral.
+- Node ID 256 bit diturunkan dari hash public key, mengabaikan geografi fisik.
+- Metrik jarak XOR d(x, y) = x XOR y memenuhi aksioma ruang metrik.
+- K-Buckets membagi tabel rute dan menjamin pencarian simpul selesai dalam O(log N) langkah.
 
 **Naskah Tutur (Voiceover Script):**
-Mari kita telusuri apa yang sebenarnya terjadi di dalam sebuah simpul ketika menerima transaksi baru dari jaringan P2P.
-Sebuah simpul blockchain jujur tidak pernah meneruskan data secara membabi buta.
-Begitu sebuah transaksi masuk, simpul tersebut langsung menjalankan serangkaian audit lokal yang sangat ketat.
-Apakah struktur datanya valid?
-Apakah tanda tangan digitalnya cocok secara matematis?
-Dan apakah saldo pengirim mencukupi tanpa ada upaya double spending?
-Jika ada satu saja syarat yang gagal, transaksi tersebut langsung dibuang ke tempat sampah dan pengirimnya bisa dikenakan penalti reputasi.
-Jika transaksinya valid seratus persen, simpul akan memasukkannya ke dalam Mempool, yaitu ruang memori lokal untuk menampung transaksi yang sedang mengantre diproses oleh penambang.
-Setelah itu, simpul memberi tahu rekan-rekannya dengan mengirimkan pesan inventaris atau pesan `inv` yang hanya berisi hash dari transaksi tersebut.
-Jika rekan-rekannya melihat bahwa hash itu sudah ada di mempool mereka, mereka akan mengabaikannya.
-Mekanisme deduplikasi ini sangat penting agar jaringan terbebas dari badai lalu lintas data ganda yang dapat memboroskan kuota internet para operator simpul.
+Ketika sebuah komputer baru menyalakan perangkat lunak blockchain untuk pertama kalinya, bagaimana ia menemukan rekan-rekannya di seluruh dunia tanpa adanya buku telepon atau server DNS terpusat?
+Sebagian besar protokol modern, termasuk Ethereum dengan protokol Discv4 dan Discv5, mengandalkan Kademlia Distributed Hash Table atau DHT.
+Di dalam Kademlia, setiap simpul menghasilkan identitas unik 256 bit yang disebut Node ID, yang diturunkan dari hash kunci publiknya.
+Lokasi geografis fisik seperti negara atau benua diabaikan sepenuhnya.
+Jarak antara Simpul x dan Simpul y diukur menggunakan metrik matematika bitwise XOR: jarak d(x, y) sama dengan x XOR y.
+Operasi XOR ini memenuhi seluruh aksioma ruang metrik: simetris, non-negatif, dan memenuhi ketidaksamaan segitiga.
+Tabel perutean di setiap simpul dibagi menjadi beberapa kelompok yang disebut K-Buckets berdasarkan kesamaan prefiks bit.
+Ketika Anda mencari sebuah simpul atau data tertentu, algoritma Kademlia akan menanyakan simpul-simpul yang memiliki jarak XOR semakin mendekati target.
+Melalui struktur biner ini, menemukan simpul mana pun di seluruh planet bumi dijamin selesai dalam maksimal O(log N) langkah pencarian iteratif.
 
 ---
 
-## Slide 6: Penemuan Simpul (Node Discovery): Distributed Hash Table (DHT) & Kademlia
+## Slide 6: Bootstrapping & Network Churn
 
 ### Konten Slide
-- **Tantangan Bootstrapping Simpul:** Ketika sebuah simpul baru dinyalakan dengan tabel rute kosong, bagaimana simpul tersebut menemukan komputer lain tanpa direktori sentral?
-- **Teknologi Distributed Hash Table (DHT):** Basis data terdistribusi yang memetakan identitas simpul dan konten data di seluruh jaringan tanpa server master.
-- **Adopsi Algoritma Kademlia:**
-  - Standar industri teruji yang dipelopori oleh BitTorrent, diadaptasi oleh Ethereum sebagai protokol penemuan simpul (`discv4` dan `discv5`).
-  - Setiap simpul diberikan identitas permanen berupa **Node ID** sepanjang 256-bit (dihasilkan dari hash kunci publik simpul).
-  - Menyusun topologi jaringan berdasarkan kedekatan matematis antar-identitas simpul.
-- *Visual:* Diagram alur penemuan simpul Kademlia: Node ID 256-bit dihitung dari kunci publik, dimasukkan ke ruang metrik jarak logaritmik.
+
+Entering the mesh and maintaining stable topology
+
+The Bootstrap Problem:
+
+- Initial State: New nodes power on with completely empty K-Buckets and routing tables.
+- The Bootnode Solution: Client software contains hardcoded IP addresses of highly stable community Bootnodes.
+- Transient Connection: The new node pings a Bootnode exclusively to request nearby active peers via Kademlia. Once populated, the connection is severed to prevent centralized dependency.
+
+Network Churn Mitigation:
+
+- The Threat: Unpredictable mass connection and disconnection of independent nodes (Network Churn).
+- Least-Recently-Seen Replacement: Kademlia actively prioritizes nodes with high, proven uptime. Long-lived nodes statistically demonstrate the highest probability of remaining online, ensuring table stability despite constant network flux.
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
-- Masalah saat node baru menyala: siapa yang harus dihubungi pertama kali tanpa server direktori?
-- Distributed Hash Table (DHT) Kademlia adalah solusi standar industri.
-- Setiap simpul punya Node ID 256-bit dari hash kunci publiknya.
+
+- Masalah bootstrap: simpul baru menyala dengan tabel rute K-Buckets kosong.
+- Solusi Bootnodes: alamat IP komunitas ditanam dalam kode klien sebagai jembatan sementara.
+- Mengatasi network churn: aturan Least-Recently-Seen mempertahankan simpul lama yang stabil.
 
 **Naskah Tutur (Voiceover Script):**
-Sekarang bayangkan kalian baru saja mengunduh perangkat lunak node blockchain di komputer kalian dan menekan tombol jalankan.
-Komputer kalian menyala dalam kondisi hard drive kosong dan tabel koneksi kosong melompong.
-Bagaimana cara komputer kalian menemukan ribuan simpul blockchain lain yang aktif di internet tanpa ada server direktori sentral tempat bertanya?
-Di sinilah peran penting Distributed Hash Table atau DHT, khususnya algoritma Kademlia.
-Kademlia adalah algoritma penemuan simpul legendaris yang awalnya dipakai oleh BitTorrent, lalu diadaptasi oleh Ethereum menjadi protokol `discv4` dan `discv5`.
-Di dalam jaringan Kademlia, setiap komputer diberi identitas unik berupa Node ID sepanjang 256 bit yang diturunkan dari hash kunci publik komputer tersebut.
-Kademlia tidak memedulikan lokasi geografis komputer kalian di dunia nyata.
-Kademlia menyusun peta hubungan antar-komputer berdasarkan kedekatan matematis di dalam ruang angka 256 bit.
+Namun, ada satu paradoks awal yang harus dipecahkan: ketika sebuah simpul baru menyala pertama kali, tabel K-Buckets miliknya masih kosong melompong.
+Bagaimana ia bisa mengirim sinyal XOR jika belum mengenal satu pun simpul lain?
+Tantangan ini diselesaikan melalui mekanisme Bootstrapping.
+Pengembang perangkat lunak klien menyertakan beberapa alamat IP statis dari simpul komunitas yang sangat stabil, yang dikenal sebagai Bootnodes.
+Perlu dicatat, koneksi ke Bootnode ini bersifat transien atau sementara.
+Simpul baru hanya menyapa Bootnode untuk meminta daftar tetangga aktif pertama di sekitarnya.
+Begitu tabel rute lokalnya mulai terisi oleh simpul-simpul independen lain, simpul baru akan memutuskan hubungannya dengan Bootnode untuk mencegah ketergantungan sentral.
+Tantangan berikutnya adalah Network Churn, yaitu fenomena di mana ribuan komputer pengguna tersambung dan terputus secara acak setiap menitnya.
+Untuk menjaga kestabilan topologi jaringan, algoritma Kademlia menerapkan aturan Least-Recently-Seen Replacement.
+Kademlia memprioritaskan simpul-simpul yang sudah online dalam durasi lama.
+Data statistik membuktikan bahwa komputer yang sudah menyala selama berminggu-minggu memiliki probabilitas paling tinggi untuk tetap aktif, sehingga tabel jaringan tetap kokoh meskipun ribuan simpul baru datang dan pergi.
 
 ---
 
-## Slide 7: Metrik Jarak XOR dan Perutean K-Buckets
+## Slide 7: Scalability: Compact Blocks (BIP-152)
 
 ### Konten Slide
-- **Elegansi Metrik Jarak XOR:**
-  - Jarak antara dua simpul $x$ dan $y$ dihitung menggunakan operasi bitwise exclusive-OR (XOR):
-    $$d(x, y) = x \oplus y$$
-  - Memenuhi seluruh aksioma matematis ruang metrik geometris: identitas diri ($x \oplus x = 0$), simetri ($x \oplus y = y \oplus x$), dan ketidaksamaan segitiga.
-- **Struktur Tabel Perutean K-Buckets:**
-  - Simpul mengorganisasi daftar rekannya ke dalam kantong-kantong (*k-buckets*), biasanya menampung $k = 16$ simpul per kantong.
-  - Kantong dipartisi berdasarkan kesamaan prefiks bit: kantong terjauh berbeda pada bit pertama, kantong terdekat berbagi puluhan bit yang sama.
-- **Pencarian Rute Logaritmik:** Menemukan simpul mana pun di seluruh dunia hanya memerlukan maksimal $\mathcal{O}(\log N)$ langkah pencarian iteratif (*iterative lookup*).
-- *Visual:* Ilustrasi pembagian ruang Kademlia k-buckets berdasarkan prefiks bit biner dan operasi XOR jarak matematis.
+
+Neutralizing propagation delay and accidental forks
+
+The Latency Bottleneck:
+
+- The Physics: Transmitting raw 2MB blocks across submarine cables takes seconds of propagation delay.
+- Accidental Forks & Orphan Rate: During this delay, remote miners waste energy building on obsolete chains, creating accidental forks and orphan blocks.
+- Centralization Pressure: High latency incentivizes massive data center clustering to minimize physical distance, threatening decentralization.
+
+The BIP-152 Solution:
+
+- The Insight: 99% of transactions in a newly mined block already exist in the receiving node Mempool.
+- Data Minimization: Miners stop transmitting full raw blocks. They transmit only an 80-byte Block Header and a list of 6-byte Short Transaction IDs (salted SipHash).
+- Instant Local Reconstruction: The receiving node matches the 6-byte IDs to its local Mempool, rebuilding the 2MB block locally in milliseconds.
+- Reduces bandwidth waste by >90%.
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
-- Kademlia mengukur jarak antar-node menggunakan operasi XOR ($x \oplus y$).
-- Jarak XOR memenuhi hukum matematika ruang geometris murni.
-- Tabel perutean diatur dalam k-buckets, menjamin pencarian simpul tuntas dalam waktu logaritmik $O(\log N)$.
+
+- Hambatan latensi penyebaran blok mentah 2MB melintasi kabel bawah laut.
+- Jeda propagasi memicu orphan blocks dan sentralisasi penambang di data center raksasa.
+- Solusi BIP-152 Compact Blocks: 99 persen transaksi sudah ada di Mempool lokal penerima.
+- Hanya menyiarkan header 80-byte dan Short ID 6-byte, memangkas bandwidth >90 persen.
 
 **Naskah Tutur (Voiceover Script):**
-Salah satu keindahan terbesar dari Kademlia adalah cara mereka mendefinisikan jarak antar-komputer.
-Jarak antara komputer X dan komputer Y diukur menggunakan operasi logika bitwise XOR atau exclusive-OR.
-Operasi XOR ini memiliki keunikan matematika yang luar biasa.
-Jarak sebuah komputer ke dirinya sendiri adalah nol, jarak dari A ke B persis sama dengan jarak dari B ke A, dan rumus ini mematuhi ketidaksamaan segitiga seperti geometri ruang nyata.
-Setiap simpul menyimpan alamat komputer lain di dalam tabel perutean yang terbagi menjadi kelompok-kelompok bernama *k-buckets*.
-Setiap kantong biasanya berisi enam belas simpul yang dikelompokkan berdasarkan kesamaan awalan bit pada Node ID mereka.
-Ada kantong untuk simpul yang jarak matematisnya sangat jauh, dan ada kantong untuk simpul tetangga terdekat.
-Ketika komputer kalian ingin mencari simpul tertentu di jaringan global, kalian tidak perlu menyisir seluruh internet.
-Kalian cukup menanyakan ke simpul di kantong terdekat secara iteratif.
-Pencarian simpul mana pun di seluruh dunia dijamin tuntas dalam kompleksitas logaritmik $O(\log N)$.
+Ketika volume transaksi meningkat, penyiaran blok mentah berukuran beberapa megabyte membentur batasan hukum fisika internet.
+Menyebarkan data blok berukuran besar melintasi kabel serat optik bawah laut membutuhkan jeda waktu propagasi beberapa detik.
+Jeda beberapa detik ini sangat berbahaya di dalam sistem Proof of Work.
+Ketika satu penambang berhasil menemukan blok, penambang di belahan dunia lain yang terlambat menerima informasi tersebut akan membuang energi listrik untuk menambang di atas blok usang.
+Ini memicu timbulnya accidental forks dan orphan blocks.
+Keadaan ini menciptakan tekanan sentralisasi, di mana para penambang terpaksa berkumpul di satu pusat data yang sama untuk meminimalkan jarak latensi fisik.
+Bitcoin memecahkan krisis ini lewat pembaruan Compact Blocks atau BIP-152 pada tahun 2016.
+Para insinyur menyadari bahwa sembilan puluh sembilan persen transaksi yang ada di dalam blok baru sebenarnya sudah tersimpan rapi di dalam Mempool simpul penerima.
+Oleh karena itu, penambang tidak perlu lagi menyiarkan blok mentah yang besar.
+Penambang cukup menyiarkan header blok berukuran 80 byte dan daftar ID ringkas enam-byte dari transaksi tersebut menggunakan algoritma salted SipHash.
+Simpul penerima mencocokkan ID pendek tersebut ke Mempool lokalnya dan merekonstruksi blok utuh secara instan dalam beberapa milidetik, memangkas beban lalu lintas data jaringan hingga lebih dari sembilan puluh persen.
 
 ---
 
-## Slide 8: Bootnodes dan Penanganan Network Churn
+## Slide 8: Network-Layer Threats
 
 ### Konten Slide
-- **Masalah Permulaan (The Bootstrap Problem):** Saat simpul pertama kali daring, tabel k-buckets berada dalam kondisi kosong mutlak.
-- **Peran Simpul Pelopor (Bootnodes):**
-  - Perangkat lunak klien menyertakan daftar alamat IP statis yang ditanam di dalam kode sumber (*hardcoded Bootnodes*).
-  - Simpul baru menghubungi bootnode selama beberapa detik pertama semata-mata untuk menanyakan simpul tetangga aktif terdekat via protokol Kademlia.
-  - Setelah tabel rute terisi, simpul segera memutuskan koneksi dari bootnode dan beroperasi otonom di jaringan mesh.
-- **Resistensi terhadap Network Churn:**
-  - *Network Churn:* Fenomena di mana ribuan simpul bebas terhubung dan terputus kapan saja secara tak terduga.
-  - *Kebijakan Penggantian K-Bucket:* Mengutamakan simpul yang memiliki masa aktif lama (*least-recently-seen replacement*).
-  - Statistik jaringan membuktikan bahwa simpul yang sudah menyala stabil berjam-jam memiliki probabilitas tertinggi untuk tetap daring di masa depan.
-- *Visual:* Alur bootstrapping simpul baru: Terhubung ke Bootnode sementara -> Menarik daftar tetangga -> Membangun tabel lokal -> Melepas Bootnode ke jaringan mesh.
+
+Eclipse isolation and Sybil de-anonymization
+
+1. The Eclipse Attack
+
+- Mechanism: Attacker monopolizes all inbound and outbound connections of a target (e.g., a crypto exchange).
+- Impact: The eclipsed node is fed a privately mined, counterfeit blockchain, enabling devastating double-spending attacks.
+- Mitigation: Diversifying outbound connections across disparate IPv4 /16 subnets (ASNs) and anchoring trusted peers to local disk storage.
+
+2. Sybil Attacks & DoS
+
+- Mechanism: Flooding the network with cheap virtual identities.
+- First-Hop Monitoring: Attackers map the origin of transactions, destroying privacy and de-anonymizing physical IP addresses.
+- Mitigation: Peer Scoring Algorithms automatically penalize, disconnect, and ban nodes that spam invalid data or violate gossip rate limits.
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
-- Bootnode hanya dipakai beberapa detik saat pertama kali menyala untuk mengisi tabel awal.
-- Setelah tabel terisi, koneksi ke bootnode dilepas agar tidak ada ketergantungan sentral.
-- Kademlia tahan terhadap network churn dengan memprioritaskan koneksi yang sudah lama aktif dan stabil.
+
+- Dua ancaman lapisan jaringan: Eclipse Attack dan Sybil Monitoring.
+- Eclipse Attack: Penyerang memonopoli koneksi simpul target untuk menyuapkan blockchain palsu.
+- Mitigasi Eclipse: Diversifikasi koneksi keluar melintasi beragam subnet IPv4 /16 dan ASN.
+- Sybil Attack memetakan IP fisik pengguna; dimitigasi dengan Peer Scoring Algorithm otomatis.
 
 **Naskah Tutur (Voiceover Script):**
-Jika tabel K-buckets awalnya kosong, dari mana komputer kita pertama kali mendapatkan alamat simpul rekannya?
-Solusi rekayasa perangkat lunak untuk masalah ini adalah *Bootnodes*.
-Di dalam kode sumber aplikasi klien blockchain, pengembang menyertakan beberapa alamat IP publik dari simpul stabil yang dikelola oleh komunitas inti.
-Ketika simpul baru pertama kali menyala, ia akan menghubungi bootnode ini selama beberapa detik saja.
-Simpul baru tidak meminta data transaksi ke bootnode.
-Ia hanya meminta daftar simpul aktif lain yang berada di sekitarnya.
-Begitu tabel perutean lokalnya terisi oleh alamat rekan-rekan baru, simpul tersebut langsung memutus hubungan dari bootnode dan melebur secara mandiri ke dalam jaringan jala global.
-Hal ini mencegah bootnode menjadi titik ketergantungan sentral.
-Selain itu, jaringan P2P menghadapi tantangan bernama *network churn*, yaitu kondisi di mana komputer pengguna bisa mati dan menyala sewaktu-waktu.
-Kademlia mengatasi ini dengan aturan cerdas: simpul yang sudah terbukti menyala stabil selama berjam-jam akan selalu diprioritaskan di dalam tabel perutean dibanding simpul baru yang belum teruji keandalannya.
+Meskipun arsitektur mesh terdesentralisasi sangat tangguh, jaringan P2P tetap menghadapi ancaman keamanan di tingkat lapisan jaringan.
+Serangan paling berbahaya adalah Eclipse Attack.
+Dalam serangan ini, penyerang menargetkan satu simpul tertentu, misalnya simpul milik bursa kripto besar.
+Penyerang secara perlahan memonopoli seluruh koneksi masuk dan keluar dari simpul korban.
+Setelah simpul terisolasi total dari dunia luar, penyerang menyuapkan rantai blockchain palsu buatan mereka sendiri.
+Korban mengira transaksi deposit sudah sah di rantai global, padahal mereka sedang terjebak di dalam ilusi buatan peretas, sehingga penyerang berhasil mencairkan dana lewat serangan double-spending.
+Blockchain memitigasi serangan ini dengan mendiversifikasi koneksi keluar secara ketat melintasi berbagai subnet IPv4 garis miring enam belas dan Autonomous System Numbers yang berbeda-beda.
+Ancaman kedua adalah Sybil de-anonymization.
+Penyerang menyalakan ribuan simpul mata-mata untuk memantau lompatan pertama transaksi, dengan tujuan membongkar identitas alamat IP fisik pengguna.
+Untuk melawan hal ini, simpul menerapkan Peer Scoring Algorithm yang secara otomatis memberikan penalti, memutus koneksi, dan memblokir simpul mana pun yang melanggar batas lalu lintas atau menyebarkan data palsu.
 
 ---
 
-## Slide 9: Propagasi Blok dan Masalah Latensi Jaringan
+## Slide 9: Hardware & Routing Resilience
 
 ### Konten Slide
-- **Perbedaan Transaksi vs. Blok Penuh:**
-  - Transaksi individual berukuran sangat kecil (beberapa ratus byte).
-  - Blok penuh dapat mencapai ukuran beberapa megabyte dan memuat ribuan transaksi.
-- **Hambatan Latensi Transmisi ($\Delta$):**
-  - Butuh waktu beberapa detik agar sebuah blok baru yang ditambang di satu benua dapat merambat ke seluruh dunia melalui kabel optik bawah laut.
-  - *Orphan Rate & Accidental Forks:* Selama masa tunda propagasi tersebut, penambang lain di belahan dunia berbeda tidak sadar dan terus menambang di atas blok lama yang sudah usang.
-- **Tekanan Sentralisasi Ekonomi:**
-  - Penambang atau validator besar yang terkonsentrasi di pusat data geografis yang sama memiliki keunggulan latensi mutlak dibanding penambang rumahan terpencil.
-  - Latensi yang tinggi memaksa peserta jaringan berkumpul ke fasilitas server terpusat demi menghindari kerugian finansial.
-- *Visual:* Diagram percabangan rantai (*fork*) akibat jeda waktu rambat blok antarselancar dunia, memicu pemborosan energi dan risiko keamanan.
+
+Surviving BGP Hijacking and state-level censorship
+
+Border Gateway Protocol (BGP) Vulnerability:
+
+- The Threat: The global internet relies on BGP to route traffic between Autonomous Systems. Classical BGP lacks cryptographic authentication.
+- Routing Partitions: Rogue ISPs or authoritarian states can announce fake IP prefix routes, hijacking traffic meant for major mining pools.
+- The Consequence: The global mesh is physically cleaved into isolated partitions. Both sides mine independently, triggering massive, destructive chain reorganizations upon reconnection.
+
+Advanced Countermeasures:
+
+- Transport Layer Encryption: Modern networking stacks (libp2p) secured by Noise protocol encryption channels.
+- Encrypted Tunnels: Routing traffic through Tor onion networks to obscure node origins and bypass terrestrial firewalls.
+- Orbital Satellites: Independent infrastructure (e.g., Blockstream Satellite) continuously broadcasting block headers directly from earth orbit, rendering terrestrial cable cuts ineffective.
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
-- Blok berukuran megabyte butuh waktu merambat ke seluruh dunia (latensi transmisi).
-- Latensi tinggi memicu persaingan blok tidak sengaja (accidental forks dan orphan blocks).
-- Tekanan sentralisasi: penambang terdorong berkumpul di satu data center raksasa agar tidak kalah cepat.
+
+- Kerentanan BGP pada routing internet global tanpa otentikasi kriptografis.
+- Pembajakan rute BGP oleh ISP nakal atau negara dapat membelah jaringan dan memicu reorg masif.
+- Tiga penangkal: Enkripsi Noise protocol di libp2p, terowongan Tor, dan siaran satelit Blockstream dari orbit bumi.
 
 **Naskah Tutur (Voiceover Script):**
-Menyebarkan transaksi tunggal berukuran beberapa ratus byte sangatlah mudah.
-Namun menyebarkan satu blok utuh berukuran beberapa megabyte adalah tantangan fisik yang berat bagi internet global.
-Ketika seorang penambang di Asia menemukan blok baru, blok tersebut membutuhkan waktu beberapa detik untuk merambat melintasi benua melalui kabel serat optik bawah laut.
-Jeda waktu rambat ini disebut *propagation delay* atau delta.
-Selama jeda beberapa detik tersebut, para penambang di Eropa atau Amerika belum tahu bahwa blok baru sudah ditemukan.
-Mereka terus membakar listrik menambang di atas puncak rantai lama yang sebenarnya sudah basi.
-Jika penambang lain di tempat terpisah menemukan blok di detik yang sama, jaringan akan terbelah menjadi dua cabang sementara yang kita sebut *accidental fork*.
-Salah satu blok pasti akan dibuang menjadi *orphan block*, membuang energi penambang secara sia-sia.
-Lebih buruk lagi, fenomena ini memicu tekanan sentralisasi yang sangat berbahaya.
-Penambang-penambang besar akan terdorong secara ekonomi untuk memindahkan seluruh server mereka ke satu gedung pusat data raksasa yang sama agar tidak kalah latensi, membunuh desentralisasi jaringan secara perlahan.
+Tingkat kerentanan terdalam dari sebuah blockchain terletak pada infrastruktur fisik internet itu sendiri: protokol Border Gateway Protocol atau BGP.
+BGP adalah protokol pengatur rute lalu lintas data antar-penyedia layanan internet di seluruh dunia yang sayangnya tidak memiliki mekanisme otentikasi kriptografis bawaan.
+Penyedia internet nakal atau rezim negara otoriter dapat menyiarkan rute prefiks IP palsu untuk membajak lalu lintas data simpul penambang besar.
+Serangan ini dapat membelah jaringan internet global menjadi dua partisi yang terisolasi secara fisik.
+Kedua belahan dunia akan terus memproduksi blok secara mandiri tanpa mengetahui keberadaan satu sama lain.
+Ketika kabel kembali tersambung beberapa jam kemudian, cabang rantai yang lebih panjang akan menimpa cabang rantai lainnya, memicu chain reorganization raksasa yang merusak transaksi ekonomi yang telah selesai.
+Untuk menghadapi ancaman tingkat negara ini, para insinyur blockchain membangun pertahanan berlapis.
+Pertama, enkripsi lapisan transport menggunakan protokol Noise di atas libp2p guna mencegah inspeksi paket oleh ISP.
+Kedua, perutean anonim melalui jaringan terowongan Tor untuk menembus sensor firewall terestrial.
+Ketiga, pembangunan infrastruktur satelit luar angkasa mandiri seperti Blockstream Satellite yang menyiarkan data blok langsung dari orbit bumi, memastikan bahwa pemutusan kabel serat optik bawah laut sekalipun tidak akan pernah sanggup mematikan denyut nadi blockchain.
 
 ---
 
-## Slide 10: Solusi Skalabilitas Propagasi: Compact Blocks (BIP-152)
+## Slide 10: Synthesis: The Four Pillars
 
 ### Konten Slide
-- **Inefisiensi Penyiaran Blok Tradisional:** Menyiarkan seluruh berkas blok mentah berukuran 2 MB memboroskan bandwidth, padahal 99 persen isi transaksi di dalam blok tersebut sudah berada di mempool lokal simpul penerima.
-- **Inovasi Compact Blocks (Bitcoin BIP-152):**
-  - Pengirim tidak mengirimkan ribuan data transaksi utuh.
-  - Pengirim hanya mengirimkan **Block Header** sepanjang 80 byte dan daftar **Short Transaction IDs** sebesar 6 byte per transaksi (menggunakan intisari salted SipHash).
-- **Rekonstruksi Lokal Seketika:**
-  - Simpul penerima mencocokkan ID transaksi pendek 6-byte ke transaksi lengkap di mempool lokalnya.
-  - Pada lebih dari 95 persen kasus, seluruh transaksi sudah tersedia dan blok utuh 2 MB direkonstruksi dalam hitungan milidetik.
-  - Jika ada satu atau dua transaksi yang hilang, simpul hanya meminta transaksi spesifik yang kurang tersebut.
-- **Dampak Performa:** Memangkas konsumsi bandwidth transmisi blok hingga lebih dari 90 persen dan mempercepat propagasi global ke bawah satu detik.
-- *Visual:* Sequence diagram BIP-152: Penambang mengirim Header + Short ID -> Simpul mencocokkan ke mempool lokal -> Blok lengkap terbentuk secara instan tanpa mengunduh ulang.
+
+The completed architecture of Distributed Trust
+
+1. The Double-Spending Solution:
+   Nakamoto Consensus aligns thermodynamic economic incentives without central authority.
+
+2. Cryptographic Hashes & Merkle Trees:
+   Permanent mathematical data integrity and logarithmic-speed inclusion proofs.
+
+3. Asymmetric Cryptography:
+   Absolute sovereign ownership and value transfer authorization via digital signatures.
+
+4. Peer-to-Peer Networks:
+   A censorship-resistant communication backbone with organic fault tolerance and zero single points of failure.
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
-- Mengirim blok utuh memboroskan bandwidth karena datanya sudah ada di mempool.
-- BIP-152 Compact Blocks: hanya kirim header 80 byte dan ID transaksi 6 byte.
-- Rekonstruksi lokal: memangkas beban transmisi hingga 90 persen lebih dan menekan orphan rate.
+
+- Rangkuman empat pilar arsitektur dasar Distributed Trust.
+- Konsensus Nakamoto menyelesaikan insentif ekonomi dan ketiadaan otoritas sentral.
+- Hash dan Merkle Tree menjamin integritas data dan verifikasi logaritmik.
+- Kriptografi Asimetris memberikan kedaulatan otorisasi transfer nilai.
+- Jaringan P2P memberikan tulang punggung komunikasi organik tanpa single point of failure.
 
 **Naskah Tutur (Voiceover Script):**
-Bagaimana para insinyur blockchain mengatasi krisis latensi transmisi blok ini?
-Jawabannya adalah inovasi brilian bernama *Compact Blocks* atau BIP-152 di Bitcoin.
-Para pengembang menyadari satu fakta penting: ketika seorang penambang menyiarkan blok sebesar dua megabyte, sembilan puluh sembilan persen dari transaksi di dalam blok itu sebenarnya sudah pernah diterima dan tersimpan rapi di mempool lokal komputer penerima sejak beberapa menit yang lalu.
-Mengirim ulang seluruh data mentah transaksi tersebut adalah pemborosan bandwidth jaringan yang luar biasa konyol.
-Lewat standar BIP-152, penambang tidak lagi menyiarkan blok mentah yang gemuk.
-Penambang hanya menyiarkan header blok sebesar 80 byte, ditemani oleh daftar nomor pengenal pendek bernama *Short Transaction ID* yang ukurannya hanya 6 byte per transaksi.
-Ketika simpul penerima mendapat bundel kecil ini, ia langsung mencocokkan ID 6-byte tersebut ke dalam mempool lokalnya sendiri.
-Dalam hitungan milidetik, simpul tersebut merakit sendiri blok dua megabyte yang utuh di dalam memorinya tanpa perlu mengunduh ulang dari internet.
-Teknologi ini memangkas konsumsi bandwidth hingga lebih dari sembilan puluh persen dan memangkas waktu propagasi global hingga di bawah satu detik.
+Dengan selesainya pembahasan lapisan jaringan, seluruh arsitektur dasar dari Distributed Trust kini telah lengkap berdiri kokoh di atas empat pilar utama.
+Pilar pertama adalah The Double-Spending Solution: Nakamoto Consensus menyelaraskan aturan ekonomi dan hukum termodinamika tanpa memerlukan satu pun figur otoritas sentral.
+Pilar kedua adalah Cryptographic Hashes dan Merkle Trees: menjamin integritas data secara permanen dan memungkinkan pembuktian audit transaksi dengan kecepatan logaritmik O(log N).
+Pilar ketiga adalah Asymmetric Cryptography: kurva eliptik dan tanda tangan digital menghadirkan kedaulatan mutlak atas kepemilikan dan otorisasi pemindahan nilai.
+Dan pilar keempat adalah Peer-to-Peer Networks: menyediakan tulang punggung komunikasi tahan sensor yang memiliki ketahanan mandiri tanpa satu pun titik kegagalan sentral.
+Keempat pilar ini saling mengunci, mengubah teori ilmu komputer abstrak menjadi realitas sistem moneter terdesentralisasi pertama di dunia.
 
 ---
 
-## Slide 11: Vektor Serangan P2P 1: The Eclipse Attack
+## Slide 11: Bridge to the Next Module: Blockchain Architecture and State Models
 
 ### Konten Slide
-- **Definisi Serangan:** Upaya penyerang untuk mengisolasi secara total satu simpul target tertentu dari jaringan jujur global.
-- **Mekanisme Eksploitasi:**
-  - Penyerang membuat ratusan simpul palsu dan membanjiri tabel perutean simpul target (seperti node bursa kripto atau pedagang besar).
-  - Penyerang memonopoli seluruh koneksi masuk (*inbound*) dan koneksi keluar (*outbound*) simpul korban.
-  - Simpul korban mengalami kondisi gerhana (*eclipsed*): korban hanya melihat pandangan dunia palsu yang diatur oleh penyerang.
-- **Konsekuensi Fatal:**
-  - Penyerang dapat menyodorkan rantai blok palsu yang ditambang secara privat ke simpul korban.
-  - Menipu korban agar menganggap pembayaran transaksi sudah terkonfirmasi resmi, lalu mengeksekusi serangan double-spending di jaringan utama.
-- **Mekanisme Pertahanan:**
-  - *Diversifikasi Subnet:* Membatasi koneksi keluar agar berasal dari alamat Autonomous System Numbers (ASN) dan subnet IPv4 `/16` yang berbeda-beda.
-  - *Anchor Connections:* Menyimpan daftar alamat IP simpul jujur terpercaya yang tahan lama ke penyimpanan disk lokal.
-- *Visual:* Ilustrasi simpul korban dikelilingi dan diisolasi oleh simpul merah penyerang, terputus total dari jaringan simpul hijau jujur di luar.
+
+The Structural Question:
+We now have authenticated transactions propagating over a decentralized mesh.
+But how is the internal ledger actually organized in memory?
+
+Next Track:
+Module 2: Blockchain Architecture and State Models (UTXO vs. Account Models).
 
 ### Catatan Presenter (Cheatsheet)
+
 **Quick Cues:**
-- Eclipse attack bertujuan membutakan satu simpul dari dunia luar.
-- Penyerang memonopoli seluruh koneksi peer korban untuk menyodorkan blockchain palsu.
-- Pertahanan: batasi koneksi dari subnet IP yang sama dan simpan koneksi jangkar terpercaya di disk.
+
+- Mengantarkan peserta menuju Bab 2 (Architecture and State).
+- Menghubungkan transmisi data P2P ke pengorganisasian memori internal simpul.
+- Teaser materi modul 02: Model UTXO pada Bitcoin vs Model Account pada Ethereum.
 
 **Naskah Tutur (Voiceover Script):**
-Karena blockchain beroperasi di internet publik yang terbuka, lapisan jaringan P2P adalah sasaran empuk bagi para peretas.
-Salah satu serangan paling berbahaya di tingkat jaringan adalah *Eclipse Attack* atau serangan gerhana.
-Dalam serangan ini, target peretas bukanlah meretas matematika kriptografinya, melainkan mengisolasi satu simpul tertentu dari dunia luar, misalnya simpul milik bursa kripto besar.
-Peretas meluncurkan ratusan simpul palsu dan membanjiri koneksi masuk serta koneksi keluar milik korban hingga seluruh jalurnya termonopoli.
-Simpul korban kini berada dalam kondisi gerhana: ia tidak bisa lagi mendengar kabar dari simpul-simpul jujur di seluruh dunia.
-Korban hanya bisa melihat informasi apa pun yang diizinkan oleh peretas.
-Peretas kemudian bisa menyodorkan riwayat blockchain palsu yang ditambang secara rahasia ke bursa tersebut, membuat bursa percaya bahwa transfer uang peretas sudah lunas.
-Setelah barang atau uang fiat dicairkan oleh korban, peretas membatalkan transaksi itu di jaringan dunia nyata.
-Untuk menangkal serangan ini, klien blockchain modern menerapkan aturan ketat: koneksi keluar wajib disebar ke subnet IPv4 dan penyedia internet yang berbeda-beda, serta menyimpan daftar simpul jangkar terpercaya di memori penyimpanan lokal.
-
----
-
-## Slide 12: Vektor Serangan P2P 2: Network-Layer Sybil Attacks & DoS
-
-### Konten Slide
-- **Sybil Attack pada Lapisan Jaringan:**
-  - Berbeda dari konsensus penambangan (yang dilindungi oleh Proof of Work), membuat identitas simpul virtual di lapisan P2P berbiaya sangat murah.
-  - Penyerang menyalakan ribuan simpul bayangan untuk memanipulasi rute pencarian Kademlia DHT dan memata-matai alamat asal transaksi.
-- **Erosi Privasi dan De-anonimisasi:**
-  - Dengan mengelilingi topologi jaringan, simpul penyerang mencatat simpul mana yang pertama kali membisikkan suatu transaksi (*first-hop monitoring*).
-  - Berpotensi memetakan alamat transaksi blockchain ke alamat IP fisik perangkat pengguna di dunia nyata.
-- **Ancaman Denial of Service (DoS):**
-  - Membanjiri jaringan dengan transaksi sampah yang sengaja dibuat gagal validasi atau memicu kehabisan memori (*memory exhaustion*).
-- **Strategi Mitigasi Jaringan:**
-  - Pembatasan kuota koneksi per alamat IP secara ketat.
-  - Pembatasan laju siaran gossip (*gossip rate limiting*).
-  - *Peer Scoring Algorithms:* Sistem penalti otomatis yang memutus dan memblokir simpul yang menyiarkan data cacat atau duplikat.
-- *Visual:* Bagan pohon mitigasi: Ribuan simpul palsu Sybil dibendung oleh dinding filter reputasi skor peer dan pembatasan laju transmisi.
-
-### Catatan Presenter (Cheatsheet)
-**Quick Cues:**
-- Identitas simpul virtual sangat murah dibuat, membuka celah Sybil attack di level jaringan.
-- Bahaya utama: pemantauan first-hop untuk melacak alamat IP fisik pengguna asli.
-- Solusi: skor reputasi rekanan (peer scoring), rate limiting, dan pemutusan simpul berperilaku buruk.
-
-**Naskah Tutur (Voiceover Script):**
-Meskipun Nakamoto Consensus menggunakan Proof of Work untuk mencegah manipulasi voting pembuatan blok, ancaman Sybil Attack tetap membayangi lapisan jaringan P2P.
-Membuat ribuan akun simpul virtual di internet sangatlah murah dan mudah dilakukan oleh siapa pun yang punya server sewaan.
-Seorang penyerang dapat menyebarkan ribuan simpul bayangan ke seluruh jaringan untuk memata-matai pergerakan data.
-Bahaya terbesarnya adalah ancaman de-anonimisasi privasi pengguna.
-Dengan memonitor simpul mana yang pertama kali menyiarkan sebuah transaksi ke internet, peretas dapat melacak dan memetakan transaksi tersebut ke alamat IP rumah atau kantor pengguna asli.
-Selain itu, jaringan terbuka rentan terhadap serangan Denial of Service, di mana peretas membanjiri antrean mempool dengan transaksi sampah untuk membuat sistem kehabisan memori RAM.
-Untuk mempertahankan stabilitas, perangkat lunak blockchain menerapkan sistem *Peer Scoring*.
-Setiap simpul secara independen memberikan skor reputasi kepada tetangganya.
-Jika ada simpul tetangga yang bertindak mencurigakan, mengirim data sampah, atau melanggar aturan laju pesan, simpul tersebut seketika diputus koneksinya dan diblokir dari tabel perutean.
-
----
-
-## Slide 13: Vektor Serangan P2P 3: BGP Hijacking & Partisi Routing
-
-### Konten Slide
-- **Kerentanan Fondasi Internet (BGP):**
-  - Internet global mengandalkan Border Gateway Protocol (BGP) untuk merutekan paket data antar-jaringan penyedia jasa internet (*Autonomous Systems*).
-  - Protokol BGP klasik tidak memiliki autentikasi kriptografis bawaan, rentan terhadap manipulasi rute palsu.
-- **Skenario BGP Hijacking:**
-  - Penyedia internet nakal atau aktor negara mengumumkan rute prefiks IP palsu untuk membajak lalu lintas data menuju kolam penambangan (*mining pools*) utama.
-  - Memecah jaringan blockchain global menjadi dua partisi wilayah yang terisolasi secara fisik (*network partition*).
-  - Setiap partisi terus menambang rantai blok masing-masing tanpa menyadari keberadaan partisi lain, memicu reorganisasi rantai raksasa saat partisi tersambung kembali.
-- **Arsitektur Ketahanan Tingkat Lanjut:**
-  - *Enkripsi Lapisan Transport:* Pemanfaatan protokol komunikasi modern seperti libp2p yang dilengkapi enkripsi saluran Noise.
-  - *Jaringan Terowongan Terenkripsi:* Integrasi jaringan privat virtual dan routing bawang (*Tor onion routing*).
-  - *Pemancar Satelit Orbital:* Stasiun luar angkasa independen (seperti Blockstream Satellite) yang memancarkan header dan blok langsung dari orbit bumi, kebal terhadap kabel darat yang diputus.
-- *Visual:* Diagram peta dunia menunjukkan serangan pembajakan jalur kabel BGP di darat berdampingan dengan pemancar satelit luar angkasa yang memancarkan blok langsung dari orbit.
-
-### Catatan Presenter (Cheatsheet)
-**Quick Cues:**
-- BGP adalah sistem navigasi rute internet global yang rentan dibajak oleh ISP nakal atau negara.
-- Pembajakan BGP dapat membelah jaringan blockchain menjadi dua partisi wilayah terpisah.
-- Solusi mutakhir: enkripsi libp2p, terowongan Tor, hingga relay satelit dari luar angkasa.
-
-**Naskah Tutur (Voiceover Script):**
-Ancaman terbesar bagi lapisan fisik blockchain sebenarnya bukan datang dari peretas perorangan, melainkan dari infrastruktur internet itu sendiri: Border Gateway Protocol atau BGP.
-BGP adalah protokol navigasi utama yang mengatur bagaimana paket data dialirkan antar-penyedia jasa internet di seluruh dunia.
-Sayangnya, protokol BGP warisan era awal internet ini tidak memiliki enkripsi bawaan.
-Sebuah perusahaan telekomunikasi nakal atau aktor negara yang otoriter dapat memanipulasi rute BGP untuk membajak lalu lintas data blockchain.
-Mereka bahkan memiliki kekuatan fisik untuk membelah jaringan global menjadi dua partisi wilayah yang saling terisolasi, misalnya memutus komunikasi antara benua Asia dan benua Amerika.
-Akibatnya, kedua belahan dunia akan menambang rantai blok mereka sendiri-sendiri tanpa sadar, dan ketika kabel tersambung kembali, salah satu rantai akan musnah tertelan reorganisasi konsensus.
-Untuk mengantisipasi skenario perang geopolitik dan sensor tingkat negara ini, komunitas blockchain membangun benteng pertahanan berlapis.
-Jaringan modern menggunakan protokol libp2p dengan enkripsi Noise, rute terowongan Tor, dan bahkan memanfaatkan relay satelit komersial seperti Blockstream Satellite yang menyiarkan blok Bitcoin langsung dari stasiun luar angkasa secara kontinu, sepenuhnya kebal dari pemutusan kabel optik di dasar samudra.
-
----
-
-## Slide 14: Empat Pilar Distributed Trust & Jembatan ke Modul Berikutnya
-
-### Konten Slide
-- **Sintesis Lengkap Fondasi Kepercayaan Terdesentralisasi:**
-  1. *The Double-Spending Solution:* Konsensus Nakamoto menyelaraskan insentif ekonomi termodinamika tanpa otoritas tunggal.
-  2. *Cryptographic Hashes & Merkle Trees:* Integritas data matematis permanen dan pembuktian inklusi berkecepatan logaritmik.
-  3. *Asymmetric Cryptography:* Kedaulatan kepemilikan mutlak dan otorisasi transfer nilai melalui tanda tangan digital.
-  4. *Peer-to-Peer Networks:* Tulang punggung komunikasi jala yang tangguh, tahan sensor, dan tanpa titik kegagalan tunggal.
-- **Pertanyaan Struktural Berikutnya:**
-  - Kita telah memiliki transaksi terotentikasi yang merambat di atas jaringan jala terdesentralisasi.
-  - Namun, bagaimana struktur data internal buku besar (*ledger*) diorganisasikan di dalam memori dan penyimpanan permanen?
-  - Mengapa Bitcoin memilih model koin fisik digital lepasan (**UTXO Model**) sementara Ethereum memilih model buku rekening saldo tunggal (**Account Model**)?
-- **Arah Kurikulum Selanjutnya:** Memasuki **Modul 2: Blockchain Architecture and State Models**.
-- *Visual:* Empat pilar arsitektur Distributed Trust menopang fondasi bangunan yang mengarah ke pintu gerbang arsitektur blockchain dan state models.
-
-### Catatan Presenter (Cheatsheet)
-**Quick Cues:**
-- Rangkum 4 pilar fondasi Distributed Trust yang sudah tuntas dipelajari.
-- Masalah berikutnya: bagaimana data ledger disimpan dan dikelola dalam memori?
-- Teaser Modul 2: Blockchain Architecture and State Models (UTXO vs Account-based).
-
-**Naskah Tutur (Voiceover Script):**
-Dengan berakhirnya sesi ini, kita telah resmi menuntaskan seluruh fondasi penting di bab pertama: Distributed Trust.
-Mari kita lihat kembali empat pilar kokoh yang sudah berhasil kita bangun bersama.
-Pertama, solusi double-spending lewat sintesis Nakamoto yang mengikat kebenaran sejarah pada hukum termodinamika energi fisik.
-Kedua, fungsi hash dan pohon Merkle yang memberikan jaminan integritas data permanen dalam skala logaritmik.
-Ketiga, kriptografi asimetris yang melahirkan tanda tangan digital sebagai bukti kepemilikan mutlak tanpa campur tangan bank sentral.
-Dan keempat, jaringan Peer-to-Peer yang mendistribusikan seluruh kebenaran ini ke seluruh penjuru dunia tanpa bergantung pada satu pun server sentral.
-Empat pilar ini telah berdiri tegak.
-Namun, memiliki transaksi yang sah dan menyebar di jaringan P2P belumlah cukup untuk membangun sistem komputasi global.
-Bagaimana sebenarnya struktur data internal sebuah blok dirancang?
-Bagaimana komputer menghitung mutasi saldo dan perubahan status dunia dari detik ke detik?
-Dan mengapa Bitcoin memilih arsitektur koin lepasan yang disebut UTXO model, sementara Ethereum memilih model buku rekening saldo global yang disebut Account model?
-Semua misteri struktural tersebut akan kita bedah secara mendalam di modul berikutnya: Blockchain Architecture and State Models.
-Terima kasih atas perhatian kalian, dan sampai jumpa di bab selanjutnya.
+Kini kita telah memiliki transaksi sah yang terotentikasi dan beredar mulus di atas jaringan jala global.
+Namun, timbul pertanyaan mendasar berikutnya bagi para arsitek sistem: bagaimana data buku besar ini sebenarnya disusun dan diorganisasikan di dalam memori komputer mesin simpul?
+Bagaimana Bitcoin dan Ethereum mencatat saldo pengguna secara fundamental di tingkat struktur data?
+Apakah transaksi disimpan sebagai grafik koin pecahan yang belum dibelanjakan, ataukah disimpan seperti buku tabungan rekening bank dengan saldo akun saldo tunggal?
+Di bab berikutnya, kita akan membedah Module 2: Blockchain Architecture and State Models: UTXO versus Account Models.
+Terima kasih atas perhatian Anda di bab pertama ini, dan sampai jumpa di modul selanjutnya.

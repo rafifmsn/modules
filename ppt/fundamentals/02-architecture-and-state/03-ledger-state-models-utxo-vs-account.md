@@ -1,383 +1,386 @@
 # Ledger State Models: UTXO vs. Account Model
-Modul Presentasi: Arsitektur dan State (02.3)
+Modul Presentasi: Fondasi Distributed Trust (02.3)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: Ledger State Models: UTXO vs. Account Model
 
 ### Konten Slide
-- **Topik:** Ledger State Models: UTXO vs. Account Model
-- **Track:** Architecture and State
-- **Fokus Utama:** Perbandingan arsitektur penyimpanan status antara UTXO model dan Account model, implikasi konkurensi, expressiveness smart contract, dan state bloat.
-- *Visual:* Perbandingan grafis antara grafik koin diskrit yang terhubung (UTXO) dan tabel terpusat saldo akun (Account).
+Ledger State Models: UTXO vs. Account Model
+Architecture and State (02.3)
+The architectural dichotomy between discrete output graphs and global state mappings dictates network concurrency, smart contract expressivity, and node hardware requirements.
+
+Comparative Anatomy Matrix:
+- Concurrency: UTXO enables Parallel Validation; Account enforces Sequential Execution.
+- Expressivity: UTXO has Limited Stateless logic; Account provides Turing-Complete Stateful compute.
+- Scalability: UTXO features High Prunability; Account faces Challenging State Growth.
+- Security Surface: UTXO has Narrow double-spend attack surface; Account has Broad reentrancy and state bloat surface.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Selamat datang di modul ketiga: Ledger State Models: UTXO vs Account Model.
-- Membahas bagaimana data state sebenarnya disimpan di memori dan disk simpul.
-- Membedah dua filosofi besar: uang fisik diskrit versus rekening koran perbankan.
+- Membuka modul ketiga bab Architecture and State.
+- Membedah dikotomi arsitektur mendasar antara grafik koin diskret (UTXO) dan pemetaan status global (Model Akun).
+- Menjelaskan bagaimana model data memengaruhi konkurensi, fleksibilitas kontrak pintar, dan beban perangkat keras validator.
 
 **Naskah Tutur (Voiceover Script):**
-Selamat datang di modul ketiga dari bab Arsitektur dan State.
-Di modul sebelumnya, kita sudah membedah formula transisi status di mana blok baru memperbarui status lama menjadi status baru yang kita sebut sebagai sigma.
-Namun rumus matematis tersebut memunculkan pertanyaan rekayasa yang sangat krusial: seperti apa sebenarnya wujud status sigma tersebut di dalam hard drive komputer kita?
-Dalam rekayasa sistem terdistribusi, ada dua kubu filosofi besar dalam mencatat kepemilikan.
-Kubu pertama adalah model UTXO yang digunakan oleh Bitcoin dan Cardano.
-Kubu kedua adalah model Akun yang digunakan oleh Ethereum, Solana, dan seluruh sistem perbankan tradisional.
-Pilihan arsitektur antara dua model ini menentukan segalanya tentang sebuah blockchain: mulai dari kecepatan transaksi, privasi pengguna, kompleksitas smart contract, hingga beban penyimpanan data simpul.
-Mari kita mulai dengan memahami model mental keduanya.
+Selamat datang di modul ketiga dari bab Architecture and State: Ledger State Models: UTXO versus Account Model.
+Di dunia blockchain publik, seluruh cara kerja jaringan ditentukan oleh bagaimana data saldo disimpan di dalam memori komputer.
+Apakah sistem memandang koin sebagai lembaran fisik terpisah yang berpindah tangan dalam sebuah grafik terarah?
+Ataukah sistem memandang koin sebagai angka saldo akun di dalam satu tabel basis data raksasa?
+Pilihan arsitektur antara model UTXO pada Bitcoin dan model Account pada Ethereum bukanlah sekadar selera desain kode program.
+Pilihan ini secara langsung menentukan apakah jaringan dapat memproses transaksi secara paralel, seberapa cerdas kontrak pintar yang bisa dijalankan, hingga seberapa mahal spesifikasi komputer yang dibutuhkan untuk menjadi validator independen.
 
 ---
 
-## Slide 2: Dua Paradigma: Uang Fisik vs Rekening Bank
+## Slide 2: Model UTXO vs. Account Model: The Core Metaphors
 
 ### Konten Slide
-- **1. Model UTXO (Analogi Lembaran Uang Tunai di Dompet):**
-  - Tidak ada entitas "saldo akun" yang tersimpan di dalam database.
-  - Koin eksis sebagai potongan nilai diskrit yang tidak dapat dibagi bernama **Unspent Transaction Outputs (UTXOs)**.
-  - Membeli barang seharga $60 menggunakan lembaran $50 dan $20 menghancurkan kedua lembar tersebut, menghasilkan lembaran baru $60 untuk penjual dan $10 uang kembalian untuk pembeli.
-- **2. Model Account (Analogi Rekening Koran Bank):**
-  - Database global memetakan setiap alamat langsung ke angka total saldonya.
-  - Transfer uang dieksekusi melalui mutasi aritmatika langsung di baris database (*in-place arithmetic*):
-    $$\text{Balance}_{\text{Alice}} \leftarrow \text{Balance}_{\text{Alice}} - 60$$
-    $$\text{Balance}_{\text{Bob}} \leftarrow \text{Balance}_{\text{Bob}} + 60$$
-- *Visual:* Diagram komparasi dompet berisi 3 lembar uang tunai versus buku rekening bank dengan catatan debit dan kredit saldo.
+1. Model UTXO: Physical Wallet Metaphor
+- Global Balance Entity: Null.
+- Structure: Coins exist as discrete, indivisible chunks of value called Unspent Transaction Outputs (UTXOs).
+- Mechanism: Buying a $60 item with a $50 and $20 bill destroys both bills, minting a new $60 bill for the merchant and a $10 change bill for the buyer.
+
+2. Account Model: Banking Ledger Metaphor
+- Global Balance Entity: Active.
+- Structure: A global database maps every address directly to its total balance.
+- Mechanism: Value transfer executes via in-place arithmetic mutation of the database row:
+  Balance(Alice) = Balance(Alice) - 60
+  Balance(Bob) = Balance(Bob) + 60
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- UTXO mirip lembaran uang kertas di dompet fisik kita.
-- Model akun bekerja persis seperti buku tabungan di bank komersial.
-- Di Bitcoin tidak ada angka saldo Alice; saldo hanyalah hasil penjumlahan koin-koin unspent miliknya.
+- Analogi dompet fisik (UTXO) vs buku kas perbankan (Model Akun).
+- UTXO: Koin bersifat pecahan tak terbagi yang dilebur dan dicetak ulang menjadi output baru.
+- Model Akun: Saldo tersimpan pada entitas akun global dan dimutasi langsung lewat aritmatika tambah/kurang.
 
 **Naskah Tutur (Voiceover Script):**
-Untuk memahami perbedaan kedua model ini, kita bisa menggunakan analogi sehari-hari.
-Bayangkan model UTXO seperti lembaran uang kertas di dalam dompet kulit kalian.
-Jika dompet kalian berisi uang delapan puluh dolar, kalian sebenarnya tidak memegang tulisan angka delapan puluh.
-Kalian mungkin memegang satu lembar lima puluh dolar, satu lembar dua puluh dolar, dan satu lembar sepuluh dolar.
-Ketika kalian membeli jaket seharga enam puluh dolar, kalian tidak bisa merobek lembaran lima puluh dolar tersebut.
-Kalian menyerahkan lembar lima puluh dan dua puluh dolar sekaligus.
-Transaksi tersebut memusnahkan kedua lembar uang tadi, lalu menciptakan dua lembar uang baru: enam puluh dolar untuk pemilik toko, dan sepuluh dolar uang kembalian yang masuk kembali ke dompet kalian.
-Sebaliknya, model Akun bekerja persis seperti rekening bank atau spreadsheet Excel.
-Di Ethereum, sistem mencatat alamat kalian dan menyandingkannya langsung dengan angka saldo total kalian.
-Ketika kalian mentransfer dana, sistem cukup melakukan pengurangan aritmatika pada saldo kalian dan menambahkan angka yang sama ke saldo penerima.
+Untuk memahami perbedaan kedua model ini, kita dapat menggunakan dua analogi di dunia nyata.
+Model UTXO bekerja persis seperti dompet fisik berisi lembaran uang tunai.
+Di dalam Bitcoin, tidak ada kolom basis data yang mencatat saldo total Alice.
+Yang ada hanyalah lembaran koin digital terpisah yang belum dibelanjakan atau Unspent Transaction Outputs.
+Jika Anda memiliki selembar uang lima puluh dolar dan selembar dua puluh dolar di dompet Anda, lalu ingin membeli barang seharga enam puluh dolar, Anda tidak bisa memotong fisik lembaran uang tersebut.
+Anda harus menyerahkan kedua lembar uang tersebut ke kasir untuk dihancurkan, lalu sistem mencetak selembar uang baru enam puluh dolar untuk pedagang dan selembar uang baru sepuluh dolar sebagai kembalian ke dompet Anda.
+Sebaliknya, Model Akun bekerja persis seperti buku kas perbankan modern.
+Setiap alamat terdaftar sebagai satu baris data di dalam basis data global.
+Ketika Alice mentransfer enam puluh dolar ke Bob, sistem hanya melakukan operasi aritmatika sederhana: saldo Alice langsung dikurangi enam puluh dan saldo Bob langsung ditambah enam puluh di baris data mereka masing-masing.
 
 ---
 
-## Slide 3: Anatomi UTXO: Koin Diskrit dan Outpoint
+## Slide 3: UTXO Anatomy: Pointers and Locks
 
 ### Konten Slide
-- **Pondasi Status Bitcoin (UTXO Set):** Kumpulan seluruh luaran transaksi yang belum pernah dibelanjakan sejak Genesis Block.
-- **Struktur Transaksi Bitcoin:**
-  - *Transaction Inputs:* Tidak mencantumkan nominal dana, melainkan menunjuk ke UTXO masa lalu menggunakan **Outpoint**:
-    - `TxID`: Hash 32-byte dari transaksi pembuat koin sebelumnya.
-    - `vout`: Indeks integer 4-byte yang menunjukkan luaran spesifik yang ingin dibelanjakan.
-    - `scriptSig` / `Witness`: Bukti pembuka gembok kriptografis (tanda tangan digital dan kunci publik).
-  - *Transaction Outputs (`TxOut`):*
-    - `value`: Jumlah nilai satoshi yang dikunci ke dalam luaran baru ini.
-    - `scriptPubKey`: Skrip gembok kriptografis yang menentukan syarat pengeluaran dana di masa depan.
-- *Visual:* Diagram transaksi Bitcoin menghubungkan Outpoint di sisi input menuju scriptPubKey baru di sisi output.
+UTXO Anatomy: Pointers and Locks
+
+Core Definitions:
+- UTXO Set: The active database of all unspent transaction outputs since Genesis, cached in validator RAM.
+- Transaction Inputs (Pointers):
+  Inputs do not contain value. They point to past UTXOs using an Outpoint:
+  TxID: 32-byte hash of the past transaction.
+  vout: 4-byte integer index of the specific output.
+  scriptSig: Cryptographic unlocking witness (signatures + public keys).
+- Transaction Outputs (Locks / TxOut):
+  value: Nominal satoshi amount.
+  scriptPubKey: Cryptographic locking script dictating future spend conditions.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- UTXO Set adalah basis data aktif yang disimpan di RAM simpul penuh.
-- Input tidak membawa nilai uang, melainkan pointer Outpoint ke transaksi masa lalu.
-- Output berisi nominal satoshi dan skrip penguncian cryptographic scriptPubKey.
+- Anatomi transaksi UTXO: Outpoint, Input, dan Output.
+- UTXO Set: Himpunan koin yang belum dibelanjakan, disimpan di RAM validator untuk validasi instan.
+- Input adalah penunjuk (pointer) ke output masa lalu (TxID dan vout).
+- Output adalah gembok kriptografis (value dalam satoshi dan scriptPubKey).
 
 **Naskah Tutur (Voiceover Script):**
-Mari kita bedah arsitektur teknis dari model UTXO.
-Di dalam Bitcoin, status jaringan direpresentasikan oleh apa yang disebut sebagai *UTXO Set*.
-Ini adalah daftar seluruh luaran koin yang pernah tercipta tetapi belum pernah dibelanjakan.
-Setiap transaksi Bitcoin tersusun dari larik input dan larik output.
-Hal unik yang sering mengejutkan pemula adalah: input transaksi Bitcoin sama sekali tidak mencantumkan nominal uang.
-Sebuah input hanyalah sebuah penunjuk atau *Outpoint*.
-Outpoint ini memuat `TxID`, yaitu hash dari transaksi masa lalu yang menciptakan koin tersebut, serta nomor indeks `vout`.
-Input juga membawa bukti pembuka gembok berupa tanda tangan digital dan kunci publik.
-Di sisi seberang, luaran atau `TxOut` menentukan berapa jumlah satoshi yang ingin dikunci serta menyematkan skrip pengunci bernama `scriptPubKey` yang mendikte siapa yang berhak membelanjakan koin tersebut kelak.
+Mari kita bedah struktur data internal di balik transaksi UTXO.
+Setiap simpul penuh Bitcoin menyimpan sebuah basis data memori berkecepatan tinggi bernama *UTXO Set*.
+UTXO Set adalah kumpulan seluruh koin di dunia yang saat ini berstatus belum dibelanjakan.
+Ketika sebuah transaksi baru dibuat, bagian Input transaksi sebenarnya sama sekali tidak memuat nominal uang.
+Input hanyalah sebuah penunjuk atau pointer yang merujuk ke koin masa lalu menggunakan *Outpoint*, yaitu kombinasi dari hash TxID 32-byte transaksi sebelumnya dan nomor indeks output `vout`.
+Input menyertakan `scriptSig` yang memuat tanda tangan kriptografis sebagai kunci pembuka gembok.
+Di sisi lain, bagian Output transaksi bertindak sebagai gembok baru.
+Output memuat nilai nominal koin dalam satuan satoshi serta kode program `scriptPubKey` yang menentukan kriteria matematika apa yang wajib dipenuhi oleh calon penerima di masa depan untuk dapat membuka koin tersebut.
 
 ---
 
-## Slide 4: Hukum Kekekalan Nilai dan Fee Implisit
+## Slide 4: Value Conservation and Implicit Fees
 
 ### Konten Slide
-- **Prinsip Indivisibilitas UTXO:** Sebuah UTXO tidak pernah bisa dibelanjakan sebagian; ia harus dibelanjakan utuh 100 persen atau tidak sama sekali.
-- **Hukum Kekekalan Nilai Transaksi:**
-  $$\sum \text{Value}(\text{Inputs}) = \sum \text{Value}(\text{Outputs}) + \text{MinerFee}$$
-- **Karakteristik Fee Implisit:**
-  - Biaya transaksi penambang tidak dideklarasikan secara eksplisit sebagai output.
-  - Fee penambang adalah selisih murni antara total nilai seluruh input dikurangi total nilai seluruh output.
-- **Bahaya Salah Perhitungan:** Jika pengguna atau dompet lupa membuat output uang kembalian (*change output*), maka seluruh sisa dana input otomatis dihadiahkan kepada penambang sebagai fee.
-- *Visual:* Neraca timbangan matematika memperlihatkan sisi input seimbang sempurna dengan sisi output ditambah biaya penambang.
+Value Conservation and Implicit Fees
+
+The Law of Value Conservation:
+Sum(Value_Inputs) = Sum(Value_Outputs) + MinerFee
+Principle: UTXOs are indivisible. They must be consumed 100% or not at all.
+
+The Fatal Flaw of Implicit Fees:
+Miner fees are strictly implicit, calculated purely as the mathematical difference between total inputs and total outputs:
+MinerFee = Sum(Inputs) - Sum(Outputs)
+
+The Danger:
+If a buggy wallet software forgets to create a change output for the remaining funds, the protocol automatically awards the entire excess balance to the miner as a tip.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Koin UTXO tidak bisa dibelanjakan separuh; harus dikonsumsi seutuhnya.
-- Biaya penambang bersifat implisit, dihitung dari selisih input dikurangi output.
-- Risiko fatal: tanpa change output, seluruh sisa koin diserap penambang sebagai tip.
+- Hukum kekekalan nilai: Total nilai input wajib sama dengan total output ditambah biaya penambang.
+- Koin UTXO bersifat tak terbagi (indivisible): wajib dikonsumsi seratus persen atau tidak sama sekali.
+- Biaya penambang bersifat implisit (selisih input dikurangi output).
+- Bahaya bug dompet: jika lupa mencantumkan alamat kembalian, seluruh sisa dana hangus tersedot ke penambang.
 
 **Naskah Tutur (Voiceover Script):**
-Karena koin UTXO bersifat atomik dan tidak bisa dibagi di tengah jalan, transaksi wajib mematuhi hukum kekekalan nilai.
-Total nilai seluruh koin yang masuk ke sisi input harus sama persis dengan total nilai koin yang keluar di sisi output, ditambah biaya transaksi penambang.
-Satu hal yang sangat penting dipahami: biaya penambang di Bitcoin bersifat implisit.
-Kalian tidak akan menemukan kolom khusus bertuliskan biaya fee di dalam struktur data transaksi.
-Fee penambang hanyalah selisih matematika murni antara total input dikurangi total output.
-Kondisi ini menciptakan risiko fatal bagi pengembang perangkat lunak dompet.
-Jika sistem kalian mengambil input senilai sepuluh Bitcoin untuk membayar satu Bitcoin, tetapi kode kalian lupa menciptakan output kembalian sebesar sembilan Bitcoin ke dompet pengguna, maka protokol akan menganggap sisa sembilan Bitcoin tersebut sebagai bonus tip sukarela untuk penambang.
-Sembilan koin itu akan lenyap seketika masuk ke kantong penambang.
+Di dalam model UTXO berlaku hukum fisika kekekalan nilai atau *The Law of Value Conservation*.
+Karena koin UTXO bersifat tak terbagi, sebuah koin yang dijadikan input transaksi wajib dihanguskan seratus persen.
+Jumlah seluruh nilai input harus sama persis dengan jumlah seluruh nilai output ditambah biaya penambang.
+Satu keunikan krusial pada Bitcoin adalah bahwa biaya transaksi atau miner fee bersifat *implisit*.
+Tidak ada bidang data khusus di dalam transaksi Bitcoin yang menuliskan nominal biaya penambang.
+Protokol secara otomatis menghitung biaya penambang sebagai selisih matematika murni antara total input dikurangi total output.
+Sifat ini pernah melahirkan insiden fatal bagi pengembang perangkat lunak dompet.
+Jika kode dompet mengalami bug dan lupa menyertakan alamat kembalian untuk uang sisa pengguna, protokol Bitcoin akan menganggap seluruh sisa uang tersebut sebagai tip sukarela dan memberikannya secara instan kepada penambang yang menemukan blok.
 
 ---
 
-## Slide 5: Mesin Stack Kriptografis: Bitcoin Script
+## Slide 5: Cryptographic Stack Execution
 
 ### Konten Slide
-- **Karakteristik Bahasa Script:** Bersifat Forth-like, berbasis tumpukan (*stack-based*), sengaja dibuat non-Turing complete tanpa perulangan (*loops*) untuk mencegah *halting problem*.
-- **Mekanisme Evaluasi Transaksi:** Node mengeksekusi skrip pembuka gembok (`scriptSig`) milik pembelanja, dilanjutkan dengan skrip pengunci (`scriptPubKey`) milik koin asal pada satu stack yang sama.
-- **Tahapan Eksekusi P2PKH (Pay-to-Public-Key-Hash):**
-  1. Masukkan tanda tangan digital `[sig]` ke atas stack.
-  2. Masukkan kunci publik `[pubKey]` ke atas stack.
-  3. `OP_DUP`: Gandakan item teratas stack (`pubKey`).
-  4. `OP_HASH160`: Lakukan hashing SHA-256 dan RIPEMD-160 pada kunci publik.
-  5. Masukkan hash target yang diharapkan dari skrip pengunci.
-  6. `OP_EQUALVERIFY`: Pastikan hash kunci publik cocok dengan alamat target.
-  7. `OP_CHECKSIG`: Verifikasi keabsahan tanda tangan ECDSA menggunakan kunci publik terhadap digest transaksi.
-- **Hasil Akhir:** Operasi berhasil jika nilai teratas stack bernilai `TRUE` (bukan nol) tanpa pesan kesalahan.
-- *Visual:* Diagram visual tumpukan stack mengevaluasi instruksi OP_DUP, OP_HASH160, dan OP_CHECKSIG langkah demi langkah.
+Cryptographic Stack Execution
+
+Engine Architecture:
+Forth-like, stack-based engine.
+Intentionally non-Turing complete (no loops) to permanently prevent the halting problem.
+
+Execution Sequence (P2PKH):
+1. Push signature [sig] and public key [pubKey] to stack.
+2. OP_DUP: Duplicate the top stack item (pubKey).
+3. OP_HASH160: Apply SHA-256 and RIPEMD-160 to pubKey.
+4. Push target expected hash from locking script.
+5. OP_EQUALVERIFY: Validate that the public key hash matches the target address.
+6. OP_CHECKSIG: Verify ECDSA signature against transaction digest.
+
+Result: Spend is valid only if the final top stack value evaluates to TRUE.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Bitcoin menggunakan bahasa skrip berbasis stack tanpa perulangan untuk mencegah infinite loop.
-- Skrip pengunci dan pembuka dieksekusi secara berurutan di atas tumpukan memori stack.
-- Evaluasi P2PKH memastikan pembuktian kepemilikan kunci publik dan keabsahan tanda tangan secara matematis.
+- Mesin eksekusi Bitcoin Script berbasis tumpukan (stack) mirip bahasa Forth.
+- Sengaja dibuat non-Turing complete (tanpa looping) demi mencegah serangan halting problem.
+- Alur eksekusi P2PKH: OP_DUP, OP_HASH160, OP_EQUALVERIFY, dan OP_CHECKSIG.
+- Transaksi sah hanya jika nilai puncak tumpukan bernilai TRUE di akhir eksekusi.
 
 **Naskah Tutur (Voiceover Script):**
-Bagaimana simpul jaringan memverifikasi bahwa seseorang berhak membelanjakan sebuah UTXO?
-Bitcoin menggunakan bahasa pemrograman berbasis stack yang mirip dengan bahasa Forth.
-Bahasa ini sengaja dirancang non-Turing complete tanpa fitur loop agar eksekusinya selalu berhenti dan tidak bisa diserang dengan script tanpa akhir.
-Mari kita lihat bagaimana transaksi standar P2PKH diverifikasi di atas memori stack.
-Pertama, tanda tangan dan kunci publik pengirim didorong ke atas tumpukan stack.
-Instruksi `OP_DUP` kemudian menggandakan kunci publik di posisi teratas.
-Selanjutnya instruksi `OP_HASH160` memproses kunci publik tersebut dengan algoritma hash untuk membuktikan bahwa kuncinya cocok dengan alamat tujuan.
-Setelah diverifikasi kesesuaiannya dengan `OP_EQUALVERIFY`, instruksi pamungkas `OP_CHECKSIG` memverifikasi tanda tangan digital kurva eliptis terhadap transaksi.
-Jika tanda tangan valid, stack akan menyisakan nilai `TRUE`.
-Begitu angka `TRUE` muncul, status koin lama dihapus dari database UTXO dan koin baru resmi diterbitkan.
+Bagaimana simpul memvalidasi bahwa kunci pembuka input cocok dengan gembok output?
+Bitcoin menggunakan mesin komputasi berbasis tumpukan atau stack yang mirip dengan bahasa pemrograman Forth bernama *Bitcoin Script*.
+Satoshi sengaja merancang Script bersifat non-Turing complete, artinya Script tidak memiliki perintah perulangan atau looping.
+Desain ini bertujuan untuk mencegah *halting problem*, memastikan bahwa program validasi selalu berhenti dan tidak ada peretas yang bisa membuat simpul berputar selamanya.
+Pada skema transaksi standar P2PKH, proses validasi berjalan dalam enam langkah tumpukan.
+Tanda tangan dan kunci publik didorong ke dalam stack.
+Opcode OP_DUP menggandakan kunci publik, lalu OP_HASH160 menghitung hashnya.
+Setelah itu, sistem mencocokkan hash tersebut dengan alamat penerima melalui OP_EQUALVERIFY.
+Terakhir, opcode OP_CHECKSIG memverifikasi keabsahan tanda tangan kurva eliptik terhadap data transaksi.
+Jika seluruh operasi matematika berhasil tanpa cacat dan menyisakan nilai TRUE di puncak stack, koin dinyatakan sah untuk dibelanjakan.
 
 ---
 
-## Slide 6: Arsitektur Account Model: World State Ethereum
+## Slide 6: Account Anatomy: The Ethereum 4-Tuple
 
 ### Konten Slide
-- **Pondasi Status Global:** Status global Ethereum dimodelkan sebagai pemetaan kunci-nilai (*key-value mapping*) dari alamat 20-byte menuju objek status akun:
-  $$\sigma: \text{Address} \to \text{Account}$$
-- **Empat Komponen Akun Ethereum (4-Tuple):**
-  - `nonce`: Penghitung skalar transaksi yang dikirim (untuk EOA) atau jumlah kontrak yang dibuat (untuk kontrak).
-  - `balance`: Saldo native cryptocurrency milik akun dalam satuan wei.
-  - `storageRoot`: Hash 256-bit akar dari Merkle Patricia Trie internal yang menyimpan variabel penyimpanan persisten kontrak.
-  - `codeHash`: Hash Keccak-256 dari bytecode mesin virtual yang mengikat akun ini.
-- *Visual:* Diagram objek akun Ethereum memperlihatkan 4 field: nonce, balance, storageRoot, dan codeHash.
+Account Anatomy: The Ethereum 4-Tuple
+
+State Mapping:
+sigma: Address (20-byte) -> Account 4-Tuple
+
+The 4-Tuple Components:
+1. nonce: Scalar transaction counter (for EOAs) or contract creation counter.
+2. balance: Native cryptocurrency balance measured in wei.
+3. storageRoot: 256-bit hash root of a dedicated internal Merkle Patricia storage tree.
+4. codeHash: Keccak-256 hash of the governing contract bytecode.
+
+Account Types:
+- Externally Owned Accounts (EOA):
+  Human/key-controlled.
+  storageRoot and codeHash are empty.
+  The only entities that can initiate transactions and pay gas.
+- Contract Accounts:
+  Managed autonomously by permanent on-chain EVM bytecode.
+  Hold state variables in their private storageRoot trie.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Ethereum tidak melacak koin individual, melainkan memetakan alamat ke objek akun.
-- Setiap akun memiliki 4 field baku: nonce, balance, storageRoot, dan codeHash.
-- storageRoot dan codeHash membedakan akun manusia dengan smart contract.
+- Struktur data 4-Tuple pada setiap akun Ethereum: nonce, balance, storageRoot, codeHash.
+- Dua jenis akun: EOA (dikendalikan private key manusia) vs Contract Account (dikendalikan kode program).
+- Hanya EOA yang dapat menginisiasi transaksi pertama dan membayar gas.
 
 **Naskah Tutur (Voiceover Script):**
-Sekarang mari kita alihkan perhatian ke model Akun milik Ethereum.
-Di Ethereum, jaringan sama sekali tidak melacak lembaran koin individual.
-Status global Ethereum adalah sebuah peta relasional raksasa yang menghubungkan setiap alamat akun dengan objek data empat serangkai.
-Setiap akun di Ethereum memiliki empat field terstruktur.
-Pertama adalah `nonce`, yaitu jumlah transaksi yang pernah dipancarkan.
-Kedua adalah `balance`, yaitu saldo total dalam satuan wei.
-Dua field berikutnya adalah pembeda revolusioner Ethereum: `storageRoot` dan `codeHash`.
-Jika akun tersebut adalah akun dompet biasa milik manusia, field `storageRoot` dan `codeHash` ini akan dibiarkan kosong.
-Namun jika akun tersebut adalah smart contract, `codeHash` akan mengunci kode program yang mengendalikan akun tersebut, dan `storageRoot` akan mengarah ke pohon data tersendiri yang menyimpan variabel memori persisten dari aplikasi tersebut.
+Sekarang mari kita beralih ke filosofi yang berseberangan: Model Akun pada Ethereum.
+Di dalam basis data Ethereum, setiap alamat dua puluh byte dipetakan secara langsung ke sebuah struktur data yang disebut 4-Tuple.
+Empat elemen tersebut adalah nonce sebagai pencatat nomor urut transaksi, balance sebagai penyimpan saldo mata uang native dalam satuan wei, storageRoot sebagai akar pohon penyimpanan memori internal, serta codeHash yang menyimpan hash dari kode program kontrak pintar.
+Ethereum membagi ekosistemnya menjadi dua jenis akun.
+Pertama adalah Externally Owned Account atau EOA, yaitu akun pribadi yang dikendalikan oleh manusia menggunakan private key.
+Akun EOA memiliki nilai storageRoot dan codeHash yang kosong, dan merupakan satu-satunya entitas di jaringan yang berhak menginisiasi transaksi dan membayar gas.
+Kedua adalah Contract Account, yaitu akun otonom yang dikendalikan oleh kode bytecode EVM.
+Akun kontrak dapat menyimpan variabel data permanen di dalam pohon storageRoot miliknya sendiri dan dapat merespons transaksi yang dikirim oleh akun lain.
 
 ---
 
-## Slide 7: Anatomi Akun: EOA vs Smart Contract
+## Slide 7: Modified Merkle Patricia Trie (MPT)
 
 ### Konten Slide
-- **1. Externally Owned Accounts (EOA):**
-  - Dikendalikan oleh manusia atau perangkat lunak off-chain melalui kepemilikan private key.
-  - Nilai `codeHash` adalah hash string kosong; nilai `storageRoot` kosong.
-  - Memiliki kemampuan menginisiasi transaksi secara mandiri, membayar gas, dan menggerakkan eksekusi jaringan.
-- **2. Contract Accounts (Smart Contracts):**
-  - Dikelola secara otonom oleh kode bytecode EVM yang tersimpan permanen di on-chain.
-  - Memiliki `codeHash` yang menunjuk ke bytecode program dan `storageRoot` yang menunjuk ke variabel status.
-  - **Sifat Reaktif:** Tidak memiliki kunci privat dan tidak dapat menginisiasi transaksi sendiri; hanya aktif jika dipanggil oleh EOA atau kontrak lain.
-- *Visual:* Bagan perbandingan EOA (aktor inisiator dengan private key) versus Contract Account (mesin reaktif dengan storage dan bytecode).
+Modified Merkle Patricia Trie (MPT)
+
+The Hybrid Solution:
+Merges the cryptographic integrity of a Merkle Tree with the O(log N) path-finding efficiency of a Radix trie.
+
+Trie Hierarchy:
+Root Node (32-byte stateRoot) -> Extension Nodes -> Branch Nodes -> Leaf Nodes (Account Data).
+
+Logarithmic Mutation:
+When Alice transfers ETH to Bob, nodes do not recalculate the entire database.
+Only the specific nodes along the traversal path from leaf to root are updated.
+
+State Root:
+The resulting 32-byte stateRoot is embedded directly into the block header, guaranteeing global state consensus across all independent validators.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- EOA dikendalikan private key, sedangkan contract account dikendalikan bytecode.
-- EOA adalah inisiator utama; smart contract bersifat reaktif menunggu panggilan.
-- Smart contract memiliki database internal sendiri yang dirangkum oleh storageRoot.
+- Struktur Modified Merkle Patricia Trie (MPT) menggabungkan pohon Merkle dan Radix trie.
+- Mutasi logaritmik: pembaruan saldo hanya menghitung ulang simpul di sepanjang jalur dari daun ke akar.
+- Menghasilkan stateRoot 32-byte yang ditanam di header blok untuk menjamin keseragaman status dunia.
 
 **Naskah Tutur (Voiceover Script):**
-Ethereum membagi aktor di jaringannya ke dalam dua kategori akun yang berbeda.
-Kategori pertama adalah Externally Owned Accounts atau EOA.
-Ini adalah akun dompet kita sehari-hari yang dikendalikan oleh kunci privat di luar sistem blockchain.
-EOA adalah satu-satunya entitas yang memiliki wewenang untuk memulai transaksi di jaringan dan membayar biaya komputasi gas.
-Kategori kedua adalah Contract Accounts atau Smart Contracts.
-Akun ini tidak dipegang oleh manusia dan tidak memiliki kunci privat.
-Akun kontrak dikendalikan sepenuhnya oleh sekumpulan kode bytecode yang tersimpan permanen di blockchain.
-Kontrak pintar bersifat reaktif murni: mereka tidak bisa bangun sendiri di pagi hari dan mengirim transaksi.
-Mereka hanya akan terbangun dan menjalankan logikanya jika ada transaksi dari EOA atau kontrak lain yang memicu eksekusinya.
-Setiap mutasi memori internal kontrak akan secara otomatis mengubah nilai `storageRoot` di akun tersebut.
+Tantangan terbesar dari Model Akun adalah kecepatan pembuktian status.
+Jika ada puluhan juta akun di dunia, bagaimana kita merangkum status seluruh akun tersebut ke dalam satu hash 32-byte tanpa harus menghitung ulang seluruh basis data setiap detik?
+Ethereum merancang struktur data canggih bernama Modified Merkle Patricia Trie atau MPT.
+MPT adalah perkawinan silang antara pohon Merkle yang memberikan integritas kriptografis dan Radix trie yang memberikan efisiensi pencarian kunci berbasis prefiks karakter.
+Pohon ini tersusun dari Leaf Nodes di bagian bawah, Branch Nodes di percabangan, Extension Nodes untuk memadatkan jalur, hingga bermuara pada satu Root Node di puncak.
+Ketika Alice mentransfer saldo ke Bob, validator tidak perlu menyusun ulang seluruh basis data global.
+Validator hanya memperbarui simpul-simpul yang berada di sepanjang jalur dari simpul daun Alice dan Bob menuju puncak pohon secara logaritmik.
+Nilai akhir 32-byte stateRoot ini ditanamkan di header blok, memberikan bukti konsensus status dunia yang tak terbantahkan.
 
 ---
 
-## Slide 8: Data Struktur: Modified Merkle Patricia Trie
+## Slide 8: Architectural Synthesis Matrix
 
 ### Konten Slide
-- **Kebutuhan Struktur Data:** Bagaimana ribuan simpul dapat menyepakati jutaan saldo akun secara instan tanpa inkonsistensi data?
-- **Modified Merkle Patricia Trie (MPT):**
-  - Menggabungkan keunggulan integritas kriptografis pohon Merkle dengan efisiensi pencarian jalur milik Radix tree.
-  - *Kunci (Path):* Hash Keccak-256 dari alamat akun 20-byte.
-  - *Nilai (Value):* Objek status akun 4-tuple yang di-encode menggunakan RLP.
-- **Efisiensi Mutasi Logaritmik:**
-  - Ketika sebuah saldo akun berubah, simpul tidak perlu menghitung ulang seluruh pohon.
-  - Hanya simpul-simpul di sepanjang jalur dari daun menuju akar yang dihitung ulang dalam kompleksitas $O(\log n)$.
-  - Akar pohon setinggi 32-byte dicatat langsung ke dalam header blok sebagai `stateRoot`.
-- *Visual:* Arsitektur MPT memperlihatkan percabangan nibble heksadesimal dari Root Node menuju Extension Node, Branch Node, hingga Leaf Node.
+Architectural Synthesis Matrix
+
+Dimension:
+1. State Representation:
+   - UTXO Model: Independent coin graph.
+   - Account Model: Global mapping of balances.
+2. Transaction Concurrency:
+   - UTXO Model: High (Native parallel processing of disjoint outputs).
+   - Account Model: Low (Forced sequential execution for identical accounts).
+3. Contract Expressivity:
+   - UTXO Model: Limited (Stateless, complex shared state logic).
+   - Account Model: Turing-Complete (Effortless shared state execution).
+4. Storage Burden:
+   - UTXO Model: Efficient (Spent coins are pruned from active RAM).
+   - Account Model: High (Permanent state bloat over time).
+5. Privacy Mechanics:
+   - UTXO Model: Superior (Fresh change address generated for every spend).
+   - Account Model: Vulnerable (Static address reuse links all transactions).
+6. Double-Spend Check:
+   - UTXO Model: Outpoint consumption check in UTXO Set.
+   - Account Model: Scalar nonce increment check in database.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- World State disimpan dalam Modified Merkle Patricia Trie (MPT).
-- Menggabungkan efisiensi lookup Radix Trie dengan keamanan kriptografis Merkle Tree.
-- Perubahan saldo satu akun hanya memperbarui simpul di jalurnya dengan efisiensi logaritmik O(log n).
+- Matriks perbandingan komparatif UTXO vs Account Model melintasi 6 dimensi rekayasa.
+- UTXO unggul dalam konkurensi paralel, pemangkasan memori penyimpanan, dan privasi alamat baru.
+- Model Akun unggul mutlak dalam fleksibilitas kontrak pintar dan koordinasi shared-state.
 
 **Naskah Tutur (Voiceover Script):**
-Bagaimana mungkin jutaan akun pengguna dan miliaran variabel penyimpanan kontrak bisa diverifikasi secara instan tanpa ada simpul yang mengalami perbedaan data?
-Jawabannya ada pada struktur data bernama Modified Merkle Patricia Trie atau MPT.
-Struktur data ini adalah perkawinan cerdas antara pohon Merkle dan Radix trie.
-Alamat akun di-hash menjadi serangkaian jalur navigasi berbasis heksadesimal.
-Setiap angka heksadesimal memandu penelusuran dari simpul akar, melewati simpul percabangan, hingga sampai ke simpul daun yang menyimpan data akun tersebut.
-Keunggulan utama dari MPT adalah efisiensi pembaruan datanya.
-Jika Alice mentransfer koin ke Bob, hanya beberapa simpul di sepanjang jalur cabang akun Alice dan Bob yang perlu dihitung ulang hash-nya, dengan kompleksitas logaritmik O(log n).
-Seluruh cabang pohon lainnya tetap tidak tersentuh.
-Akar tunggal 32-byte di puncak pohon inilah yang disimpan di header blok sebagai `stateRoot`.
+Mari kita rangkum perbandingan komparatif antara Model UTXO dan Model Account melintasi enam dimensi rekayasa sistem.
+Dalam hal konkurensi transaksi, model UTXO unggul telak karena simpul dapat memproses ribuan transaksi secara paralel selama transaksi tersebut mengonsumsi koin output yang berbeda.
+Sebaliknya, model akun terikat pada eksekusi sekuensial yang ketat untuk mencegah konflik saldo pada akun yang sama.
+Namun dalam hal fleksibilitas kontrak pintar, model akun adalah pemenang mutlak karena variabel memori dapat diakses dan diubah bersama secara bebas oleh banyak pengguna.
+Di sisi beban penyimpanan memori, model UTXO sangat efisien karena koin yang sudah dibelanjakan dapat langsung dihapus dari memori RAM validator, sementara model akun menderita masalah pembengkakan state permanen di mana data yang sudah masuk sulit untuk dihapus.
+Dan dari segi privasi, model UTXO secara alami mendorong penggunaan alamat baru di setiap uang kembalian, sedangkan model akun mendorong penggunaan satu alamat statis yang mudah diprofiling.
 
 ---
 
-## Slide 9: Matriks Komparasi 6 Dimensi
+## Slide 9: Real-World Architectural Bottlenecks
 
 ### Konten Slide
-- **Komparasi Mendalam Dua Paradigma:**
-  - *Representasi Status:* Graf luaran koin independen (UTXO) vs Peta nilai global saldo dan memori (Account).
-  - *Konkurensi Transaksi:* **Tinggi** pada UTXO (dapat diproses paralel lintas core CPU) vs **Rendah/Kompleks** pada Account (wajib sekuensial jika menyentuh akun sama).
-  - *Ekspresivitas Smart Contract:* **Terbatas** pada UTXO (stateless/eUTXO rumit) vs **Turing-Complete Kaya** pada Account (state bersama antar-aplikasi sangat mudah).
-  - *Beban Penyimpanan (Storage):* **Efisien** pada UTXO (koin terpakai bisa di-prune dari RAM) vs **Rentan State Bloat** pada Account (saldo nol dan storage slot tersimpan permanen).
-  - *Privasi:* **Unggul** pada UTXO (alamat baru untuk setiap uang kembalian) vs **Rentan Analisis** pada Account (penggunaan ulang alamat statis).
-  - *Pencegahan Double-Spend:* Pemeriksaan Outpoint terpakai di UTXO set vs Pemeriksaan kenaikan skalar nonce akun.
-- *Visual:* Tabel matriks visual membandingkan parameter UTXO vs Account dengan indikator keunggulan masing-masing.
+Real-World Architectural Bottlenecks
+
+1. UTXO Limit: Cardano eUTXO (Concurrency Collision)
+- Cardano adopted Extended UTXO for smart contracts, requiring liquidity pools to be represented as single UTXOs.
+- The Bottleneck: Representing a liquidity pool as a single UTXO means it can mathematically only execute 1 swap per block.
+- Simultaneous user swaps instantly fail due to double-spend collisions on the shared liquidity output.
+
+2. Account Limit: Ethereum Storage (State Bloat & Contention)
+- Easy shared-state comes with severe hardware degradation.
+- The Bottleneck: Account data and storage slots persist indefinitely in the MPT. Sequential access to popular contract pools triggers extreme gas bidding wars.
+- Continuous state bloat chokes disk I/O, forcing full node validators onto enterprise-grade NVMe SSDs just to maintain chain sync.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Enam dimensi kunci perbandingan arsitektur.
-- UTXO unggul dalam konkurensi paralel dan privasi.
-- Account model unggul dalam kemudahan memprogram smart contract dan composability.
+- Bottleneck dunia nyata: Kasus kegagalan konkurensi Cardano eUTXO vs Krisis state bloat Ethereum.
+- Cardano eUTXO: Kolam likuiditas AMM sebagai 1 UTXO hanya bisa melayani 1 swap per blok karena tabrakan double-spend.
+- Ethereum: Kemudahan shared-state memicu perang gas dan pembengkakan I/O disk yang mewajibkan SSD NVMe kelas enterprise.
 
 **Naskah Tutur (Voiceover Script):**
-Mari kita sejajarkan kedua model ini dalam enam dimensi teknis.
-Pertama, dari segi konkurensi: model UTXO jauh lebih unggul karena transaksi yang membelanjakan koin berbeda dapat diverifikasi secara paralel di berbagai core prosesor tanpa khawatir bentrok.
-Di model Akun, pemrosesan paralel sangat sulit karena transaksi yang mengakses akun yang sama harus dijalankan secara berurutan.
-Kedua, dari segi kemampuan smart contract: model Akun adalah pemenang mutlak.
-Sangat mudah membangun aplikasi pinjam-meminjam atau bursa terdesentralisasi jika semua pengguna bisa berinteraksi ke satu wadah saldo bersama.
-Di UTXO, logika bersama semacam itu sangat rumit dibangun.
-Ketiga, dari beban penyimpanan: model UTXO sangat bersih karena koin yang sudah terpakai bisa dihapus dari memori aktif, sedangkan model Akun menderita penyakit penumpukan data permanen atau state bloat.
-Dan terakhir, privasi pada UTXO lebih terlindungi secara alami karena pengguna terbiasa mengganti alamat untuk setiap uang kembalian.
+Dilema teoritis ini terbukti nyata dalam insiden rekayasa di dunia industri blockchain.
+Ketika Cardano mencoba menghadirkan smart contract menggunakan arsitektur Extended UTXO, mereka membentur tembok konkurensi.
+Dalam aplikasi pertukaran terdesentralisasi atau AMM, seluruh likuiditas pasar terikat pada satu output UTXO bersama.
+Karena satu UTXO hanya bisa dikonsumsi satu kali per blok, pertukaran tersebut secara matematis hanya mampu melayani tepat satu pengguna per blok.
+Ratusan pengguna lain yang mencoba bertransaksi secara bersamaan seketika gagal karena koin likuiditas tersebut sudah terlanjur dilebur oleh pengguna pertama.
+Di sisi lain, Ethereum membayar mahal kemudahan sistem akun mereka dengan krisis State Bloat.
+Karena data kontrak pintar tersimpan permanen di dalam pohon MPT, beban membaca dan menulis data ke disk semakin hari semakin lambat.
+Untuk menjaga sinkronisasi simpul agar tidak tertinggal dari rantai utama, para operator validator independen kini terpaksa menggunakan media penyimpanan SSD NVMe kelas industri dengan kecepatan tinggi, yang pada akhirnya membatasi siapa saja yang sanggup menjalankan simpul sendiri di rumah.
 
 ---
 
-## Slide 10: Studi Kasus: Concurrency di Cardano eUTXO
+## Slide 10: The Consensus Dilemma
 
 ### Konten Slide
-- **Ambisi eUTXO Cardano (2021):** Mengadopsi Extended UTXO untuk menghadirkan kapabilitas smart contract tanpa meninggalkan keunggulan paralelisme model UTXO.
-- **Kebuntuan Arsitektur AMM (Kasus Minswap):**
-  - Pada Automated Market Maker (AMM), likuiditas perdagangan ditampung dalam satu kumpulan bersama (*liquidity pool*).
-  - Di bawah model eUTXO, kumpulan likuiditas tersebut direpresentasikan oleh **satu buah UTXO tunggal**.
-  - Sifat dasar UTXO: sebuah output hanya dapat dibelanjakan **tepat satu kali per blok**.
-- **Dampak di Lapangan:**
-  - Hanya satu transaksi penukaran (*swap*) pengguna yang berhasil di setiap blok; ratusan transaksi pengguna lain di blok yang sama gagal akibat benturan double-spend.
-  - Pengembang terpaksa membangun solusi off-chain batcher yang rumit untuk menggabungkan order pengguna sebelum menyentuh pool UTXO.
-- *Visual:* Ilustrasi ratusan transaksi swap pengguna menabrak satu UTXO liquidity pool yang hanya bisa melayani 1 transaksi per blok.
+The Consensus Dilemma
+Reconciling State Models with Global Truth
+
+The Absolute Mandate:
+Regardless of whether a ledger relies on the stateless graphs of UTXOs or the global mappings of Account models, all distributed nodes face one absolute mandate:
+They must agree on a single, mathematically valid timeline.
+
+The Fracture Scenarios:
+- What happens when network latency causes two miners on opposite sides of the globe to discover valid blocks at the exact same millisecond?
+- How does a network mathematically resolve temporary block reorganizations versus permanent ideological hard forks?
+- When can a user or cryptocurrency exchange safely consider a state transition to be irreversibly final?
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Cardano mencoba membawa smart contract ke model UTXO lewat model eUTXO.
-- Masalah fatal AMM: pool likuiditas adalah satu UTXO, sehingga hanya bisa melayani 1 swap per blok.
-- Ratusan transaksi gagal serentak, membuktikan tantangan shared state pada arsitektur UTXO.
+- Model status buku besar hanyalah representasi data internal.
+- Tantangan mutlak sistem terdistribusi: seluruh simpul wajib menyepakati satu garis waktu kebenaran tunggal.
+- Munculnya percabangan: perselisihan latensi jaringan sementara vs perpecahan ideologis permanen.
 
 **Naskah Tutur (Voiceover Script):**
-Teori arsitektur ini terbukti nyata di dunia produksi.
-Salah satu studi kasus paling terkenal terjadi pada peluncuran smart contract Cardano tahun 2021 melalui model Extended UTXO atau eUTXO.
-Para pengembang ingin membangun bursa terdesentralisasi seperti Uniswap.
-Namun di dalam sistem AMM, seluruh pengguna menukar token ke satu kolam likuiditas bersama.
-Masalah fatal muncul karena di bawah model eUTXO, kolam likuiditas tersebut diwakili oleh satu buah koin UTXO tunggal.
-Padahal hukum dasar UTXO menegaskan bahwa sebuah koin hanya bisa dibelanjakan satu kali dalam satu blok.
-Akibatnya, ketika bursa diluncurkan di jaringan uji coba, hanya ada satu transaksi penukaran yang berhasil di setiap blok.
-Ratusan transaksi penukaran dari pengguna lain langsung gagal serentak karena dianggap mencoba melakukan double-spending pada UTXO kolam yang sama.
-Kasus ini membuka mata industri bahwa mengelola status bersama atau *shared state* di model UTXO membutuhkan rekayasa off-chain yang luar biasa rumit.
+Apapun model buku besar yang dipilih oleh sebuah arsitektur protokol, baik itu grafik koin UTXO tanpa status maupun tabel akun dengan status global, seluruh simpul terdistribusi di dunia terikat pada satu mandat mutlak yang sama: mereka wajib menyepakati satu garis waktu sejarah yang identik.
+Namun di dunia nyata, jaringan internet tidaklah sempurna.
+Apa yang terjadi ketika dua penambang di belahan bumi yang berbeda menemukan blok valid pada milidetik yang sama persis akibat keterlambatan transmisi serat optik?
+Bagaimana protokol memulihkan perpecahan status sementara secara otomatis tanpa campur tangan manusia?
+Dan apa perbedaan mendasar antara reorganisasi blok acak dengan perpecahan garpu keras atau hard fork permanen yang membelah komunitas pengembang?
+Yang terpenting, kapan sebuah transaksi saldo benar-benar mencapai titik finalitas mutlak yang mustahil untuk dibatalkan?
 
 ---
 
-## Slide 11: Masalah Struktural Ethereum: State Bloat
+## Slide 11: Bridge to the Next Module: Forks, Finality, and Reorganizations
 
 ### Konten Slide
-- **Tantangan Bersama Model Akun:** Kemudahan pemrograman status bersama (*shared state*) di Ethereum harus dibayar dengan degradasi kinerja perangkat keras.
-- **Storage Contention & Gas Bidding Wars:**
-  - Ketika ribuan pengguna bertransaksi di pool likuiditas yang sama, seluruh eksekusi dipaksa berjalan sekuensial satu per satu.
-  - Memicu perang penawaran biaya gas (*priority fee*) ekstrem untuk memperebutkan urutan eksekusi pertama di dalam blok.
-- **Fenomena State Bloat:**
-  - Setiap akun yang dibuat dan setiap variabel storage smart contract akan menetap selamanya di World State Trie kecuali dihapus eksplisit.
-  - Database MPT terus membengkak tanpa batas, memicu degradasi kecepatan pembacaan disk I/O.
-- **Tuntutan Spesifikasi Validator:** Operator simpul penuh kini dipaksa menggunakan drive solid-state NVMe kelas enterprise agar simpul tidak tertinggal sinkronisasi rantai.
-- *Visual:* Grafik pertumbuhan ukuran World State Ethereum dari tahun ke tahun disertai ilustrasi beban pembacaan disk I/O pada node.
+The Inevitability of Divergence:
+When physical latency splits the timeline, how does math heal the wound?
+
+Next Module:
+Module 02.4: Forks, Finality, and Reorganizations.
+
+Core Themes Explored:
+- Soft Forks vs. Hard Forks: Backward-compatible rule tightening vs. permanent chain schisms.
+- The Mechanics of Reorgs: The heaviest-chain rule and the economics of the 51% double-spend attack.
+- Probabilistic Finality (PoW) vs. Deterministic Economic Finality (PoS Casper FFG).
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Kemudahan model akun Ethereum memicu masalah antrean sekuensial dan perang gas.
-- State bloat: data memori akun menumpuk selamanya di hard drive node.
-- Dampak desentralisasi: spesifikasi minimum hardware membengkak, menuntut drive NVMe berkecepatan tinggi.
+- Mengantarkan peserta ke modul penutup bab Architecture and State.
+- Pertanyaan kunci: Bagaimana protokol merekonsiliasi percabangan garis waktu dan menjamin kepastian transaksi.
+- Teaser materi modul 02.4: Mekanisme Reorg, Soft Fork vs Hard Fork, dan evolusi finalitas PoW ke PoS.
 
 **Naskah Tutur (Voiceover Script):**
-Sebaliknya, model Akun milik Ethereum juga tidak luput dari beban struktural yang berat.
-Meskipun model ini membuat pembuatan aplikasi terdesentralisasi menjadi sangat mudah, ada harga mahal yang harus dibayar.
-Pertama adalah persaingan akses penyimpanan atau *storage contention*.
-Karena semua orang mengakses kontrak yang sama, transaksi harus diantrekan secara ketat satu per satu.
-Di saat volatilitas pasar tinggi, ini memicu perang penawaran gas di mana pengguna saling menaikkan tip demi memperebutkan giliran eksekusi pertama.
-Masalah kedua yang jauh lebih kronis adalah *state bloat*.
-Di Ethereum, sekali sebuah akun atau variabel kontrak diciptakan, data tersebut akan menetap di World State Trie selamanya kecuali dibersihkan secara manual.
-Ukuran basis data ini terus membengkak ratusan gigabyte.
-Akibatnya, operasi pembacaan disk I/O menjadi sangat lambat, hingga operator simpul validator saat ini wajib menggunakan drive SSD NVMe kelas enterprise berkecepatan tinggi hanya agar simpul mereka tidak tertinggal dari rantai utama.
-
----
-
-## Slide 12: Jembatan ke Modul Berikutnya
-
-### Konten Slide
-- **Pencapaian Pemahaman:** Kita telah membedah perbedaan mendasar antara model UTXO dan model Akun dalam merepresentasikan status dunia.
-- **Pertanyaan Konsensus Tingkat Tinggi:**
-  - Baik menggunakan UTXO maupun model Akun, seluruh simpul penuh wajib menyepakati satu garis waktu sejarah yang sah.
-  - Namun, bagaimana jika dua penambang di belahan bumi berbeda menemukan blok valid pada detik yang sama persis?
-  - Bagaimana jika pengembang merilis pembaruan perangkat lunak yang mengubah aturan konsensus?
-  - Apa yang membedakan reorganisasi blok sementara dengan perpecahan ideologis permanen seperti kelahiran Ethereum Classic?
-- **Materi Modul Berikutnya:** Membedah percabangan rantai dan resolusi konsensus dalam **Forks, Finality, and Reorganizations**.
-- *Visual:* Pohon percabangan blockchain membelah menjadi dua cabang sejarah dengan pertanyaan resolusi konsensus.
-
-### Catatan Presenter (Cheatsheet)
-**Quick Cues:**
-- State model selesai dibedah: kelebihan dan kekurangan UTXO vs Account.
-- Membuka dilema konsensus: apa yang terjadi ketika simpul berbeda melihat sejarah yang berbeda.
-- Teaser materi modul 2.4: Forks, Finality, and Reorganizations.
-
-**Naskah Tutur (Voiceover Script):**
-Kita telah menuntaskan perbandingan mendalam antara dua pilar pencatatan status: model UTXO dan model Akun.
-Kalian sekarang memahami mengapa Bitcoin memilih kesederhanaan dan konkurensi lembaran uang kertas, sementara Ethereum memilih fleksibilitas buku kas komputasi global.
-Namun terlepas dari bagaimana status disimpan di hard drive, seluruh komputer di jaringan memiliki satu tugas mutlak yang sama: mereka harus menyepakati sejarah blok mana yang merupakan kebenaran tunggal yang sah.
-Lalu apa yang terjadi jika kesepakatan itu retak di tengah jalan?
-Bagaimana jika dua penambang di dua benua berbeda menemukan blok yang sama-sama sah pada detik yang sama persis?
-Apa yang terjadi jika komunitas pengembang memperbarui aturan konsensus sehingga sebagian komputer menolak blok-blok baru tersebut?
-Dan bagaimana jaringan menyelesaikan cabang sejarah yang bertabrakan hingga sebuah transaksi benar-benar mencapai status final yang tidak bisa dibatalkan lagi?
-Untuk menjawab seluruh dinamika percabangan konsensus ini, di modul penutup bab ini kita akan membedah Forks, Finality, and Reorganizations.
-Sampai jumpa di modul berikutnya.
+Pertanyaan tentang garis waktu kebenaran ini membawa kita ke modul penutup dari bab Architecture and State.
+Di modul berikutnya, kita akan membedah secara matematis dan ekonomis bagaimana konsensus menangani perpecahan garis waktu di jaringan internet terbuka.
+Kita akan melihat bagaimana aturan rantai terakumulasi terberat menyelesaikan reorganisasi blok, bagaimana serangan double-spend dilancarkan melalui pembatalan blok, serta evolusi dramatis dari finalitas probabilistik enam blok pada Proof of Work menuju finalitas ekonomi deterministik pada konsensus Proof of Stake Casper FFG.
+Semua ini akan kita kupas tuntas dalam Forks, Finality, and Reorganizations.
+Terima kasih, dan sampai jumpa di modul berikutnya.

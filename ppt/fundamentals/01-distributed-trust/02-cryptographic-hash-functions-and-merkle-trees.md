@@ -3,13 +3,14 @@ Modul Presentasi: Fondasi Distributed Trust (01.2)
 
 ---
 
-## Slide 1: Judul Presentasi
+---
+
+## Slide 1: Cryptographic Hash Functions and Merkle Trees
 
 ### Konten Slide
-- **Topik:** Cryptographic Hash Functions and Merkle Trees
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Fondasi matematis integritas data, kompresi kriptografis, dan verifikasi logaritmik dalam sistem terdesentralisasi.
-- *Visual:* Visualisasi alur data mentah masuk ke engine SHA-256 menghasilkan digest 32-byte, berdampingan dengan bagan pohon Merkle bercabang.
+Cryptographic Hash Functions and Merkle Trees
+Fundamentals of Distributed Trust: Module 01.2
+The mathematical foundations of data integrity, cryptographic compression, and logarithmic verification in decentralized systems.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -26,17 +27,19 @@ Hari ini kita akan membedah cara kerja matematika di balik fungsi hash, lima sif
 
 ---
 
-## Slide 2: Krisis Skala pada Ledger Terdesentralisasi
+---
+
+## Slide 2: The Scale Crisis: Decentralized Ledgers
 
 ### Konten Slide
-- **Tantangan Verifikasi Data:** Blockchain publik beroperasi di lingkungan tanpa server pusat dan tanpa administrator database terpercaya.
-- **Dilema Pemeriksaan Linier:**
-  - Jika simpul jaringan wajib mengunduh dan membaca seluruh riwayat transaksi baris demi baris, komputasi akan macet.
-  - Setiap penambahan blok memperbesar beban bandwidth, kapasitas disk, dan waktu verifikasi secara linier (*O(N)*).
-- **Kebutuhan Primitif Kriptografis:**
-  - Mekanisme identifikasi dokumen berukuran sembarang menjadi representasi ringkas berukuran tetap.
-  - Jaminan matematis bahwa modifikasi sekecil satu bit pada data akan terdeteksi seketika.
-- *Visual:* Diagram perbandingan node yang kewalahan membaca data linier 500 GB vs node yang memverifikasi data instan menggunakan cryptographic digest.
+The Scale Crisis: Decentralized Ledgers
+The Linear Verification Dilemma:
+If nodes are forced to download and read the entire ledger line-by-line, computation bottlenecks.
+Each additional block increases storage, bandwidth, and verification time linearly: O(N).
+
+The Need for Cryptographic Primitives:
+Mechanisms to identify arbitrary-sized documents as compact, fixed-size representations.
+Mathematical guarantees that a single-bit modification will be detected instantly.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -56,17 +59,19 @@ Kita membutuhkan teknologi yang bisa merangkum data sebesar apa pun menjadi sidi
 
 ---
 
-## Slide 3: Intuisi Sidik Jari Digital (Digital Fingerprints)
+---
+
+## Slide 3: Digital Fingerprints: Intuition and Compression
 
 ### Konten Slide
-- **Analogi Biologis:** Sidik jari manusia berukuran kecil dan unik, mewakili satu individu secara spesifik tanpa harus menduplikasi wujud fisik manusia tersebut.
-- **Kompresi Data Sembarang:**
-  - Input dapat berupa satu huruf, file transaksi 250 byte, atau data sebesar ratusan gigabyte.
-  - Output yang dihasilkan selalu berukuran tetap, misalnya 256 bit (32 byte) pada SHA-256.
-- **Sifat Komputasi:**
-  - Sangat cepat dan murah dihitung ke arah depan (*forward evaluation*).
-  - Menghasilkan ringkasan heksadesimal 64 karakter yang unik untuk setiap muatan data.
-- *Visual:* Diagram flowchart input sembarang (teks pendek, transaksi, file ISO raksasa) masuk ke hash engine menghasilkan output heksadesimal 32 byte dengan panjang seragam.
+Digital Fingerprints: Intuition and Compression
+Arbitrary Input Compression:
+Input can be a single character, a 250-byte transaction file, or hundreds of gigabytes of data.
+Output digest is always a fixed size (typically 32 bytes or 256 bits).
+
+Computational Properties:
+Extremely fast and cheap forward evaluation.
+Generates a unique 64-character hexadecimal digest representing each underlying data payload.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -86,17 +91,19 @@ Hasil ini biasa kita lihat sebagai deretan 64 karakter heksadesimal yang menjadi
 
 ---
 
-## Slide 4: Sifat Matematis 1 & 2: Determinisme dan Pre-Image Resistance
+---
+
+## Slide 4: Mathematical Properties 1 & 2: Determinism and Pre-Image Resistance
 
 ### Konten Slide
-- **Formalisasi Pemetaan:** $H: \{0, 1\}^* \to \{0, 1\}^n$, memetakan domain string bit tak hingga ke kodomain string bit berukuran tetap $n$.
-- **1. Determinisme (Universal Consistency):**
-  - Input yang sama selalu menghasilkan output digest yang persis sama kapan pun dan di mana pun dihitung.
-  - Menghilangkan ketergantungan pada jam lokal, status sistem operasi, atau keacakan internal.
-- **2. Pre-Image Resistance (Sifat Satu Arah):**
-  - Diberikan output hash $y$, secara komputasi mustahil menemukan input asal $x$ sedemikian sehingga $H(x) = y$.
-  - Ruang pencarian brute-force untuk 256-bit membutuhkan rata-rata $2^{255}$ kalkulasi.
-- *Visual:* Analogi blender buah (mudah menghancurkan stroberi dan pisang menjadi smoothie, mustahil memutar balik pisau blender untuk menyusun kembali buah utuh).
+Mathematical Properties 1 & 2: Determinism and Pre-Image Resistance
+Determinism (Universal Consistency):
+The exact same input always yields the exact same output digest, regardless of time, location, or hardware architecture.
+Eliminates reliance on local clocks, operating system status, or internal randomness.
+
+Pre-Image Resistance (One-Way):
+Given output digest y, it is computationally impossible to reverse-engineer input x such that H(x) = y.
+Average brute-force search space requires 2^255 calculations for 256-bit hashes.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -119,17 +126,19 @@ Tetapi kalau kalian disodorkan segelas smoothie, kalian tidak akan pernah bisa m
 
 ---
 
-## Slide 5: Sifat Matematis 3 & 4: Second Pre-Image vs. Collision Resistance
+---
+
+## Slide 5: Mathematical Properties 3 & 4: Second Pre-Image vs. Collision Resistance
 
 ### Konten Slide
-- **3. Second Pre-Image Resistance (Weak Collision Resistance):**
-  - Diberikan input spesifik $x_1$, mustahil menemukan input berbeda $x_2$ sehingga $H(x_1) = H(x_2)$.
-  - Mencegah penyerang mengganti transaksi Alice yang sah dengan transaksi palsu yang ber-hash identik.
-- **4. Collision Resistance (Strong Collision Resistance):**
-  - Mustahil menemukan pasangan sembarang $x_1$ dan $x_2$ mana pun di alam semesta sedemikian sehingga $H(x_1) = H(x_2)$.
-  - Pada tabrakan bebas, penyerang memiliki kebebasan penuh memilih kedua input secara bersamaan.
-- **Perbedaan Mendasar:** Second pre-image menantang penyerang mencocokkan target yang ditentukan orang lain, sedangkan collision resistance membebaskan penyerang mencari kecocokan antar dua input bebas.
-- *Visual:* Diagram perbandingan: Target tetap $x_1$ menuju $y$ (Second Pre-Image) vs Pasangan bebas $x_1$ dan $x_2$ bertemu di titik hash yang sama (Collision).
+Mathematical Properties 3 & 4: Second Pre-Image vs. Collision Resistance
+Second Pre-Image Resistance (Weak Collision Resistance):
+Given specific input x1, it is impossible to find a different input x2 such that H(x1) = H(x2).
+Prevents attackers from substituting a legitimate transaction with a fraudulent transaction of identical hash.
+
+Collision Resistance (Strong Collision Resistance):
+It is impossible to find any arbitrary pair x1 and x2 in the universe such that H(x1) = H(x2).
+In free collision search, attackers have total freedom to alter both inputs simultaneously.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -151,20 +160,20 @@ Tetapi secara komputasi praktis, menemukan tabrakan tersebut harus mustahil dila
 
 ---
 
-## Slide 6: The Birthday Paradox dan Keamanan Komputasi
+---
+
+## Slide 6: The Birthday Paradox
 
 ### Konten Slide
-- **Pigeonhole Principle:** Ruang input tak terbatas dipetakan ke ruang output berhingga ($2^{256}$), sehingga tabrakan matematis pasti ada.
-- **The Birthday Paradox:**
-  - Dalam sebuah ruangan berisi 23 orang, probabilitas dua orang berbagi hari ulang tahun yang sama melampaui 50 persen.
-  - Mencari kecocokan antar-pasangan acak jauh lebih mudah daripada mencocokkan satu target tanggal lahir tertentu.
-- **Kompleksitas Komputasi Tabrakan:**
-  - Batas pencarian tabrakan berkurang dari $2^n$ menjadi akar kuadratnya: $\mathcal{O}(2^{n/2})$.
-  - Untuk SHA-256: Pre-image resistance setara $2^{256}$ operasi, collision resistance setara $2^{128}$ operasi.
-- **Preseden Algoritma yang Usang:**
-  - *MD5 (128-bit, batas $2^{64}$):* Runtuh pada tahun 2004, tabrakan dapat dibuat dalam hitungan detik di ponsel.
-  - *SHA-1 (160-bit, batas $2^{80}$):* Runtuh resmi oleh Google pada tahun 2017 lewat serangan SHAttered.
-- *Visual:* Grafik kurva probabilitas Birthday Paradox melesat naik di 23 orang, disandingkan dengan perbandingan kekuatan kunci MD5, SHA-1, dan SHA-256.
+The Birthday Paradox
+Pigeonhole Principle & Probabilities:
+Mapping an infinite input space to a finite output space (2^256) guarantees mathematical collisions exist.
+The Birthday Paradox proves finding a match between any two arbitrary inputs is vastly easier than matching a specific target.
+
+Security Limits:
+Collision resistance boundary drops from 2^n to 2^(n/2).
+For SHA-256, finding a collision requires 2^128 operations, remaining strictly secure against modern supercomputers.
+Obsolete Algorithms: MD5 (collapsed 2004), SHA-1 (broken 2017).
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -188,18 +197,15 @@ Itulah sebabnya industri blockchain hari ini standarnya adalah 256 bit ke atas.
 
 ---
 
-## Slide 7: Sifat Matematis 5: The Avalanche Effect
+---
+
+## Slide 7: The Avalanche Effect
 
 ### Konten Slide
-- **Definisi Efek Longsoran:** Perubahan mikroskopis pada input wajib memicu perubahan radikal dan tak terduga pada seluruh output hash.
-- **Karakteristik Bit:** Mengubah satu bit saja pada file berukuran ratusan megabyte akan membalikkan sekitar 50 persen bit pada digest keluaran.
-- **Demonstrasi SHA-256:**
-  - `echo -n "The quick brown fox jumps over the lazy dog" | sha256sum` menghasilkan digest berawalan `d7a8fbb3...`
-  - `echo -n "The quick brown fox jumps over the lazy dog." | sha256sum` menghasilkan digest berawalan `ef530b25...`
-- **Implikasi Desain Keamanan:**
-  - Hash function bertindak seperti *random oracle* matematis murni.
-  - Mencegah penyerang menggunakan analisis linier atau optimasi gradien untuk menebak input secara bertahap.
-- *Visual:* Tampilan dua string teks yang hanya berbeda satu tanda titik, menghasilkan dua baris hash yang berbeda total dari awal hingga akhir.
+The Avalanche Effect
+A microscopic 1-bit change in the input triggers a radical, unpredictable inversion of approximately 50% of the output bits.
+Prevents attackers from deducing patterns, correlations, or mathematical vectors between inputs and output digests.
+Acts purely as an idealized random oracle.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -221,17 +227,18 @@ Efek longsoran inilah yang nantinya menjadi pondasi utama kompetisi penambangan 
 
 ---
 
-## Slide 8: Lanskap Algoritma Hash Produksi Blockchain
+---
+
+## Slide 8: Production Hash Functions in Blockchains
 
 ### Konten Slide
-- **Spesialisasi Kebutuhan Protokol:** Berbagai blockchain memilih algoritma hash berdasarkan efisiensi perangkat keras, keamanan struktural, dan integrasi kriptografis.
-- **Perbandingan Algoritma Utama:**
-  - **SHA-256 (Merkle-Damgard):** Digunakan Bitcoin; standar NIST teruji tempur; didukung instruksi akselerasi hardware pada CPU dan ASIC.
-  - **Keccak-256 (Sponge Construction):** Digunakan Ethereum (EVM); pemenang kompetisi SHA-3; kebal terhadap serangan length-extension.
-  - **RIPEMD-160:** Digunakan Bitcoin untuk kompresi alamat publik (P2PKH) menjadi 20 byte demi menghemat kapasitas ledger.
-  - **BLAKE3 (Tree-Based Merkle):** Digunakan Solana tooling; sangat terparalelisasi di multi-core CPU dan jalur SIMD; performa jauh melampaui SHA-256.
-  - **Poseidon (Algebraic Sponge):** Digunakan pada ZK-Rollup (Starknet, zkSync, Scroll); dioptimalkan untuk sirkuit aritmatika prime fields dengan constraint minimal.
-- *Visual:* Tabel matriks perbandingan 5 algoritma: Nama, Output, Arsitektur, Penggunaan Utama, dan Keunggulan Utama.
+Production Hash Functions in Blockchains
+Blockchains optimize hash architectures for specific cryptographic and hardware integrations:
+SHA-256 (Merkle-Damgard, Bitcoin): Battle-tested NIST standard, hardware-accelerated by ASIC circuits.
+Keccak-256 (Sponge Construction, Ethereum): SHA-3 standard winner, immune to length-extension attacks.
+RIPEMD-160 (Bitcoin P2PKH): Compresses public key hashes to 20 bytes to save ledger space.
+BLAKE3 (Tree-Based, Solana Tooling): Highly parallelized SIMD performance.
+Poseidon (Algebraic Sponge, ZK-Rollups): Optimized for zero-knowledge arithmetic circuits.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -253,17 +260,18 @@ Poseidon dirancang dengan struktur aljabar medan prima yang secara drastis meman
 
 ---
 
-## Slide 9: Anatomi dan Konstruksi Merkle Tree
+---
+
+## Slide 9: Merkle Tree Anatomy
 
 ### Konten Slide
-- **Latar Belakang:** Ditemukan dan dipatenkan oleh Ralph Merkle pada tahun 1979; struktur pohon biner berbasis hash.
-- **Kebutuhan Agregasi Transaksi:** Satu blok blockchain memuat ribuan transaksi; merangkum seluruh transaksi menjadi satu komitmen kriptografis tunggal.
-- **Tiga Tahap Konstruksi:**
-  1. *Leaf Hashing:* Setiap data transaksi di-hash secara independen: $H_A = H(Tx_A), H_B = H(Tx_B), \dots$
-  2. *Pairwise Concatenation:* Pasangan daun yang bersebelahan digabungkan lalu di-hash: $H_{AB} = H(H_A \mathbin{\Vert} H_B)$.
-  3. *Recursive Reduction:* Proses penggabungan berulang ke tingkat atas hingga menyisakan satu hash puncak: **Merkle Root** ($H_{ABCD}$).
-- **Penanganan Jumlah Ganjil:** Jika jumlah transaksi ganjil, transaksi terakhir diduplikasi untuk membentuk pasangan seimbang.
-- *Visual:* Diagram pohon biner 4 transaksi ($Tx_A, Tx_B, Tx_C, Tx_D$) mengerucut dari Leaf Hashes ke Internal Nodes hingga Merkle Root.
+Merkle Tree Anatomy
+Invented by Ralph Merkle (1979): A binary hash tree aggregating thousands of transactions into a single cryptographic commitment.
+
+Tree Construction:
+1. Leaf Hashing: Raw transactions are hashed independently (H_A = H(Tx_A)).
+2. Pairwise Concatenation: Adjacent leaves are paired and concatenated (H_AB = H(H_A || H_B)).
+3. Recursive Reduction: Recursively repeated upward until only a single 32-byte root remains: The Merkle Root.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -285,21 +293,22 @@ Kalau ada blok dengan jumlah transaksi ganjil, misalnya lima transaksi, implemen
 
 ---
 
-## Slide 10: Mekanisme Verifikasi Merkle Proof (Audit Path)
+---
+
+## Slide 10: The Audit Path: Merkle Proof Verification
 
 ### Konten Slide
-- **Definisi Merkle Proof:** Bukti kriptografis ringkas yang membuktikan keberadaan suatu transaksi di dalam blok tanpa memerlukan seluruh isi blok tersebut.
-- **Komponen Audit Path untuk Transaksi $Tx_A$ (dari 8 transaksi):**
-  - Data mentah transaksi: $Tx_A$.
-  - Daftar hash tetangga (*sibling hashes*): $[H_B, H_{CD}, H_{EFGH}]$.
-  - Nilai tepercaya di tangan verifikator: **Merkle Root** dari block header.
-- **Langkah Rekonstruksi oleh Verifikator:**
-  1. Hitung hash daun target: $H_A = H(Tx_A)$.
-  2. Gabungkan dengan sibling $H_B$: $H_{AB} = H(H_A \mathbin{\Vert} H_B)$.
-  3. Gabungkan dengan sibling $H_{CD}$: $H_{ABCD} = H(H_{AB} \mathbin{\Vert} H_{CD})$.
-  4. Gabungkan dengan sibling $H_{EFGH}$: $\text{ComputedRoot} = H(H_{ABCD} \mathbin{\Vert} H_{EFGH})$.
-  5. Cocokkan: Jika $\text{ComputedRoot} == \text{MerkleRoot}$, keabsahan transaksi terbukti secara mutlak.
-- *Visual:* Diagram pohon 8 daun menyorot jalur hijau dari $Tx_A$ ke Root, dengan node sibling $H_B, H_{CD}, H_{EFGH}$ ditandai sebagai data pembuktian.
+The Audit Path: Merkle Proof Verification
+Cryptographic proofs of inclusion without downloading the full block.
+
+Verification Components:
+- Raw transaction payload (Tx_A).
+- Array of sibling hashes along the branch ([H_B, H_CD, H_EFGH]).
+- Trusted Merkle Root in the block header.
+
+Local Verification Logic:
+Compute H_A locally, recursively hash upward with sibling hashes.
+If locally calculated root matches the trusted header root, transaction inclusion is mathematically proven.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -322,20 +331,20 @@ Jika akar yang dihitung Bob cocok persis dengan Merkle Root di tangannya, Bob me
 
 ---
 
-## Slide 11: Efisiensi Skala Logaritmik O(log N)
+---
+
+## Slide 11: Logarithmic Scale Efficiency: O(log N)
 
 ### Konten Slide
-- **Penskalaan Linier vs. Logaritmik:**
-  - *Pemeriksaan Linier:* Memeriksa $N$ transaksi menuntut transmisi data sebesar $\mathcal{O}(N)$.
-  - *Pemeriksaan Merkle Proof:* Ukuran bukti hanya bertambah sebanding dengan tinggi pohon: $\mathcal{O}(\log_2 N)$.
-- **Analisis Ukuran Bukti Nyata (Ukuran Hash = 32 Byte):**
-  - 4 Transaksi: Butuh 2 hash menghasilkan 64 byte payload.
-  - 16 Transaksi: Butuh 4 hash menghasilkan 128 byte payload.
-  - 1.024 Transaksi: Butuh 10 hash menghasilkan 320 byte payload (menggantikan download 500 KB data mentah).
-  - 4.096 Transaksi: Butuh 12 hash menghasilkan 384 byte payload (menggantikan download 2 MB data mentah).
-  - 1.048.576 Transaksi: Butuh 20 hash menghasilkan 640 byte payload (menggantikan download 500 MB data mentah).
-- **Keunggulan Teknis:** Mengurangi beban transfer data hingga 99,99 persen pada dataset berskala raksasa.
-- *Visual:* Tabel komparasi ukuran payload linier (naik curam) berdampingan dengan kurva logaritmik ukuran Merkle proof yang sangat landai.
+Logarithmic Scale Efficiency: O(log N)
+Proof size grows logarithmically relative to tree height: O(log2 N).
+
+Payload Comparisons (32-byte hashes):
+- 4 Transactions: 2 hashes (64 bytes).
+- 1,024 Transactions: 10 hashes (320 bytes) vs 500 KB block.
+- 4,096 Transactions: 12 hashes (384 bytes) vs 2 MB block.
+- 1,048,576 Transactions: 20 hashes (640 bytes) vs 500 MB block.
+Reduces verification bandwidth overhead by over 99.99%.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -357,19 +366,20 @@ Hanya dengan 640 byte, kalian mendapatkan kepastian kriptografis yang setara den
 
 ---
 
-## Slide 12: Simplified Payment Verification (SPV) & Light Clients
+---
+
+## Slide 12: Simplified Payment Verification (SPV)
 
 ### Konten Slide
-- **Bitcoin Whitepaper Section 8:** Satoshi Nakamoto merancang mekanisme SPV untuk mengoperasikan dompet ringan di perangkat berkapasitas terbatas.
-- **Arsitektur Light Client:**
-  - Tidak mengunduh riwayat transaksi penuh yang berukuran ratusan gigabyte.
-  - Hanya mengunduh **Block Headers** sebesar 80 byte per blok (memuat timestamp, target kesulitan, nonce, dan Merkle Root).
-- **Alur Kerja SPV:**
-  1. Light client memvalidasi bukti kerja (Proof of Work) pada rangkaian header 80-byte.
-  2. Saat menerima pembayaran, client meminta Merkle Proof transaksi tersebut dari full node jaringan.
-  3. Client merekonstruksi root secara lokal dan mencocokkannya ke header blok terpanjang.
-- **Dampak Demokratisasi:** Memungkinkan partisipasi terdesentralisasi yang aman pada smartphone, dompet perangkat keras (*hardware wallets*), dan browser web.
-- *Visual:* Sequence diagram interaksi antara Smartphone (Light Client mengunduh header 80-byte) dan Full Node (mengirim Merkle inclusion proof).
+Simplified Payment Verification (SPV)
+Light Client Architecture:
+Does not download full transaction history (hundreds of gigabytes).
+Only downloads 80-byte Block Headers (timestamp, target difficulty, nonce, Merkle Root).
+
+SPV Workflow:
+1. Light client validates Proof of Work on 80-byte header chain.
+2. Requests Merkle Proofs for incoming payments from full nodes.
+3. Reconstructs root locally and verifies against the longest header chain in milliseconds.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -389,16 +399,16 @@ Dalam sepersekian detik, transaksi terbukti sah tanpa perantara, tanpa server pe
 
 ---
 
-## Slide 13: Jembatan ke Modul Berikutnya: Otoritas dan Kepemilikan
+---
+
+## Slide 13: Authority and Ownership
 
 ### Konten Slide
-- **Pencapaian Primitif Integritas:** Cryptographic hash functions dan Merkle trees menjamin integritas data yang permanen, ringkas, dan tahan manipulasi.
-- **Pertanyaan Kritis Baru yang Muncul:**
-  - Merkle tree membuktikan bahwa suatu transaksi tercatat di dalam blok, tetapi tidak menjelaskan siapa yang berhak membuat transaksi tersebut.
-  - Jika Alice menyusun transaksi transfer koin, apa yang mencegah Mallory membuat format transaksi identik untuk menguras seluruh saldo milik Alice?
-- **Ketiadaan Otoritas Terpusat:** Di blockchain tidak ada kata sandi, tidak ada customer support, dan tidak ada kartu identitas fisik untuk membuktikan kepemilikan.
-- **Materi Modul Berikutnya:** Membedah kepemilikan matematis absolut dan otorisasi transfer nilai: **Asymmetric Cryptography and Digital Signatures**.
-- *Visual:* Ilustrasi gembok digital dan sepasang kunci (Private Key dan Public Key) berdampingan dengan dokumen transaksi bertanda tangan matematis.
+Authority and Ownership
+Cryptographic hash functions and Merkle trees guarantee permanent, tamper-resistant data integrity.
+Merkle trees prove a transaction is recorded in a block, but cannot determine who possesses the legal authority to create that transaction.
+Without central passwords or database permissions, how do users mathematically prove absolute ownership over digital assets?
+Next Module: Asymmetric Cryptography and Digital Signatures.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**

@@ -1,24 +1,27 @@
 # The Byzantine Generals Problem
-Modul Presentasi: Consensus and Game Theory (03.1)
+Modul Presentasi: Fondasi Distributed Trust (03.1)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: The Byzantine Generals Problem
 
 ### Konten Slide
-- **Topik:** The Byzantine Generals Problem
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Memahami dilema koordinasi di lingkungan tanpa rasa saling percaya dan fondasi matematis Byzantine Fault Tolerance.
-- *Visual:* Ilustrasi pengepungan benteng oleh beberapa divisi militer dengan utusan kurir yang melintasi wilayah musuh.
+The Byzantine Generals Problem
+Fundamentals of Distributed Trust (Module 03.1)
+
+The Coordination Dilemma:
+In centralized systems, coordination is trivial because a single server holds absolute authority.
+In public networks, nodes do not merely experience blackouts-they actively lie, broadcast forged data, and collude.
+This module dissects the mathematical limits of securing trustless environments.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Selamat datang di modul pertama bab Konsensus dan Game Theory.
+- Membuka Bab 3: Consensus and Game Theory.
 - Membedah masalah koordinasi paling fundamental dalam ilmu komputer terdistribusi.
 - Mengapa sistem publik harus tahan terhadap kebohongan aktif, bukan sekadar server rusak.
 
 **Naskah Tutur (Voiceover Script):**
-Selamat datang di bab Consensus and Game Theory.
+Selamat datang di bab ketiga: Consensus and Game Theory.
 Hari ini kita akan mengupas tuntas salah satu teka-teki paling fundamental dalam ilmu komputer terdistribusi: The Byzantine Generals Problem.
 Di sistem terpusat, koordinasi adalah hal yang sangat sepele karena ada satu server pengendali yang memegang otoritas mutlak.
 Namun, ketika ribuan komputer anonim di internet harus menyepakati satu riwayat transaksi tanpa perantara, keadaannya berubah drastis.
@@ -28,24 +31,26 @@ Mari kita pelajari bagaimana para ilmuwan merumuskan masalah ini dan batas matem
 
 ---
 
-## Slide 2: Dua Lingkungan Jaringan Terdistribusi
+## Slide 2: Two Distributed Network Environments
 
 ### Konten Slide
-- **Private Data Center (Lingkungan Jinak):**
-  - Seluruh mesin dimiliki oleh entitas tunggal dengan kontrol perimeter ketat.
-  - Kegagalan sistem bersifat *benign*: server mati mendadak, kehilangan daya listrik, atau kabel jaringan putus.
-  - Mesin tidak pernah berbohong atau sengaja memalsukan catatan basis data.
-- **Public Blockchain (Lingkungan Tanpa Rasa Percaya):**
-  - Beroperasi melintasi internet terbuka dengan partisipan pseudonim.
-  - Node dapat dikendalikan oleh penyerang canggih dengan motif finansial.
-  - Ancaman mencakup pemalsuan state, serangan Sybil, penolakan pesan, hingga sabotase konsensus.
-- *Visual:* Perbandingan grafis antara kluster server Google atau AWS yang aman vs topologi jaringan P2P terbuka yang penuh node bermusuhan.
+Two Distributed Network Environments
+
+1. Private Data Center (Benign)
+- Entire system controlled by a single entity with strict perimeters.
+- Failures are strictly fail-stop (power loss, severed cables).
+- Machines never lie or intentionally forge database records.
+
+2. Public Blockchain (Trustless)
+- Open internet topology with pseudonymous, untrusted participants.
+- Nodes can be controlled by sophisticated adversaries with financial motives.
+- Subject to active state forgery, Sybil attacks, and consensus sabotage.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
 - Bandingkan server internal perusahaan dengan jaringan terbuka blockchain.
-- Di data center, mesin rusak hanya berhenti bekerja (fail-stop).
-- Di blockchain, peserta asing bisa berpura-pura jujur sambil mengirim tipuan.
+- Di data center privat, mesin rusak hanya berhenti bekerja (fail-stop).
+- Di blockchain, peserta asing bisa berpura-pura jujur sambil mengirim tipuan secara aktif.
 
 **Naskah Tutur (Voiceover Script):**
 Sebelum kita masuk ke rumus matematis, kita harus membedakan dua dunia sistem terdistribusi.
@@ -60,22 +65,25 @@ Inilah alasan mengapa arsitektur konsensus blockchain membutuhkan standar keaman
 
 ---
 
-## Slide 3: Asal-Usul Historis: Industri Kedirgantaraan dan Perang Dingin
+## Slide 3: Historical Origins: The Asymmetric Fault (Bit-Flip)
 
 ### Konten Slide
-- **Bukan Berakar dari Kripto:** Masalah ini lahir dari rekayasa sistem kendali penerbangan kritis (avionics) pada era Perang Dingin.
-- **Transisi ke Fly-by-Wire:**
-  - Kendali fisik kabel baja digantikan oleh sinyal digital dari kluster komputer redundan (seperti pada Space Shuttle dan Boeing 777).
-  - Jika satu komputer pengendali rusak, komputer cadangan harus mengambil alih secara instan.
-- **Ancaman Asymmetric Fault (Bit-Flip):**
-  - Radiasi kosmik di atmosfer dapat memicu *single-event upset* pada sirkuit silikon.
-  - Komputer yang mengalami kerusakan acak tidak mati secara bersih, melainkan mengirim perintah "naik" ke sayap kiri dan perintah "turun" ke sayap kanan.
-- *Visual:* Ilustrasi sistem fly-by-wire pesawat penumpang modern yang menerima sinyal digital asimetris dari komputer kontrol yang rusak.
+Historical Origins: The Asymmetric Fault (Bit-Flip)
+
+The Cold War Avionics Origin:
+BFT did not originate in cryptography; it was born in Cold War avionics.
+As redundant digital computers replaced mechanical cables (e.g., Space Shuttle, Boeing 777), a fatal flaw emerged.
+
+Cosmic Radiation (Single-Event Upset):
+Cosmic radiation hitting silicon chips caused random bit-flips.
+The damaged flight-control computer did not simply die cleanly.
+It sent contradictory commands simultaneously: commanding the left wing UP and the right wing DOWN.
+Standard redundancy protocols fail against asymmetric signals.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Ceritakan asal mula konsep BFT dari industri pesawat terbang luar angkasa.
-- Kabel mekanik diganti sinyal komputer digital redundan.
+- Ceritakan asal mula konsep BFT dari industri pesawat terbang luar angkasa era Perang Dingin.
+- Kabel mekanik diganti sinyal komputer digital redundan (fly-by-wire).
 - Fenomena bit-flip akibat radiasi kosmik membuat komputer mengirim perintah saling bertolak belakang.
 
 **Naskah Tutur (Voiceover Script):**
@@ -92,189 +100,182 @@ Para ilmuwan komputer akhirnya dituntut merancang algoritma yang tetap sanggup m
 
 ---
 
-## Slide 4: Alegori Klasik: Lamport, Shostak, dan Pease (1982)
+## Slide 4: Lamport's Allegory & Equivocation
 
 ### Konten Slide
-- **Formalisasi Makalah Ilmiah (1982):** Leslie Lamport, Robert Shostak, dan Marshall Pease memformalkan tantangan ini dalam bentuk perumpamaan militer.
-- **Skenario Pengepungan Kota:**
-  - Pasukan Byzantium terbagi menjadi beberapa divisi dan mengepung kota musuh dari berbagai sisi.
-  - Masing-masing divisi dipimpin oleh seorang jenderal (misalnya Jenderal Alice, Bob, Charlie, dan Mallory).
-  - Para jenderal terpisah jarak geografis dan hanya bisa berkomunikasi lewat kurir pejalan kaki.
-- **Tujuan Koordinasi Mutlak:**
-  - Kota musuh memiliki pertahanan yang sangat kokoh.
-  - Pasukan hanya akan menang jika seluruh divisi menyerang secara serentak pada waktu fajar.
-  - Jika hanya sebagian divisi yang menyerang sementara sisanya mundur, pasukan yang menyerang akan dihancurkan total.
-- *Visual:* Peta medan perang dengan benteng musuh di tengah dan empat kamp jenderal yang saling bertukar pesan lewat kurir berkuda.
+Lamport's Allegory & Equivocation
+
+The Classical Scenario (1982):
+Formalized in 1982 by Leslie Lamport, Robert Shostak, and Marshall Pease.
+Geographically separated generals must coordinate a synchronized attack via foot courier to conquer a city.
+
+The Threat: Equivocation:
+Traitorous generals (e.g., Mallory) send conflicting asymmetric commands to loyal generals to shatter coordination (telling Alice to ATTACK while telling Bob to RETREAT).
+
+Two Mandatory Rules for Consensus:
+1. Agreement: All loyal generals must execute an identical, uniform plan.
+2. Validity: Loyal generals must obey the true command of a loyal commander.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Leslie Lamport membungkus masalah matematika rumit ini dengan cerita perang.
-- Jenderal hanya bisa berkomunikasi via kurir pejalan kaki.
-- Keputusan harus serentak: semua menyerang bersama, atau semua mundur bersama.
+- Perumpamaan militer Lamport, Shostak, dan Pease (1982).
+- Jenderal mengepung benteng dan hanya bisa berkirim pesan lewat kurir kaki.
+- Bahaya Equivocation (berbohong muka dua): jenderal pengkhianat mengirim perintah serang ke satu divisi dan perintah mundur ke divisi lain.
+- Dua aturan mutlak konsensus: Agreement (keseragaman) dan Validity (kepatuhan).
 
 **Naskah Tutur (Voiceover Script):**
-Pada tahun 1982, Leslie Lamport bersama rekan-rekannya menerbitkan karya ilmiah legendaris yang merumuskan dilema ini.
-Agar konsep matematika rumit ini mudah dibayangkan, Lamport membungkusnya dalam sebuah alegori militer kuno.
-Bayangkan ada empat divisi tentara Byzantium yang sedang mengepung kota musuh dari empat penjuru berbeda.
-Masing-masing divisi dipimpin oleh seorang jenderal, katakanlah Jenderal Alice, Bob, Charlie, dan Mallory.
-Mereka tidak bisa berkumpul tatap muka, melainkan hanya bisa mengirim kurir pejalan kaki melintasi medan musuh.
-Benteng kota musuh ini sangat tangguh.
-Satu-satunya cara untuk merebut kota tersebut adalah jika seluruh divisi menyerang secara serentak saat fajar tiba.
-Kalau separuh jenderal menyerang sedangkan separuh lainnya memilih mundur, pasukan penyerang akan kalah dibantai.
-Tantangannya jelas: para jenderal harus berkoordinasi untuk menyepakati satu tindakan seragam, yaitu semua menyerang bersama atau semua mundur bersama.
+Untuk memformalisasikan dilema kebohongan asimetris ini ke dalam literatur akademis, tiga ilmuwan komputer terkemuka, Leslie Lamport, Robert Shostak, dan Marshall Pease, menerbitkan makalah legendaris pada tahun 1982.
+Mereka membungkus masalah ini dalam perumpamaan militer kuno: The Byzantine Generals Problem.
+Sekelompok jenderal Byzantium mengepung kota musuh dari berbagai arah dan terpisah secara geografis.
+Mereka hanya bisa berkomunikasi menggunakan kurir berkuda atau berjalan kaki.
+Untuk menang, seluruh pasukan wajib menyerang bersamaan.
+Jika separuh pasukan menyerang sementara separuh pasukan mundur, mereka akan dibantai oleh musuh.
+Tantangannya adalah, ada jenderal pengkhianat di antara mereka.
+Pengkhianat dapat melakukan aksi muka dua atau *equivocation*.
+Ia mengirim surat perintah serang kepada Jenderal Alice, tetapi secara bersamaan mengirim surat perintah mundur kepada Jenderal Bob.
+Lamport menetapkan bahwa sebuah algoritma konsensus dianggap sukses jika memenuhi dua syarat mutlak: Agreement, yaitu seluruh jenderal jujur mengambil keputusan yang sama persis, dan Validity, jika komandan tertinggi bersikap jujur, maka perintah aslinya yang harus dipatuhi oleh seluruh jenderal bawahan.
 
 ---
 
-## Slide 5: Jebakan Pengkhianat dan Syarat Konsensus
+## Slide 5: Crash Fault Tolerance (CFT) vs. Byzantine Fault Tolerance (BFT)
 
 ### Konten Slide
-- **Munculnya Aktor Khianat (Byzantine Traitor):**
-  - Satu atau lebih jenderal (seperti Jenderal Mallory) berniat menggagalkan rencana penyerangan.
-  - Tujuan pengkhianat adalah memecah kesepakatan jenderal yang setia (*loyal generals*).
-- **Strategi Kebohongan Asimetris (Equivocation):**
-  - Kepada Jenderal Alice, Mallory mengirim kurir dengan pesan: *"Serang fajar nanti!"*
-  - Kepada Jenderal Bob dan Charlie, Mallory mengirim kurir dengan pesan: *"Mundur fajar nanti!"*
-  - Saat para jenderal meneruskan pesan antar-kamp untuk saling memverifikasi perintah, Mallory kembali menyebarkan laporan palsu.
-- **Dua Kondisi Mutlak Konsensus:**
-  - **1. Agreement:** Seluruh jenderal yang setia harus menyepakati dan mengeksekusi rencana aksi yang identik.
-  - **2. Validity:** Jika panglima tertinggi adalah jenderal setia, seluruh jenderal setia wajib mematuhi perintah asli panglima tersebut.
-- *Visual:* Diagram alur pesan bertentangan yang dikirim Mallory secara serentak ke Alice dan Bob.
+Comparison: CFT vs. BFT
+
+Dimension:
+1. Failure Model:
+   - Crash Fault Tolerance (CFT): Fail-stop / Fail-silent.
+   - Byzantine Fault Tolerance (BFT): Arbitrary, manipulative, and malicious failures.
+2. Trust Assumption:
+   - CFT: Nodes never forge messages. If they respond, data is honest.
+   - BFT: Adversaries actively equivocate, drop packets, and collude.
+3. Algorithms:
+   - CFT: Paxos (1998), Raft (2014), Apache ZooKeeper.
+   - BFT: Nakamoto Consensus, Tendermint, PBFT.
+4. Mathematical Limit:
+   - CFT: f < n/2 (Requires simple 51% majority).
+   - BFT: f < n/3 (Requires >66.7% supermajority).
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Pengkhianat bernama Mallory mengirim perintah berbeda ke masing-masing jenderal.
-- Istilah teknis ekuivokasi: berbicara beda ke pihak yang berbeda.
-- Konsensus hanya valid jika memenuhi dua syarat: Agreement dan Validity.
+- Membedakan sistem toleransi kerusakan biasa (CFT) dengan toleransi kebohongan (BFT).
+- CFT (Paxos, Raft): mesin hanya mati atau diam; batas aman f < n/2 (mayoritas 51 persen).
+- BFT (Tendermint, Nakamoto): mesin bisa memalsukan data dan berkolusi; batas aman f < n/3 (kuorum 2/3).
 
 **Naskah Tutur (Voiceover Script):**
-Masalah koordinasi ini menjadi sangat rumit karena salah satu jenderal, yaitu Mallory, ternyata seorang pengkhianat.
-Tujuan tunggal Mallory adalah membuat para jenderal yang setia terbelah keputusannya.
-Kepada Jenderal Alice, Mallory mengirim kurir yang berpesan untuk menyerang saat fajar.
-Namun di saat bersamaan, kepada Jenderal Bob, Mallory mengirim kurir dengan pesan agar segera mundur.
-Ketika para jenderal yang setia mencoba saling mengonfirmasi pesan yang mereka terima, Mallory kembali berbohong mengenai siapa yang mengatakan apa.
-Taktik berbicara dua hal yang berbeda ke pihak berbeda ini kita sebut sebagai ekuivokasi.
-Supaya sebuah protokol koordinasi dianggap berhasil menyelesaikan masalah ini, sistem harus memenuhi dua syarat mutlak.
-Syarat pertama adalah Agreement: semua jenderal yang jujur harus mengambil keputusan akhir yang sama persis.
-Syarat kedua adalah Validity: jika panglima pemberi pesan awal adalah jenderal yang setia, seluruh jenderal setia harus menjalankan perintah asli tersebut tanpa terdistorsi.
+Perbedaan ancaman ini melahirkan dua cabang besar dalam rekayasa sistem terdistribusi.
+Cabang pertama adalah Crash Fault Tolerance atau CFT.
+Model kegagalan CFT mengasumsikan mesin hanya bisa mati mendadak atau terputus jaringannya.
+Algoritma CFT seperti Paxos dan Raft yang menggerakkan basis data Apache ZooKeeper atau etcd di Google dan Amazon hanya membutuhkan kuorum mayoritas sederhana, yaitu lebih dari lima puluh persen atau f kurang dari n per dua.
+Cabang kedua adalah Byzantine Fault Tolerance atau BFT.
+Di sini, mesin diasumsikan dapat melakukan kejahatan acak: memalsukan paket data, menahan pesan orang lain, hingga membentuk kartel untuk sabotase.
+Karena penyerang bisa aktif berbohong muka dua, BFT tidak bisa diselesaikan dengan mayoritas sederhana lima puluh satu persen.
+Secara matematis, BFT menuntut batas toleransi yang jauh lebih ketat, yaitu f kurang dari n per tiga atau kuorum supermayoritas lebih dari 66,7 persen.
 
 ---
 
-## Slide 6: CFT vs BFT: Dua Model Kegagalan Terdistribusi
+## Slide 6: The Mathematical Limit: n >= 3f + 1
 
 ### Konten Slide
-- **Crash Fault Tolerance (CFT):**
-  - *Model Kegagalan:* Node hanya gagal dengan cara berhenti beroperasi (*fail-stop* / *fail-silent*).
-  - *Asumsi Kepercayaan:* Node tidak pernah memalsukan pesan.
-    Jika node merespons, datanya dijamin jujur.
-  - *Algoritma Klasik:* Paxos (1998), Raft (2014), ZAB (Apache ZooKeeper).
-  - *Batas Toleransi:* Menoleransi kerusakan hingga $f < \frac{n}{2}$ (selama mayoritas $51\%$ aktif, sistem berjalan).
-- **Byzantine Fault Tolerance (BFT):**
-  - *Model Kegagalan:* Node dapat bertindak arbitrer, manipulatif, dan berniat jahat (*Byzantine failure mode*).
-  - *Kemampuan Musuh:* Ekuivokasi, menjatuhkan paket pesan terpilih, berkoordinasi untuk double-spending.
-  - *Batas Toleransi:* Menoleransi kerusakan maksimal $f < \frac{n}{3}$ (membutuhkan lebih dari dua pertiga node jujur).
-- *Visual:* Tabel komparasi CFT vs BFT mencakup asumsi kepercayaan, algoritma populer, dan batas toleransi matematis.
+The Mathematical Limit: n >= 3f + 1
+
+1. Liveness Requirement:
+The system must progress upon receiving n - f responses (because f honest nodes may simply be delayed by network lag).
+
+2. The Worst-Case Scenario:
+Within those n - f responses, assume f of them are Byzantine lies.
+
+3. Guaranteed Honest Voices:
+The remaining honest responses in that active quorum are exactly (n - f) - f = n - 2f.
+
+4. Defeating the Adversary:
+Honest voices must strictly outnumber malicious voices in the quorum:
+n - 2f > f  =>  n >= 3f + 1
+
+Visual Quorum Proof:
+Total Nodes (n) = Slow/Offline (f) + Malicious Votes (f) + Honest Votes (n - 2f).
+Active Quorum (n - f) must ensure honest majority.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Pembedaan mendasar antara Crash Fault Tolerance dan Byzantine Fault Tolerance.
-- CFT cukup mayoritas sederhana 51 persen karena tidak ada node yang berbohong.
-- BFT butuh supermayoritas lebih dari 66.7 persen karena musuh aktif memanipulasi pemungutan suara.
+- Pembuktian matematika mengapa BFT membutuhkan n >= 3f + 1.
+- Sistem harus jalan saat menerima n - f respons (karena f simpul jujur bisa sedang lambat).
+- Dari n - f suara, f di antaranya bisa jadi dusta penyerang Byzantine.
+- Agar suara jujur menang: n - 2f > f, menghasilkan rumus abadi n >= 3f + 1.
 
 **Naskah Tutur (Voiceover Script):**
-Dalam ilmu sistem terdistribusi, kita mengenal dua model toleransi kegagalan.
-Model pertama adalah Crash Fault Tolerance atau CFT.
-Di model ini, komputer hanya bisa rusak dengan cara mati mendadak atau terputus jaringan.
-Algoritma populer seperti Paxos dan Raft yang dipakai di infrastruktur cloud masuk ke kategori ini.
-Karena tidak ada komputer yang berbohong, sistem CFT hanya butuh mayoritas sederhana lima puluh satu persen untuk terus berfungsi.
-Bahkan jika separuh kurang satu server mati, sistem tetap aman.
-Model kedua adalah Byzantine Fault Tolerance atau BFT.
-Ini adalah model keamanan tanpa rasa percaya di mana node diasumsikan dapat memalsukan pesan, menolak transaksi secara sepihak, dan berkomplot.
-Untuk bertahan dari musuh yang berbohong aktif, mayoritas sederhana lima puluh satu persen terbukti tidak cukup.
-Secara matematis, BFT menuntut lebih dari dua pertiga kekuatan jaringan harus dipegang oleh aktor jujur.
+Mengapa batas matematis BFT harus n lebih besar atau sama dengan tiga f ditambah satu?
+Mari kita buktikan secara intuitif.
+Bayangkan jaringan memiliki total n simpul dan kita ingin bertahan dari f penyerang jahat.
+Syarat pertama adalah Liveness: sistem tidak boleh membeku selamanya menunggu komputer yang lambat.
+Jika ada f simpul yang jaringannya macet, sistem harus tetap sanggup mengambil keputusan saat menerima n minus f suara.
+Syarat kedua, dalam skenario terburuk, f penyerang jahat di jaringan merespons sangat cepat dan mengirimkan kebohongan di dalam n minus f suara tersebut.
+Artinya, jumlah suara jujur yang tersisa di dalam kuorum tersebut hanyalah n minus f dikurangi f, yaitu n minus dua f suara.
+Agar sistem tidak tertipu oleh kebohongan, suara jujur harus mengalahkan suara dusta: n minus dua f harus lebih besar dari f.
+Dengan memindahkan variabel f ke sisi kanan persamaan aljabar, kita memperoleh n lebih besar dari tiga f.
+Karena jumlah komputer selalu berupa bilangan bulat diskret, batas minimalnya adalah n sama dengan tiga f ditambah satu.
+Artinya, untuk menahan satu pengkhianat saja, Anda membutuhkan minimal empat jenderal.
+Tiga jenderal tidak akan pernah sanggup memecahkan masalah ini.
 
 ---
 
-## Slide 7: Bukti Matematis Batas BFT: Mengapa n >= 3f + 1
+## Slide 7: The Fundamental Guarantees: Safety vs. Liveness
 
 ### Konten Slide
-- **Rumusan Matematis:** Mengapa batas toleransi BFT deterministik klasik adalah $f < \frac{n}{3}$?
-- **Langkah Pembuktian:**
-  1. *Kebutuhan Liveness:* Jaringan tidak boleh mengalami kebuntuan (*deadlock*).
-     Protokol harus terus memproses transaksi saat menerima $n - f$ respon, karena $f$ node jujur mungkin sekadar lambat merespons.
-  2. *Skenario Terburuk Musuh:* Dari $n - f$ respon yang diterima, $f$ respon di antaranya ternyata berasal dari node Byzantine yang menyebarkan suara dusta.
-  3. *Jumlah Suara Jujur Minimal:* Jumlah respon jujur yang terjamin dalam kuorum hanyalah $(n - f) - f = n - 2f$.
-  4. *Menang Suara Melawan Musuh:* Agar node jujur menang dan konsensus tidak dimanipulasi, jumlah suara jujur harus strictly lebih banyak dari jumlah musuh:
-     $$n - 2f > f \implies n > 3f \implies n \ge 3f + 1$$
-- *Visual:* Diagram kuorum pemungutan suara menunjukkan pemecahan $n$ menjadi node jujur aktif ($n - 2f$), node lambat ($f$), dan node Byzantine ($f$).
+The Two Core Guarantees of Distributed Systems:
+
+Safety: "Nothing Bad Happens."
+- All honest nodes agree on identical ledger histories.
+- Conflicting branches are impossible.
+- Guarantees absolute prevention of double-spending.
+
+Liveness: "Something Good Eventually Happens."
+- The system never deadlocks or freezes permanently.
+- Valid transactions are eventually processed and appended to the ledger.
+- Guarantees censorship resistance and continuous availability.
+
+The Tension:
+In real-world networks with partitions, prioritizing one guarantee often forces the sacrifice of the other.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Bedah langkah demi langkah penurunan rumus n >= 3f + 1.
-- Node lambat dan node mati tidak bisa dibedakan dalam jaringan asinkron.
-- Agar node jujur mengalahkan node pengkhianat di kuorum, kita wajib punya lebih dari 3f node.
-
-**Naskah Tutur (Voiceover Script):**
-Mari kita buktikan secara matematis mengapa sebuah sistem BFT deterministik hanya bisa menoleransi kurang dari sepertiga node jahat.
-Misalkan total node validator kita adalah $n$, dan jumlah maksimal pengkhianat adalah $f$.
-Pertama, sistem tidak boleh macet menunggu node yang offline selamanya.
-Karena bisa saja ada $f$ node jujur yang koneksinya lambat, protokol harus segera melangkah maju begitu menerima laporan dari $n - f$ node.
-Kedua, bayangkan skenario terburuk di mana seluruh $f$ pengkhianat mengirimkan laporan palsu ke dalam kuorum $n - f$ tersebut.
-Artinya, jumlah laporan jujur yang benar-benar kita pegang dalam kuorum itu tinggal $n - f$ dikurangi $f$, alias $n - 2f$.
-Ketiga, agar kebenaran menang, jumlah suara jujur $n - 2f$ ini harus secara mutlak mengalahkan jumlah suara si pengkhianat yang berjumlah $f$.
-Jika kita selesaikan pertidaksamaannya, $n - 2f > f$ menghasilkan $n > 3f$, atau $n \ge 3f + 1$.
-Artinya, jika ada 1 pengkhianat, kalian butuh minimal 4 node.
-Jika pengkhianat menguasai sepertiga saja dari hak suara, sistem BFT klasik pasti runtuh.
-
----
-
-## Slide 8: Dua Pilar Konsensus: Safety vs Liveness
-
-### Konten Slide
-- **Dua Garansi Mutlak Setiap Sistem Konsensus:**
-  - **Safety ("Nothing Bad Happens"):**
-    - Seluruh node jujur menyepakati urutan transaksi yang identik.
-    - Tidak pernah ada dua cabang riwayat yang bertentangan disahkan secara bersamaan.
-    - Menjamin tidak ada transaksi belanja ganda (*double-spending*).
-  - **Liveness ("Something Good Eventually Happens"):**
-    - Sistem terus bergerak maju dan tidak pernah mengalami kebuntuan (*deadlock*).
-    - Setiap transaksi yang valid pada akhirnya akan diproses dan dicatat ke dalam buku besar.
-- *Visual:* Bagan neraca timbangan yang menggambarkan ketegangan konstan antara garansi Safety dan garansi Liveness.
-
-### Catatan Presenter (Cheatsheet)
-**Quick Cues:**
-- Konsensus selalu bertumpu pada dua prinsip: Safety dan Liveness.
-- Safety: tidak ada data palsu yang disahkan.
-- Liveness: sistem tidak boleh macet dan harus terus memproses transaksi.
+- Dua pilar garansi sistem terdistribusi: Safety dan Liveness.
+- Safety: tidak ada hal buruk terjadi (mencegah double-spending dan percabangan sejarah).
+- Liveness: hal baik pada akhirnya pasti terjadi (sistem tidak hang dan transaksi terus diproses).
+- Ketegangan: gangguan jaringan sering memaksa kita memilih salah satu.
 
 **Naskah Tutur (Voiceover Script):**
 Setiap perancang protokol konsensus di dunia selalu terikat pada dua garansi fundamental: Safety dan Liveness.
-Safety menjamin bahwa tidak ada hal buruk yang terjadi.
+Safety menjamin bahwa tidak ada hal buruk yang terjadi di dalam sistem.
 Artinya, seluruh komputer jujur menyepakati urutan transaksi yang sama persis, dan tidak ada dua mutasi saldo yang saling bertentangan yang disahkan secara permanen.
-Safety mencegah terjadinya double-spending.
+Safety adalah benteng yang mencegah terjadinya double-spending.
 Di sisi lain, Liveness menjamin bahwa hal baik pada akhirnya pasti terjadi.
-Sistem harus terus bergerak maju menghasilkan blok baru dan tidak boleh mengalami situasi hang atau freeze permanen.
+Sistem harus terus bergerak maju menghasilkan blok baru dan tidak boleh mengalami situasi deadlock atau freeze permanen.
 Setiap kali pengguna mengirim transaksi valid, sistem harus hidup dan memasukkannya ke dalam ledger.
 Masalah terbesarnya adalah, di dunia nyata kita sering dipaksa mengorbankan salah satu dari kedua garansi ini ketika terjadi gangguan jaringan.
 
 ---
 
-## Slide 9: Teorema Ketidakmungkinan FLP (1985)
+## Slide 8: The FLP Impossibility Theorem (1985) & The Asynchronous Trap
 
 ### Konten Slide
-- **Penemuan Fischer, Lynch, dan Paterson (1985):** Hasil pembuktian batas matematis paling terkenal dalam ilmu komputasi terdistribusi.
-- **Pernyataan Teorema:**
-  - *"Di dalam sistem terdistribusi murni asinkron, tidak ada protokol konsensus deterministik yang sanggup menjamin Safety dan Liveness secara bersamaan, bahkan jika hanya ada satu kegagalan mesin tunggal (crash fault)."*
-- **Akar Masalah Jaringan Asinkron:**
-  - Jeda pengiriman pesan tidak memiliki batas waktu atas yang pasti (*unbounded delay*).
-  - Sebuah node tidak bisa membedakan apakah rekannya mati total atau hanya mengalami keterlambatan sinyal internet.
-  - Penyerang yang bisa memperlambat paket data dapat membuat algoritma berputar tanpa henti dalam status ragu-ragu selamanya.
-- *Visual:* Diagram pesan asinkron yang tertunda tanpa batas waktu sehingga node penerima terjebak dalam siklus voting tanpa akhir.
+The FLP Impossibility Theorem (1985)
+
+The Theorem Statement:
+"In a purely asynchronous distributed system, no deterministic consensus protocol can guarantee both Safety and Liveness simultaneously, even with just one single crash fault."
+(Fischer, Lynch, Paterson, 1985 - Best Paper Award).
+
+The Asynchronous Trap:
+Unbounded Delay: Message latency across the internet has no fixed upper bound.
+Dead vs. Delayed: A node cannot distinguish between a dead peer and a delayed internet signal.
+Adversarial Exploitation: Adversaries can intentionally delay packets to trap algorithms in endless, indecisive voting cycles.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- FLP Impossibility Theorem adalah batasan ilmiah terpenting sistem terdistribusi.
-- Jaringan asinkron tidak punya batas waktu latensi pesan.
-- Mustahil membuat algoritma konsensus deterministik yang sempurna tanpa kompromi.
+- Teorema Ketidakmungkinan FLP (Fischer, Lynch, Paterson 1985).
+- Batas matematis paling terkenal: mustahil menjamin Safety dan Liveness bersamaan di jaringan murni asinkron.
+- Jebakan asinkron: keterlambatan pesan tidak terbatas (unbounded delay).
+- Penyerang bisa menahan paket data agar algoritma deterministik terjebak berputar selamanya.
 
 **Naskah Tutur (Voiceover Script):**
 Tiga tahun setelah makalah Lamport terbit, dunia ilmu komputer dikejutkan oleh temuan tiga peneliti: Fischer, Lynch, dan Paterson.
@@ -288,25 +289,27 @@ Penyerang yang cerdik bisa sengaja menunda paket data tertentu sehingga algoritm
 
 ---
 
-## Slide 10: Kompromi Arsitektur di Dunia Nyata
+## Slide 9: Real-World Architectural Compromises
 
 ### Konten Slide
-- **Pilihan Wajib Arsitek Protokol:** Karena teorema FLP mustahil dilanggar, setiap sistem konsensus wajib mengorbankan salah satu aspek saat jaringan terbelah (*network partition*).
-- **1. Classical BFT (Contoh: Tendermint / Cosmos):**
-  - **Memprioritaskan Safety di atas Liveness.**
-  - Jika gangguan jaringan memutus komunikasi lebih dari sepertiga validator, sistem secara sengaja berhenti memproduksi blok (*network halts*).
-  - Lebih baik sistem macet sementara daripada mengesahkan dua blok yang saling bertentangan.
-- **2. Nakamoto Consensus (Contoh: Bitcoin):**
-  - **Memprioritaskan Liveness di atas Safety instan.**
-  - Jika kabel internet bawah laut terputus, kedua belahan dunia tetap terus menambang blok secara independen tanpa henti.
-  - Saat koneksi pulih, cabang rantai terberat akan menimpa cabang lainnya (*chain reorganization*).
-- *Visual:* Diagram percabangan keputusan saat terjadi partisi internet: jalur BFT yang berhenti vs jalur Bitcoin yang terus berjalan dan melakukan reorg kemudian.
+Real-World Architectural Compromises
+When the internet partitions, protocols must choose a sacrifice.
+
+Classical BFT (e.g., Tendermint / Cosmos):
+- Prioritizes Safety over Liveness.
+- If >1/3 of validators disconnect, the network intentionally halts block production.
+- Better to freeze the system than risk cementing two conflicting transaction histories.
+
+Nakamoto Consensus (e.g., Bitcoin):
+- Prioritizes Liveness over instant Safety.
+- During an internet partition, nodes mine blocks independently on both sides; the chain never stops.
+- Upon reconnection, the heaviest accumulated chain overwrites the other branch via Chain Reorganization.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Dunia nyata menuntut kompromi: pilih Safety atau Liveness saat ada bencana jaringan.
-- Tendermint memilih Safety: rantai berhenti demi mencegah percabangan.
-- Bitcoin memilih Liveness: rantai tidak pernah berhenti, rekonsiliasi diselesaikan belakangan lewat rantai terpanjang.
+- Kompromi arsitektur saat terjadi partisi internet global.
+- Tendermint (Cosmos) memilih Safety: jaringan sengaja berhenti memproduksi blok jika 1/3 validator hilang.
+- Bitcoin memilih Liveness: rantai tidak pernah berhenti menambang; konsiliasi diselesaikan belakangan lewat reorg.
 
 **Naskah Tutur (Voiceover Script):**
 Hukum alam ini memaksa setiap insinyur protokol konsensus untuk mengambil pilihan sulit ketika bencana jaringan terjadi.
@@ -321,25 +324,28 @@ Ketika kabel optik tersambung kembali, aturan rantai terakumulasi terberat akan 
 
 ---
 
-## Slide 11: Tiga Inovasi Satoshi Nakamoto Mengakali Batasan FLP
+## Slide 10: Satoshi's Synthesis: Bypassing the Limits
 
 ### Konten Slide
-- **Teka-Teki Dua Dekade:** Selama lebih dari dua puluh tahun pasca FLP, para ilmuwan mengira sistem uang digital publik tanpa izin mustahil diciptakan.
-- **1. Mengganti Deterministik dengan Proses Acak Poisson:**
-  - Teorema FLP secara ketat hanya berlaku untuk algoritma deterministik.
-  - Nakamoto Consensus bersifat probabilistik menggunakan penambangan Proof of Work berbasis memori acak.
-- **2. Melepaskan Hak Suara dari Identitas Digital:**
-  - Rumus BFT klasik $n \ge 3f + 1$ membutuhkan pengetahuan pasti tentang jumlah total entitas $n$.
-  - Satoshi mengganti penghitungan identitas IP dengan penghitungan daya komputasi termodinamika riil (*hashrate*).
-- **3. Finalitas Probabilistik Menggantikan Finalitas Instan:**
-  - Alih-alih menuntut kepastian mutlak sebelum blok berikutnya dibuat, kepastian transaksi tumbuh secara eksponensial seiring bertambahnya kedalaman blok ($k$).
-- *Visual:* Tiga pilar sintesis Satoshi: Poisson Process, Thermodynamic Sybil Resistance, Probabilistic Finality.
+Satoshi's Synthesis: Bypassing the Limits
+
+1. Poisson Process over Determinism:
+Evades the FLP theorem by abandoning vulnerable deterministic voting schedules, replacing them with probabilistic Proof of Work randomness.
+
+2. Thermodynamics over Identity:
+Nullifies Sybil attacks.
+Instead of relying on a fixed, known participant count (n), voting power is anchored to physical energy (hashrate).
+
+3. Probabilistic Finality:
+Abandons instant 100% certainty.
+Transaction security crystallizes exponentially as block depth (k) increases.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Bagaimana Satoshi mengakali batasan FLP yang dianggap mustahil selama 20 tahun.
-- Menggunakan probabilitas acak alih-alih jadwal deterministik yang mudah diserang.
-- Mengganti pemungutan suara berbasis identitas dengan hukum fisika termodinamika.
+- Bagaimana Satoshi Nakamoto mendobrak kebuntuan FLP yang membeku selama 20 tahun.
+- 1. Mengganti jadwal voting deterministik dengan proses acak Poisson.
+- 2. Mengganti perhitungan identitas n dengan daya energi termodinamika riil.
+- 3. Mengganti finalitas instan dengan kepastian probabilistik eksponensial.
 
 **Naskah Tutur (Voiceover Script):**
 Selama lebih dari dua puluh tahun setelah makalah FLP terbit, hampir semua akademisi sepakat bahwa membangun uang terdesentralisasi tanpa otoritas terpusat di internet publik adalah hal yang mustahil.
@@ -347,38 +353,37 @@ Satoshi Nakamoto berhasil mendobrak kebuntuan ini melalui tiga terobosan desain 
 Pertama, ia mengganti pendekatan deterministik dengan proses acak Poisson melalui Proof of Work.
 Karena penemuan blok bersifat acak seperti undian probabilistik, penyerang tidak bisa menargetkan antrean giliran validator untuk membuat sistem macet.
 Kedua, Satoshi membuang kebutuhan identitas pengguna.
-Rumus klasik BFT selalu mensyaratkan kita tahu persis berapa jumlah total partisipan $n$, padahal di internet siapa saja bisa membuat jutaan akun palsu.
+Rumus klasik BFT selalu mensyaratkan kita tahu persis berapa jumlah total partisipan n, padahal di internet siapa saja bisa membuat jutaan akun palsu.
 Satoshi mengganti perhitungan kepala dengan perhitungan daya listrik dan komputasi riil.
 Ketiga, Satoshi tidak memaksakan finalitas instan seratus persen.
 Ia membiarkan transaksi diselesaikan secara probabilistik, di mana tingkat keamanan transaksi mengkristal secara eksponensial seiring bertumpuknya blok baru di atasnya.
 
 ---
 
-## Slide 12: Jembatan ke Modul Berikutnya: Proof of Work dan Termodinamika
+## Slide 11: Bridge to the Next Module: Proof of Work and Nakamoto Consensus
 
 ### Konten Slide
-- **Refleksi Modul 03.1:** BFT klasik menyelesaikan konsensus untuk komite tertutup dengan identitas terdaftar ($n \ge 3f + 1$).
-- **Keterbatasan BFT Klasik di Ruang Terbuka:**
-  - Tidak mampu menahan pembuatan jutaan identitas palsu (*Sybil Attack*).
-  - Membutuhkan komunikasi pesan kuadratik antar-peserta yang membuat bandwidth jenuh.
-- **Materi Modul Berikutnya:**
-  - Bagaimana Satoshi Nakamoto mengikat konsensus digital langsung ke hukum fisika termodinamika bumi.
-  - Mekanisme pre-image hash search dan Dynamic Difficulty Adjustment setiap 2.016 blok.
-  - Penyelarasan insentif ekonomi dan Nash Equilibrium penambang jujur.
-- *Visual:* Transformasi dari rapat komite jenderal menuju jaring laba-laba raksasa penambang ASIC global yang mengonsumsi energi fisik.
+Tying Digital Consensus to Physical Thermodynamics
+
+The Next Exploration:
+How does Bitcoin tie digital consensus to the physical laws of thermodynamics via pre-image hash searches and Dynamic Difficulty Adjustment?
+How does the economic reward architecture create a Nash Equilibrium that makes honesty the only profitable strategy?
+
+Next Module:
+Module 03.2: Proof of Work and Nakamoto Consensus.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Rangkum perbedaan BFT komite tertutup vs jaringan terbuka tanpa izin.
-- Teaser materi modul 03.2: Proof of Work dan Nakamoto Consensus.
-- Bagaimana listrik dan termodinamika menyelaraskan insentif kejujuran penambang.
+- Mengantarkan peserta ke Modul 03.2: Proof of Work and Nakamoto Consensus.
+- Pertanyaan kunci: Bagaimana komputasi SHA-256 dan penyesuaian kesulitan 2.016 blok menyelaraskan insentif kejujuran penambang?
+- Teaser materi modul 03.2: Teori permainan ekonomi, Nash Equilibrium, dan evolusi perangkat keras ASIC.
 
 **Naskah Tutur (Voiceover Script):**
-Sekarang kita telah memahami fondasi teori di balik Byzantine Fault Tolerance.
+Sekarang kita telah memahami fondasi teori di balik Byzantine Fault Tolerance dan batasan matematis FLP.
 Algoritma BFT klasik berhasil menyelesaikan konsensus untuk komite tertutup dengan jumlah jenderal yang diketahui sejak awal.
-Namun, algoritma ini tidak bisa langsung dibawa ke internet bebas di mana siapa saja bisa mengunduh kode dan menyalakan ratusan ribu node palsu.
+Namun, algoritma ini tidak bisa langsung dibawa ke internet bebas di mana siapa saja bisa mengunduh kode dan menyalakan jutaan node palsu.
 Bagaimana cara Satoshi Nakamoto melenyapkan ketergantungan pada identitas virtual sama sekali?
 Bagaimana Bitcoin mengunci validitas data digital langsung ke konsumsi energi listrik dan termodinamika di dunia nyata?
 Dan bagaimana aturan ekonomi ini menciptakan Nash Equilibrium yang membuat penambang lebih untung bersikap jujur daripada berbuat curang?
 Untuk membedah mesin komputasi pertama yang menggerakkan mata uang tanpa bank sentral, di modul berikutnya kita akan membedah Proof of Work and Nakamoto Consensus.
-Sampai jumpa di modul berikutnya.
+Sampai jumpa di modul selanjutnya.

@@ -1,401 +1,406 @@
 # Alternative and Hybrid Consensus Models
-Modul Presentasi: Consensus and Game Theory (03.4)
+Modul Presentasi: Fondasi Distributed Trust (03.4)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: Alternative & Hybrid Consensus Models
 
 ### Konten Slide
-- **Topik:** Alternative and Hybrid Consensus Models
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Membedah spektrum inovasi konsensus di luar PoW dan PoS murni: DPoS, BFT Klasik, Jam Kriptografis (PoH), dan Arsitektur Graf Asinkron (DAG).
-- *Visual:* Visualisasi spektrum arsitektur konsensus dari rantai blok linier konvensional menuju topologi grafik multi-dimensi DAG dan jam sekuensial frekuensi tinggi.
+Alternative & Hybrid Consensus Models
+Consensus and Game Theory (03.4)
+Beyond pure PoW and PoS, network engineering demands specialized solutions for extreme throughput, sub-second latency, and parallel processing.
+There is no single perfect algorithm-only architectural compromises.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Selamat datang di modul penutup bab Consensus and Game Theory.
-- Memahami bahwa tidak ada algoritma konsensus tunggal yang sempurna untuk seluruh kebutuhan.
-- Menjelajahi alternatif mutakhir yang dioptimalkan untuk kecepatan kilat, latensi instan, dan throughput tinggi.
+- Membuka modul keempat sekaligus modul penutup dari Bab 3: Consensus and Game Theory.
+- Menjelaskan bahwa di luar Proof of Work dan Proof of Stake murni, industri membutuhkan arsitektur berperforma tinggi.
+- Menegaskan prinsip rekayasa: Tidak ada algoritma konsensus yang sempurna untuk semua hal, yang ada hanyalah kompromi arsitektural.
 
 **Naskah Tutur (Voiceover Script):**
-Selamat datang di modul keempat dari bab Consensus and Game Theory.
-Sejauh ini, kita telah mendalami dua raksasa konsensus yang paling dominan di industri: Proof of Work milik Bitcoin dan Proof of Stake milik Ethereum.
-Namun, dunia sistem terdistribusi tidak berhenti di sana.
-Setiap algoritma konsensus pada hakikatnya adalah kajian tentang kompromi rekayasa perangkat lunak.
-Tidak ada satu pun sistem yang bisa memaksimalkan semua parameter sekaligus: kapasitas transaksi, waktu konfirmasi, desentralisasi node, konsumsi daya, dan efisiensi modal.
-Kebutuhan industri yang kian beragam, mulai dari perdagangan bursa sub-detik hingga pemrosesan data paralel, telah melahirkan beragam inovasi arsitektur baru.
-Hari ini kita akan membedah model konsensus alternatif dan hibrida, mulai dari Delegated Proof of Stake, evolusi BFT klasik, jam kriptografis Proof of History, hingga arsitektur modern berbasis Directed Acyclic Graph.
+Selamat datang di modul keempat sekaligus modul penutup dari bab Consensus and Game Theory: Alternative and Hybrid Consensus Models.
+Pada modul-modul sebelumnya, kita telah menguasai dua raksasa konsensus dunia: Proof of Work pada Bitcoin dan Proof of Stake pada Ethereum.
+Namun, lanskap industri sistem terdistribusi tidak berhenti di sana.
+Kebutuhan akan kecepatan penyelesaian transaksi dalam fraksi detik dan throughput ratusan ribu transaksi per detik melahirkan inovasi-inovasi arsitektur baru.
+Hari ini kita akan menjelajahi spektrum konsensus alternatif: dari oligarki cepat Delegated Proof of Stake, adaptasi BFT modern seperti Tendermint dan HotStuff, jam kriptografis Proof of History pada Solana, hingga arsitektur grafik asiklik DAG pada Sui dan Aptos.
+Di akhir sesi ini, kita akan melihat bahwa tidak ada satu pun algoritma yang sempurna tanpa cela, setiap protokol selalu memilih kompromi desainnya masing-masing.
 
 ---
 
-## Slide 2: Lanskap Kompromi dalam Desain Konsensus
+## Slide 2: The Design Compromise: Six Axes of Consensus
 
 ### Konten Slide
-- **Hukum Ketegangan Kompromi Rekayasa:**
-  - Tidak ada algoritma konsensus yang dapat memaksimalkan seluruh dimensi secara simultan.
-  - Setiap inovasi selalu mengorbankan aspek tertentu demi mengejar keunggulan di aspek lain.
-- **Enam Sumbu Tarik-Menarik Desain Konsensus:**
-  - **1. Throughput (TPS):** Jumlah transaksi yang sanggup diproses per detik.
-  - **2. Latency to Finality:** Waktu yang dibutuhkan hingga sebuah transaksi terkunci permanen tanpa risiko pembatalan.
-  - **3. Validator Decentralization:** Jumlah simpul independen yang sanggup berpartisipasi dalam konsensus.
-  - **4. Fault Tolerance Threshold:** Batas toleransi maksimal terhadap partisipan yang korup atau offline.
-  - **5. Network Overhead:** Jumlah bandwidth dan pesan komunikasi antar-simpul yang dibutuhkan.
-  - **6. Capital Accessibility:** Batas modal minimum yang disyaratkan untuk menjadi validator.
-- *Visual:* Radar chart enam sumbu yang membandingkan profil ekstrem antara Bitcoin PoW, Tendermint BFT, dan Sui Mysticeti DAG.
+The Design Compromise: Six Axes of Consensus
+
+The 6 Evaluative Axes:
+1. Throughput: Total transactions processed per second (TPS).
+2. Latency: Time required to lock a transaction permanently (zero reorgs).
+3. Decentralization: Total number of independent nodes participating in consensus.
+4. Fault Tolerance: Maximum threshold of corrupt or offline nodes the system can survive.
+5. Network Overhead: Bandwidth and node-to-node messaging complexity load.
+6. Capital Accessibility: Minimum economic threshold required to participate as a validator.
+
+Trade-off Reality: Maximizing one axis inevitably degrades another.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Tidak ada konsensus gratis: setiap kelebihan selalu dibayar dengan pengorbanan di sektor lain.
-- Enam sumbu tarik-menarik: Throughput, Latensi Finalitas, Desentralisasi, Batas Toleransi, Beban Pesan, dan Akses Modal.
-- Rekayasa konsensus adalah tentang memilih kompromi yang tepat untuk kebutuhan aplikasi tertentu.
+- Radar kompromi desain konsensus melintasi 6 sumbu rekayasa.
+- Throughput (TPS), Latensi ke Finalitas, Desentralisasi Jumlah Simpul, Batas Toleransi Kesalahan, Beban Pesan Jaringan, dan Aksesibilitas Modal.
+- Hukum kompromi mutlak: Meningkatkan satu sumbu pasti mengorbankan sumbu lainnya.
 
 **Naskah Tutur (Voiceover Script):**
-Sebelum kita menganalisis algoritma satu per satu, ada satu prinsip dasar yang harus selalu kita ingat: di dunia sistem terdistribusi, tidak ada makan siang gratis.
-Kalian tidak akan pernah menemukan satu algoritma konsensus ajaib yang bisa memaksimalkan kapasitas data, memiliki latensi instan di bawah satu milidetik, melibatkan jutaan komputer validator, hemat energi, dan murah modalnya sekaligus.
-Desain konsensus selalu merupakan seni memilih kompromi.
-Jika kalian ingin memproses puluhan ribu transaksi per detik dengan latensi instan, kalian terpaksa harus memangkas jumlah validator menjadi segelintir komputer server berkecepatan tinggi.
-Sebaliknya, jika kalian menuntut desentralisasi tanpa izin di mana siapa pun boleh menjadi validator menggunakan laptop tua, kalian harus rela mengorbankan kecepatan throughput dan menerima waktu konfirmasi yang lebih lambat.
-Mari kita lihat bagaimana arsitektur alternatif meramu kompromi-kompromi ini untuk memenuhi kasus penggunaan nyata.
+Untuk mengevaluasi sebuah protokol konsensus secara objektif, kita tidak boleh terjebak oleh klaim pemasaran.
+Kita harus mengukurnya melintasi enam sumbu rekayasa sistem terdistribusi.
+Sumbu pertama adalah Throughput atau kapasitas transaksi per detik.
+Sumbu kedua adalah Latensi, yaitu waktu fisik yang dibutuhkan hingga sebuah transaksi mencapai status finalitas mutlak tanpa risiko reorg.
+Sumbu ketiga adalah Desentralisasi, diukur dari berapa banyak simpul independen yang berpartisipasi secara langsung.
+Sumbu keempat adalah Toleransi Kesalahan, batas persentase simpul jahat yang mampu ditahan sistem.
+Sumbu kelima adalah Beban Jaringan, yaitu volume lalu lintas pesan antar-simpul yang membebani bandwidth internet.
+Dan sumbu keenam adalah Aksesibilitas Modal, berapa modal minimal yang harus dimiliki seseorang untuk menjadi validator.
+Hukum rekayasa membuktikan bahwa mustahil memaksimalkan keenam sumbu ini secara bersamaan.
+Mengejar throughput jutaan transaksi pasti akan mengorbankan desentralisasi atau membebani bandwidth jaringan secara ekstrem.
 
 ---
 
-## Slide 3: Delegated Proof of Stake (DPoS): Demokrasi Perwakilan Berkecepatan Tinggi
+## Slide 3: DPoS: High-Speed Representative Oligarchy
 
 ### Konten Slide
-- **Pencetus dan Penerapan (2014):** Digagas oleh Daniel Larimer dan diimplementasikan pada sistem seperti BitShares, Steem, dan EOS.
-- **Konsep Demokrasi Perwakilan:**
-  - Alih-alih mengizinkan ribuan node memproduksi blok secara serentak, pemegang token memberikan hak suara untuk memilih perwakilan.
-  - Bobot suara seorang pemilih berbanding lurus dengan jumlah token yang ia miliki (*token-weighted voting*).
-- **Mekanisme Kerja Inti:**
-  - **Komite Tetap Skala Kecil:** Hanya kandidat peraih suara teratas dalam jumlah terbatas (misalnya tepat **21 Delegasi** di EOS) yang diberi hak menandatangani blok.
-  - **Rotasi Round-Robin Deterministik:** 21 delegasi memproduksi blok secara bergantian dalam urutan tetap yang kaku tanpa persaingan tebakan hash.
-  - **Pemberhentian Seketika (Instant Eviction):** Jika sebuah delegasi offline atau berbuat curang, pemilik token dapat memindahkan suaranya dan mencopot delegasi tersebut dalam hitungan menit.
-- *Visual:* Diagram alur pemilih token menyalurkan suara ke 21 delegasi terpilih yang memproduksi blok dalam rotasi lingkaran round-robin.
+DPoS: High-Speed Representative Oligarchy
+
+The Mechanics of Speed (Introduced 2014 by Dan Larimer):
+- Token-weighted voting replaces direct node participation.
+- The entire community votes to elect a small council of exactly 21 top block producers (witnesses).
+- The 21 delegates rotate in a rigid, deterministic round-robin schedule to eliminate lottery friction, achieving 0.5-second block times.
+
+The Cartel Trap:
+- Extreme throughput is purchased with extreme political centralization.
+- Static, public IP addresses make the 21 nodes highly vulnerable to targeted DDoS attacks and regulatory coercion.
+- Internal cartel formation: Top delegates vote for each other and lock out retail participants, creating an entrenched oligarchy.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- DPoS mengganti demokrasi langsung menjadi sistem perwakilan perlemen.
-- Pemegang koin memilih komite kecil (misalnya 21 delegasi).
-- Delegasi terpilih memproduksi blok bergantian secara terjadwal tanpa undian yang rumit.
+- Delegated Proof of Stake (DPoS) diperkenalkan oleh Dan Larimer (BitShares, EOS) pada 2014.
+- Mekanisme: Pemegang token memilih dewan perwakilan kecil berisi tepat 21 validator.
+- Jadwal giliran (round-robin) kaku menghasilkan blok super cepat 0,5 detik tanpa friksi undian.
+- Jebakan kartel: Oligarki politik, kerentanan sensor regulasi pada 21 simpul, dan kartel saling pilih yang mematikan desentralisasi.
 
 **Naskah Tutur (Voiceover Script):**
-Model alternatif pertama yang sangat populer di pertengahan dekade lalu adalah Delegated Proof of Stake atau DPoS yang dirancang oleh Daniel Larimer.
-Jika Proof of Stake biasa bekerja seperti demokrasi langsung di mana semua pemilik modal berhak memvalidasi transaksi, DPoS bekerja layaknya sistem republik perwakilan.
-Seluruh pemilik koin menggunakan saldo mereka sebagai hak suara untuk memilih sekelompok kecil perwakilan yang disebut Delegasi atau Witnesses.
-Jumlah delegasi ini dikunci dalam kuota yang sangat sedikit, contohnya tepat dua puluh satu delegasi pada blockchain EOS.
-Hanya dua puluh satu komputer terpilih inilah yang memiliki hak kriptografis untuk memproduksi blok.
-Karena jumlahnya sangat sedikit dan jadwalnya sudah ditentukan secara bergiliran, mereka tidak perlu membuang waktu mengundi giliran atau menghitung rumus matematika yang berat.
-Blok diproduksi secara bergantian dalam rotasi lingkaran setiap setengah detik sekali.
-Jika salah satu delegasi berbuat curang atau servernya mati, para pemilik koin bisa segera mencabut suaranya dan menggantinya dengan delegasi cadangan.
+Eksperimen pertama untuk mengejar kecepatan ekstrem adalah Delegated Proof of Stake atau DPoS yang digagas oleh Dan Larimer pada tahun 2014.
+DPoS membuang gagasan bahwa setiap komputer harus ikut memvalidasi blok.
+Sebagai gantinya, DPoS menerapkan model demokrasi perwakilan di mana seluruh pemegang koin memilih tepat dua puluh satu delegasi utama.
+Dua puluh satu komputer terpilih ini bergiliran memproduksi blok secara berurutan dengan jadwal yang sangat kaku tanpa perlu bersaing dalam undian.
+Hasilnya adalah kecepatan luar biasa: blok dapat diterbitkan setiap setengah detik dengan throughput ribuan transaksi.
+Namun, kecepatan ini harus dibayar dengan kompromi yang sangat fatal: pemusatan kekuasaan oligarki.
+Karena hanya ada 21 validator dengan alamat IP publik yang statis, pemerintah atau penegak hukum dapat dengan mudah menyensor atau menutup ke-21 server tersebut dalam satu hari.
+Selain itu, di dunia nyata para delegasi kaya raya cenderung berkolusi membentuk kartel saling pilih, mengunci suara pengguna ritel dan mematikan prinsip desentralisasi sejati.
 
 ---
 
-## Slide 4: Jebakan Sentralisasi DPoS: Oligarki dan Kartel Validator
+## Slide 4: Classical BFT & The Quadratic Message Explosion
 
 ### Konten Slide
-- **Keunggulan Throughput Ekstrem:**
-  - Dengan hanya 21 simpul, overhead pertukaran pesan di jaringan sangat minim.
-  - Delegasi dapat menyewa perangkat keras server data center kelas enterprise yang terhubung lewat kabel serat optik privat berkecepatan tinggi.
-  - Menghasilkan interval blok 500 milidetik dan ribuan transaksi per detik.
-- **Kelemahan Fatal: Formasi Kartel dan Oligarki:**
-  - Dalam praktiknya, 21 delegasi teratas sering kali membentuk aliansi politik dan kartel ekonomi tertutup.
-  - Mereka saling memberikan suara menggunakan dana perbendaharaan bersama dan membagi imbalan blok di antara kelompok mereka sendiri.
-  - Pemegang token ritel biasa tidak memiliki kekuatan suara yang cukup untuk menggulingkan posisi mereka.
-- **Kerentanan Koersi Regulasi dan Serangan Siber:**
-  - Keberadaan 21 alamat IP publik yang statis membuat jaringan sangat mudah diserang DDoS, disita secara fisik oleh pemerintah, atau dipaksa tunduk pada sensor hukum.
-- *Visual:* Ilustrasi lingkaran tertutup 21 delegasi yang saling mengunci suara di dalam benteng kartel yang terisolasi dari komunitas luar.
+Classical BFT & The Quadratic Message Explosion
+
+The 3-Phase Flow (PBFT, Castro & Liskov 1999):
+Client Request -> [Pre-Prepare] -> [Prepare (Requires 2f+1 Quorum)] -> [Commit (Requires 2f+1 Quorum)] -> Execution.
+Yields instant, deterministic finality with zero reorganizations.
+
+The Scaling Mathematical Bottleneck:
+Because voting phases require all-to-all broadcast, communication complexity scales quadratically: O(N^2).
+- 4 Nodes = ~16 messages (sub-millisecond).
+- 100 Nodes = ~10,000 messages.
+- 1,000 Nodes = ~1,000,000 messages (systemic network saturation).
+
+Conclusion: Classical PBFT is restricted to private, 50-node enterprise consortiums.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Throughput tinggi dan latensi 500ms adalah keunggulan utama DPoS.
-- Masalah terbesarnya adalah sentralisasi politik: pembentukan kartel oligarki antar-delegasi.
-- Sangat rapuh terhadap intervensi regulator dan sensor karena hanya ada 21 server yang diketahui publik.
+- Practical Byzantine Fault Tolerance (PBFT) oleh Castro dan Liskov (1999).
+- Tiga tahap: Pre-Prepare, Prepare, dan Commit menghasilkan finalitas instan tanpa reorg.
+- Bottleneck kuadratik O(N^2): Setiap simpul harus menyiarkan suara ke seluruh simpul lain di setiap tahap.
+- Pada 1.000 simpul, terjadi ledakan 1 juta pesan per blok yang melumpuhkan bandwidth internet.
 
 **Naskah Tutur (Voiceover Script):**
-DPoS berhasil membuktikan bahwa blockchain bisa berjalan sangat kencang dengan memproses ribuan transaksi per detik dan waktu blok hanya setengah detik.
-Namun, kecepatan luar biasa ini dibayar dengan ongkos sentralisasi yang sangat fatal.
-Ketika hak mengamankan seluruh jaringan hanya diserahkan kepada dua puluh satu komputer, sistem tersebut secara de facto berubah menjadi oligarki politik.
-Dalam sejarah penerapannya di dunia nyata, para delegasi teratas sering kali berkoalisi membentuk kartel tertutup.
-Mereka saling memilih satu sama lain menggunakan pundi-pundi token proyek, membagikan keuntungan blok di lingkaran internal mereka, dan membuat pemilih ritel tidak lagi mampu mendongkel kekuasaan mereka.
-Lebih buruk lagi dari sisi keamanan siber, mengamankan seluruh ekonomi blockchain di atas dua puluh satu alamat IP yang diketahui publik membuat jaringan sangat rentan diserang.
-Pemerintah otoriter cukup mengirimkan surat panggilan hukum atau menyita server di dua puluh satu data center tersebut untuk mematikan seluruh blockchain seketika.
+Untuk menghindari jebakan kartel dan tetap mempertahankan finalitas instan, para insinyur beralih ke literatur akademis klasik: Practical Byzantine Fault Tolerance atau PBFT yang dipublikasikan oleh Castro dan Liskov pada tahun 1999.
+PBFT menyelesaikan konsensus melalui tiga tahap pertukaran pesan: Pre-Prepare, Prepare, dan Commit.
+Jika kuorum dua pertiga tercapai di tahap commit, blok langsung mencapai finalitas absolut seketika dengan garansi nol reorganisasi.
+Namun, PBFT memiliki satu kelemahan matematika yang mematikan: kompleksitas komunikasinya bersifat kuadratik atau O(N pangkat dua).
+Di setiap tahapan voting, setiap simpul wajib menyiarkan suaranya ke seluruh simpul lainnya secara serentak.
+Jika jaringan hanya memiliki empat simpul, pertukaran pesan hanya membutuhkan 16 paket data.
+Namun jika jaringan bertambah menjadi seratus simpul, terjadi sepuluh ribu pesan per blok.
+Dan jika jaringan memiliki seribu simpul, terjadi satu juta pesan yang membanjiri jaringan setiap detik.
+Ledakan pesan kuadratik ini membuat PBFT klasik hanya sanggup bertahan di lingkungan konsorsium privat dengan maksimal lima puluh simpul saja.
 
 ---
 
-## Slide 5: Classical BFT: Practical Byzantine Fault Tolerance (PBFT)
+## Slide 5: Tendermint Core: BFT for the Blockchain Era
 
 ### Konten Slide
-- **Warisan Ilmu Komputer Akademis (1999):** Miguel Castro dan Barbara Liskov memperkenalkan PBFT, membuktikan mesin status toleran-Byzantine dapat berjalan efisien di bawah model *partial synchrony*.
-- **Garansi Utama:** Memberikan **finalitas deterministik instan** tanpa ada kemungkinan percabangan atau reorganisasi rantai (*zero reorgs*).
-- **Tiga Fase Pemungutan Suara Multi-Putaran:**
-  - **1. Pre-Prepare:** Pemimpin (*Primary Leader*) menerima transaksi dari klien dan mengusulkan urutan blok ke seluruh replika.
-  - **2. Prepare:** Setiap replika memvalidasi proposal dan menyiarkan pesan persetujuan ke **seluruh replika lain di dalam jaringan**.
-    Simpul menunggu kuorum dua pertiga ($2f + 1$).
-  - **3. Commit:** Setelah kuorum Prepare terpenuhi, setiap replika menyiarkan pesan pengesahan akhir ke **seluruh replika lain**.
-    Simpul menunggu kuorum dua pertiga ($2f + 1$) sebelum menulis data permanen ke disk.
-- *Visual:* Diagram urutan fase komunikasi PBFT menunjukkan banjir pesan antar-simpul pada fase Prepare dan Commit.
+Tendermint Core: BFT for the Blockchain Era
+
+Modern Adaptation (2014):
+Engineered by Jae Kwon to adapt BFT mechanics for open public networks (the engine of the Cosmos ecosystem).
+
+The Consensus State Machine:
+Propose (Leader suggests block) -> Prevote (Validators broadcast votes) -> Polka (>66.7% supermajority reached) -> Precommit (Final broadcast) -> Commit (Instant finality).
+
+Absolute Finality:
+Provides a strict "Zero Reorg Guarantee"-once a block is committed, history cannot be rewritten without slashing 1/3 of validator capital.
+
+Safety Over Liveness:
+If an internet partition separates >1/3 of validators, Tendermint deliberately halts block production rather than risk a network split.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- PBFT lahir tahun 1999, jauh sebelum Bitcoin diciptakan.
-- Menghadirkan finalitas instan: sekali blok disahkan, blok tersebut tidak pernah bisa dibatalkan.
-- Membutuhkan tiga putaran pemungutan suara: Pre-Prepare, Prepare, dan Commit.
+- Tendermint Core dirancang oleh Jae Kwon pada 2014 untuk ekosistem Cosmos.
+- Mengadaptasi BFT ke era blockchain: Alur Propose -> Prevote -> Polka -> Precommit -> Commit.
+- Finalitas absolut: Garansi nol reorg begitu blok mencapai tahap Commit.
+- Memprioritaskan Safety di atas Liveness: Jaringan sengaja berhenti jika 1/3 validator terputus demi mencegah percabangan rantai.
 
 **Naskah Tutur (Voiceover Script):**
-Jauh sebelum Satoshi Nakamoto memperkenalkan Proof of Work, dunia akademis sistem terdistribusi telah mengembangkan keluarga algoritma yang disebut Classical BFT.
-Tonggak terpentingnya adalah makalah Practical Byzantine Fault Tolerance atau PBFT yang diterbitkan oleh Castro dan Liskov pada tahun 1999.
-Berbeda dengan rantai Nakamoto yang bersifat probabilistik, PBFT menawarkan finalitas deterministik seketika.
-Begitu sebuah transaksi dinyatakan selesai, transaksi tersebut dikunci secara permanen di piringan cakram keras dan tidak akan pernah mengalami pembatalan sejarah atau reorg.
-PBFT mencapai kesepakatan mutlak ini melalui tiga fase pemungutan suara yang sangat disiplin.
-Pertama adalah fase Pre-Prepare, di mana satu node pemimpin mengajukan draf urutan transaksi ke semua komputer anggota.
-Kedua adalah fase Prepare, di mana setiap komputer memeriksa transaksi tersebut lalu menyiarkan suaranya ke semua rekan lainnya di jaringan hingga kuorum dua pertiga tercapai.
-Ketiga adalah fase Commit, di mana semua komputer kembali saling mengirim sinyal konfirmasi bahwa mereka siap mengeksekusi state tersebut ke basis data permanen.
+Terobosan besar yang membawa algoritma BFT klasik ke panggung blockchain publik modern dihadirkan oleh Jae Kwon pada tahun 2014 melalui *Tendermint Core*, mesin konsensus yang kini menopang ekosistem Cosmos.
+Tendermint menyederhanakan alur kerja BFT menjadi mesin status dua putaran pemungutan suara yang elegan: Propose, Prevote, dan Precommit.
+Ketika blok berhasil mengumpulkan lebih dari dua pertiga suara prevote, blok tersebut mencapai status *Polka*.
+Setelah disusul oleh dua pertiga suara precommit, blok tersebut langsung dieksekusi ke dalam status *Commit*.
+Tendermint memberikan jaminan finalitas mutlak: *Zero Reorg Guarantee*.
+Sekali sebuah blok disahkan di Tendermint, riwayat transaksi tersebut mustahil untuk diputarbalikkan.
+Tunduk pada kompromi teorema FLP, Tendermint secara sadar memilih Safety di atas Liveness.
+Jika bencana jaringan global memutus komunikasi lebih dari sepertiga validator, blockchain Tendermint akan sengaja berhenti memproduksi blok baru demi memastikan tidak ada percabangan sejarah yang terjadi.
 
 ---
 
-## Slide 6: Hambatan Skalabilitas PBFT: Ledakan Pesan Kuadratik O(N^2)
+## Slide 6: HotStuff: Breaking the Linear Barrier
 
 ### Konten Slide
-- **Akar Masalah Arsitektur:** Pada fase Prepare dan Commit, setiap simpul wajib mengirim pesan ke setiap simpul lainnya (*all-to-all broadcast*).
-- **Kompleksitas Komunikasi Kuadratik:**
-  $$\text{Message Complexity} = \mathcal{O}(N^2)$$
-- **Tabel Ledakan Jumlah Pesan per Blok:**
-  - **4 Simpul:** Membutuhkan sekitar 16 pesan (sangat ringan, waktu sub-milidetik).
-  - **100 Simpul:** Membutuhkan sekitar 10.000 pesan (konsumsi bandwidth internet mulai melonjak tinggi).
-  - **1.000 Simpul:** Membutuhkan sekitar 1.000.000 pesan (jaringan mengalami saturasi dan latensi parah).
-  - **10.000 Simpul:** Membutuhkan sekitar 100.000.000 pesan (secara fisik mustahil beroperasi di internet terbuka).
-- **Kesimpulan Desain:** PBFT klasik tidak pernah dirancang untuk blockchain publik dengan ribuan validator; ia hanya layak digunakan untuk konsorsium privat perusahaan dengan 10 hingga 50 simpul.
-- *Visual:* Grafik kurva kuadratik O(N^2) yang melesat tajam ke atas, memperlihatkan ketidakmampuan algoritma klasik berskala ke ribuan simpul.
+HotStuff: Breaking the Linear Barrier
+
+The 2018 Breakthrough (Adopted by Facebook Diem, Aptos, Sui):
+Reduces communication overhead to linear O(N) in all conditions, even during leader failure (View-Change).
+
+Star Topology:
+Nodes do not broadcast to everyone (O(N^2)).
+Nodes send votes only to the primary leader.
+The leader aggregates them into a single threshold signature (Quorum Certificate) and broadcasts it back: linear O(N).
+
+Pipelined Chaining:
+Voting phases are woven across successive blocks, drastically increasing pipelining efficiency:
+- Block N+1 serves as the Prepare vote for Block N.
+- Block N+2 serves as the Precommit for Block N.
+- Block N+3 finalizes Block N.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Masalah utama PBFT adalah beban komunikasi kuadratik O(N^2).
-- Setiap komputer harus mengobrol dengan setiap komputer lain dua kali per blok.
-- 1.000 node membutuhkan satu juta pesan per blok, membuat jaringan internet langsung lumpuh.
+- HotStuff (2018): Pendobrakan batas pesan linier O(N), diadopsi oleh Diem, Aptos, dan Sui.
+- Topologi bintang: Simpul hanya mengirim suara ke pemimpin (leader), pemimpin menyatukannya dalam Quorum Certificate (QC).
+- Rantai Pipelined: Tahapan voting disatukan ke dalam pembuatan blok berikutnya (Blok N+1 menjadi prepare, N+2 precommit, N+3 finalisasi).
 
 **Naskah Tutur (Voiceover Script):**
-Mengapa algoritma PBFT klasik yang menawarkan finalitas instan dan tanpa pembakaran energi ini tidak dipakai sebagai mesin utama Bitcoin atau Ethereum?
-Jawabannya terletak pada satu rumus matematika: kompleksitas pesan kuadratik atau O(N pangkat dua).
-Di dalam PBFT, karena setiap komputer harus mengirim pesan ke semua komputer lainnya pada fase Prepare dan fase Commit, beban lalu lintas data melonjak secara eksponensial seiring bertambahnya jumlah anggota jaringan.
-Jika jaringan hanya memiliki empat komputer, sistem hanya membutuhkan enam belas pesan, yang bisa diselesaikan dalam pecahan milidetik.
-Namun jika anggotanya bertambah menjadi seratus komputer, jumlah pesan melonjak menjadi sepuluh ribu pesan per blok.
-Bayangkan jika kita ingin membangun blockchain terdesentralisasi dengan seribu validator mandiri.
-Sistem itu harus memproses satu juta pesan untuk mengesahkan satu blok saja.
-Bandwidth internet akan langsung tersumbat total oleh lalu lintas data voting ini.
-Inilah alasan mengapa PBFT klasik hanya cocok untuk jaringan konsorsium perbankan tertutup dengan puluhan mesin, dan mustahil dipakai di internet terbuka tanpa izin.
+Pada tahun 2018, tim peneliti ilmu komputer menerbitkan algoritma *HotStuff*, yang kemudian diadopsi oleh proyek Facebook Diem, Aptos, dan Sui.
+HotStuff berhasil memecahkan kutukan komunikasi kuadratik yang menghantui BFT selama tiga puluh tahun.
+HotStuff menurunkan beban lalu lintas pesan dari O(N kuadrat) menjadi linear O(N) murni, bahkan ketika pemimpin sistem mengalami kerusakan.
+Rahasia pertamanya adalah topologi bintang.
+Alih-alih setiap simpul menyiarkan suara ke seluruh simpul di dunia, simpul hanya mengirim suara mereka ke satu pemimpin utama.
+Pemimpin tersebut merangkum ribuan suara menjadi satu sertifikat kuorum kompak bernama *Quorum Certificate* dan menyiarkannya kembali ke jaringan.
+Rahasia kedua adalah *Pipelined Chaining*.
+HotStuff tidak membuang waktu menunggu tiga tahap voting terpisah pada satu blok.
+HotStuff menenun tahapan voting langsung ke dalam produksi blok berikutnya: pembuatan Blok N plus satu bertindak sebagai suara prepare untuk Blok N, pembuatan Blok N plus dua menjadi precommit, dan pembuatan Blok N plus tiga secara otomatis mengunci finalitas permanen untuk Blok N.
 
 ---
 
-## Slide 7: Tendermint Core: Membawa BFT Klasik ke Ekosistem Blockchain
+## Slide 7: Proof of History (PoH): The Cryptographic Clock
 
 ### Konten Slide
-- **Adaptasi Modern (Jae Kwon, 2014):** Menyederhanakan mekanisme PBFT menjadi mesin konsensus siap pakai untuk ekosistem Cosmos.
-- **Siklus Pemungutan Suara Berbasis Putaran (Round-Based State Machine):**
-  - **1. Propose:** Pemimpin giliran mengusulkan blok kandidat baru.
-  - **2. Prevote:** Validator memeriksa blok dan menyiarkan suara prevote.
-    Jika meraih supermayoritas dua pertiga ($> 66,7\%$), blok memperoleh status **Polka**.
-  - **3. Precommit:** Menanggapi sinyal Polka, validator menyiarkan suara precommit.
-    Jika meraih supermayoritas dua pertiga, blok langsung difinalisasi secara instan.
-- **Karakteristik Ketat:**
-  - **Zero Reorg Guarantee:** Tidak ada cabang paralel atau pembatalan blok riwayat.
-  - **Prioritas Mutlak pada Safety:** Jika terjadi jeda komunikasi yang melewati batas waktu (*timeout*), putaran melangkah ke pemimpin baru; jika partisi memutus sepertiga validator, sistem sengaja berhenti beroperasi.
-- *Visual:* Mesin status berulang Tendermint: alur transisi dari status Propose -> Prevote -> Polka -> Precommit -> Commit.
+Proof of History (PoH): The Cryptographic Clock
+
+The Time Bottleneck:
+Agreeing on chronological order across distributed nodes requires massive message overhead.
+PoH (Solana architecture) creates an objective clock before consensus begins.
+
+Sequential Generation:
+A verifiable delay function runs SHA-256 continuously in an unbroken sequential loop on a single CPU core:
+Hash 1 -> Transaction Injection -> Hash 2 -> Transaction Injection -> Hash N.
+Because each hash requires the output of the preceding hash, it is mathematically impossible to parallelize, proving the passage of physical time.
+
+Asymmetric Verification:
+While generation requires strict sequential processing on one core, verification can be split in parallel across thousands of GPU cores, enabling 400ms block intervals.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Tendermint adalah implementasi modern BFT klasik untuk blockchain publik.
-- Menggunakan istilah unik: Polka ketika prevote mencapai dua pertiga supermayoritas.
-- Menjamin finalitas instan tanpa reorg, tetapi menghentikan jaringan jika koneksi internet terbelah.
+- Proof of History (PoH) pada arsitektur Solana yang dirancang Anatoly Yakovenko.
+- Masalah waktu: Menyepakati urutan jam di jaringan terdistribusi menghabiskan bandwidth.
+- Pembuatan sekuensial: Loop SHA-256 tak terputus di satu inti CPU membuktikan berlalunya waktu fisik bumi.
+- Verifikasi asimetris: Pembuatan berjalan serial di satu inti, namun pembuktian verifikasi dapat diparalelkan ke ribuan inti GPU, menghasilkan interval blok 400 milidetik.
 
 **Naskah Tutur (Voiceover Script):**
-Pada tahun 2014, Jae Kwon merekayasa ulang konsep BFT klasik agar ramah terhadap dunia blockchain dengan menciptakan Tendermint Core, yang kini menjadi motor penggerak ekosistem Cosmos.
-Tendermint menyederhanakan putaran konsensus menjadi sebuah state machine yang sangat elegan.
-Prosesnya terdiri dari tiga langkah utama.
-Langkah pertama adalah Propose, di mana pemimpin giliran mengajukan blok transaksi baru.
-Langkah kedua adalah Prevote, di mana seluruh validator memeriksa blok tersebut.
-Jika dua pertiga supermayoritas kekuatan suara menyetujui, blok tersebut meraih predikat yang dinamakan Polka.
-Langkah ketiga adalah Precommit, di mana validator yang melihat status Polka akan memberikan persetujuan final.
-Begitu kuorum dua pertiga precommit terkumpul, blok tersebut langsung terkunci permanen di rantai.
-Tendermint menjamin kepastian mutlak tanpa reorg dengan waktu blok sekitar enam detik.
-Namun sesuai dengan hukum kompromi konsensus, Tendermint secara kaku memilih Safety di atas Liveness.
-Jika bencana internet membuat sepertiga validator terputus, sistem akan sengaja berhenti memproduksi blok demi menjaga agar sejarah transaksi tidak terpecah.
+Di arena performa tinggi, Solana mengambil pendekatan yang sangat radikal melalui inovasi *Proof of History* atau PoH yang dirancang oleh Anatoly Yakovenko.
+Hambatan terbesar dari konsensus terdistribusi bukanlah memvalidasi transaksi, melainkan menyepakati urutan waktu jam kapan transaksi itu terjadi.
+Solana menciptakan jam kriptografis objektif sebelum pemungutan suara konsensus dimulai.
+Sebuah prosesor menjalankan fungsi delay terverifikasi dengan memutar hash SHA-256 secara terus-menerus dalam satu lingkaran berantai di satu inti CPU.
+Karena perhitungan hash kedua mewajibkan hasil dari hash pertama, proses ini mustahil dipercepat secara paralel, membuktikan kepada dunia bahwa waktu fisik benar-benar telah berlalu di antara dua peristiwa transaksi.
+Keajaiban PoH terletak pada sifat verifikasi asimetrisnya.
+Meskipun penciptaan rantai waktu harus berjalan serial di satu inti CPU, proses verifikasinya dapat dipotong-potong dan diperiksa secara paralel oleh ribuan inti komputasi pada kartu grafis GPU.
+Inilah mesin rahasia yang memungkinkan Solana memangkas interval waktu blok hingga menyentuh angka empat ratus milidetik.
 
 ---
 
-## Slide 8: HotStuff: Terobosan Kompleksitas Pesan Linier O(N)
+## Slide 8: DAG Architecture: Decoupling Data & Ordering
 
 ### Konten Slide
-- **Inovasi Generasi Ketiga (2018):** Diterbitkan oleh Abraham, Malkhi, dan tim peneliti, diadopsi oleh Diem (Facebook) dan disempurnakan oleh Aptos.
-- **Memecahkan Hambatan Terbesar BFT:**
-  - Pada PBFT dan Tendermint, jika node pemimpin mati, proses pergantian kepemimpinan (*View-Change*) memicu badai pesan kuadratik $\mathcal{O}(N^2)$ bahkan kubik $\mathcal{O}(N^3)$.
-  - HotStuff mencapai terobosan teoritis: **Kompleksitas pesan linier $\mathcal{O}(N)$ dalam seluruh kondisi, termasuk saat pergantian pemimpin**.
-- **Dua Pilar Arsitektur HotStuff:**
-  - **Topologi Komunikasi Bintang (Star Communication):** Simpul tidak menyiarkan pesan ke semua simpul lain, melainkan hanya mengirim suara ke pemimpin.
-    Pemimpin menggabungkan suara menjadi tanda tangan ambang batas (*threshold signature*) lalu menyiarkannya kembali.
-  - **Pipelined Chaining:** Fase pemungutan suara dirangkai menyatu di sepanjang rantai blok berikutnya.
-    - Proposal Blok $N+1$ bertindak sebagai suara Prepare untuk Blok $N$.
-    - Proposal Blok $N+2$ bertindak sebagai suara Precommit untuk Blok $N$.
-    - Proposal Blok $N+3$ mengesahkan dan memfinalisasi Blok $N$ secara permanen.
-- *Visual:* Diagram perbandingan: jejaring pesan kusut PBFT vs topologi bintang teratur HotStuff dengan rantai persetujuan pipelining 3 blok.
+DAG Architecture: Decoupling Data & Ordering
+
+The Linear Bottleneck:
+In traditional blockchains, data dissemination and consensus ordering share a single bottlenecked queue.
+Internet bandwidth sits idle while nodes wait for consensus rounds to finish.
+
+DAG Decoupling (Narwhal & Bullshark / Mysticeti):
+- Layer 1: Data Dissemination (Narwhal Mempool)
+  Nodes broadcast transaction batches asynchronously in a Directed Acyclic Graph (DAG), saturating 100% of available internet bandwidth (>100k TPS).
+- Layer 2: Zero-Message Ordering (Bullshark / Mysticeti)
+  Once the DAG geometry is saved to local disk, validators independently calculate identical transaction orders using deterministic graph traversal rules-requiring zero extra internet messaging rounds.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- HotStuff memecahkan masalah overhead pergantian pemimpin yang sebelumnya sangat mahal di BFT klasik.
-- Mengubah komunikasi kusut antar-node menjadi topologi bintang linier O(N).
-- Mekanisme Pipelining: pengesahan blok masa lalu dititipkan di atas usulan blok-blok berikutnya.
+- Arsitektur Grafik Asiklik Terarah (DAG) pada blockchain generasi terbaru (Sui, Aptos).
+- Bottleneck linier: Pada rantai tradisional, penyiaran data dan pengurutan konsensus antre di satu pipa yang sama.
+- Dekopling DAG: Layer 1 (Narwhal) menyiarkan data secara asinkron hingga memenuhi kapasitas bandwidth (>100k TPS).
+- Layer 2 (Mysticeti): Pengurutan transaksi dilakukan secara lokal di disk validator tanpa bertukar pesan internet tambahan.
 
 **Naskah Tutur (Voiceover Script):**
-Pada tahun 2018, sebuah lompatan besar kembali terjadi di ranah BFT klasik dengan terbitnya makalah HotStuff oleh Dahlia Malkhi dan rekan-rekannya.
-Algoritma ini kemudian dipilih oleh proyek Diem milik Meta dan diadopsi oleh blockchain performa tinggi seperti Aptos.
-Sebelum HotStuff lahir, kelemahan terbesar BFT klasik adalah ketika node pemimpin mati.
-Proses pemilihan pemimpin baru atau View-Change membutuhkan banjir pesan kuadratik bahkan kubik yang bisa melumpuhkan jaringan.
-HotStuff berhasil memecahkan kebuntuan ini dengan menurunkan beban komunikasi menjadi murni linier atau O(N), bahkan ketika terjadi kegagalan pemimpin.
-Caranya ada dua.
-Pertama, mereka mengganti komunikasi kusut semua-ke-semua dengan topologi bintang.
-Para validator hanya mengirim suara ke pemimpin saat ini, lalu pemimpin merangkum suara tersebut menjadi satu tanda tangan kriptografi ringkas untuk disebarkan kembali.
-Kedua, HotStuff memperkenalkan teknik pipelining.
-Alih-alih mengunci satu blok sebelum memikirkan blok berikutnya, suara pengesahan dirangkai secara berantai di atas tiga blok berturut-turut.
-Usulan blok berikutnya sekaligus berfungsi sebagai suara konfirmasi bagi blok sebelumnya, menghasilkan efisiensi komputasi yang luar biasa tinggi.
+Inovasi paling mutakhir dalam rekayasa konsensus hari ini adalah arsitektur Directed Acyclic Graph atau DAG yang diadopsi oleh Sui melalui protokol Narwhal dan Mysticeti.
+Pada blockchain tradisional, ada pemborosan bandwidth yang sangat besar.
+Penyiaran data transaksi dan proses pengurutan konsensus terjebak di dalam satu antrean pipa linier yang sama.
+Ketika validator sedang sibuk berdebat melakukan voting konsensus, koneksi internet mereka menganggur tidak memproses data baru.
+Arsitektur DAG memecahkan masalah ini dengan memisahkan penyiaran data dari pengurutan transaksi.
+Di lapisan pertama, protokol Narwhal menyebarkan paket transaksi ke dalam grafik jaring asinkron, memaksimalkan seratus persen kapasitas bandwidth internet simpul hingga menembus seratus ribu transaksi per detik.
+Di lapisan kedua, algoritma Mysticeti melakukan pengurutan transaksi dengan nol pertukaran pesan internet tambahan.
+Begitu struktur geometri DAG tersimpan di disk lokal masing-masing validator, setiap simpul secara independen membaca grafik tersebut menggunakan aturan penelusuran deterministik yang sama persis, mencapai konsensus instan tanpa membebani jaringan.
 
 ---
 
-## Slide 9: Proof of History (PoH): Jam Kriptografis Sebelum Konsensus
+## Slide 9: The Consensus Architecture Matrix
 
 ### Konten Slide
-- **Akar Masalah Koordinasi Waktu:**
-  - Dalam jaringan terdistribusi, menyepakati urutan waktu adalah pekerjaan yang sangat berat dan memakan banyak pertukaran pesan antar-simpul.
-- **Inovasi Solana (Anatoly Yakovenko):** Menciptakan jam kriptografis objektif *sebelum* konsensus dimulai menggunakan **Verifiable Delay Function (VDF)**.
-- **Mekanisme SHA-256 Berulang:**
-  - Validator menjalankan putaran kalkulasi SHA-256 secara berurutan pada satu inti CPU:
-    $$\text{Hash}_1 = \text{SHA-256}(\text{Seed}), \quad \text{Hash}_2 = \text{SHA-256}(\text{Hash}_1), \quad \dots, \quad \text{Hash}_N = \text{SHA-256}(\text{Hash}_{N-1})$$
-  - Setiap perhitungan mutlak membutuhkan keluaran dari hash sebelumnya, sehingga mustahil dihitung secara paralel.
-  - Menyelesaikan $N$ putaran membuktikan secara matematis bahwa durasi waktu fisik tertentu telah berlalu.
-- **Penyisipan Transaksi ke Aliran Waktu (Time Ingestion):**
-  - Transaksi yang masuk diselipkan ke dalam status hash saat itu, membuktikan secara permanen bahwa transaksi terjadi setelah hash sebelumnya dan sebelum hash sesudahnya.
-- **Verifikasi Asimetris:** Menghitung jam membutuhkan waktu sekuensial pada satu inti, tetapi memverifikasinya dapat dipecah secara paralel ke ribuan inti GPU, menghasilkan interval blok 400 milidetik.
-- *Visual:* Pita rekaman hash berurutan yang merekam stempel waktu transaksi secara kriptografis sebelum disiarkan ke komite validator.
+The Consensus Architecture Matrix
+
+Comparative Landscape:
+1. Proof of Work (Bitcoin)
+   - Sybil Resistance: Thermodynamic Hashrate
+   - Finality: Probabilistic
+   - Latency: ~60 Minutes
+   - Message Load: O(N) Gossip
+   - Validator Count: Unlimited
+   - Tolerances: <50% Compute
+   - Compromise: Liveness
+
+2. Casper PoS (Ethereum)
+   - Sybil Resistance: On-Chain Capital
+   - Finality: Deterministic (Epochs)
+   - Latency: ~12.8 Minutes
+   - Message Load: O(N) BLS Aggregation
+   - Validator Count: >1,000,000
+   - Tolerances: <33% Capital
+   - Compromise: Liveness/Safety
+
+3. DPoS (EOS)
+   - Sybil Resistance: Token-Weighted Votes
+   - Finality: Hybrid BFT
+   - Latency: 1-2 Seconds
+   - Message Load: O(K) (21 Nodes)
+   - Validator Count: Exactly 21
+   - Tolerances: <33% Delegates
+   - Compromise: Liveness
+
+4. Tendermint (Cosmos)
+   - Sybil Resistance: On-Chain Capital
+   - Finality: Instant (Zero Reorg)
+   - Latency: ~6 Seconds
+   - Message Load: O(N^2) Multi-Round
+   - Validator Count: 100-180
+   - Tolerances: <33% Capital
+   - Compromise: Absolute Safety (Halts)
+
+5. DAG (Mysticeti / Sui)
+   - Sybil Resistance: On-Chain Capital
+   - Finality: Sub-Second Deterministic
+   - Latency: 400-800 Milliseconds
+   - Message Load: O(N) Streaming
+   - Validator Count: 100+ Enterprise Nodes
+   - Tolerances: <33% Capital
+   - Compromise: Sub-Second Safety
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Masalah koordinasi waktu di jaringan terdistribusi sangat menyedot bandwidth.
-- Proof of History adalah jam kriptografis, bukan algoritma konsensus mandiri.
-- SHA-256 sekuensial membuktikan berlalunya waktu fisik bumi secara tidak terbantahkan.
+- Rangkuman komparatif seluruh arsitektur konsensus utama dunia.
+- Bitcoin: Desentralisasi tanpa batas dengan latensi 60 menit.
+- Ethereum: 1 juta validator dengan finalitas deterministik 12,8 menit.
+- DPoS: Sangat cepat namun tersentralisasi di 21 delegasi.
+- Tendermint: Nol reorg dengan kompromi sistem membeku saat bencana.
+- DAG: Finalitas sub-detik dengan kebutuhan perangkat keras simpul tingkat enterprise.
 
 **Naskah Tutur (Voiceover Script):**
-Salah satu tantangan paling rumit dalam ilmu komputer terdistribusi adalah menyepakati urutan waktu: transaksi mana yang terjadi lebih dulu dibanding transaksi lainnya.
-Biasanya, komputer harus saling bertukar pesan berkali-kali hanya untuk menyepakati jam dinding bersama.
-Di Solana, Anatoly Yakovenko memecahkan masalah ini dengan pendekatan yang sangat radikal melalui Proof of History.
-Penting untuk dipahami bahwa Proof of History bukanlah algoritma konsensus yang berdiri sendiri, melainkan sebuah jam kriptografis yang berdetak sebelum konsensus dimulai.
-Caranya adalah dengan menjalankan fungsi Verifiable Delay Function menggunakan algoritma SHA-256 tanpa henti di satu inti prosesor.
-Karena menghitung hash kedua wajib menunggu hasil dari hash pertama, proses ini mustahil dipercepat menggunakan komputer paralel.
-Jika ada satu juta kalkulasi hash yang diselesaikan, itu adalah bukti matematika yang mutlak bahwa sekian ratus milidetik waktu bumi telah berlalu.
-Ketika transaksi pengguna masuk, data tersebut langsung dicap ke dalam aliran hash tersebut.
-Hebatnya, meskipun proses pencatatan waktu harus berjalan sekuensial di satu inti CPU, proses verifikasinya bisa dipecah secara paralel ke ribuan inti kartu grafis GPU.
-Para validator tidak perlu lagi berdebat soal urutan waktu, memungkinkan jaringan memproduksi blok secepat empat ratus milidetik.
+Mari kita rangkum lanskap konsensus global ke dalam satu matriks perbandingan arsitektural.
+Bitcoin dengan Proof of Work menawarkan desentralisasi tanpa batas di mana siapa saja dapat menambang, namun menuntut waktu tunggu enam puluh menit untuk keamanan probabilistik.
+Ethereum dengan Casper PoS berhasil mengoordinasikan lebih dari satu juta validator dengan jaminan finalitas deterministik berbasis modal, namun membutuhkan waktu tunggu dua belas koma delapan menit.
+DPoS memangkas latensi menjadi dua detik, tetapi harus dibayar mahal dengan sentralisasi kekuasaan di tangan dua puluh satu server saja.
+Tendermint memberikan garansi nol reorganisasi dalam enam detik, namun memilih mematikan jaringan jika sepertiga validator terputus.
+Dan arsitektur DAG modern seperti Mysticeti berhasil menghadirkan finalitas deterministik di bawah satu detik, namun menuntut validator menggunakan koneksi serat optik berkecepatan tinggi dan perangkat keras kelas enterprise.
+Setiap protokol memilih titik komprominya masing-masing sesuai tujuan keberadaannya.
 
 ---
 
-## Slide 10: Arsitektur Directed Acyclic Graph (DAG): Memecah Kebuntuan Rantai Linier
+## Slide 10: The Next Frontier: Programmable Execution
 
 ### Konten Slide
-- **Hambatan Bawaan Rantai Linier (Linear Chain Bottleneck):**
-  - Pada blockchain linier tradisional (Bitcoin, Ethereum, Cosmos), proses penyebaran data (*dissemination*) dan pengurutan (*ordering*) digabung menjadi satu pipa antrean tunggal.
-  - Saat node sedang menunggu pemungutan suara konsensus selesai, kapasitas pipa transmisi internet justru menganggur sia-sia.
-- **Pemisahan Peran pada Arsitektur DAG (Contoh: Narwhal & Bullshark / Mysticeti):**
-  - **Lapisan 1: Penyebaran Data Berkecepatan Tinggi (Narwhal Mempool):**
-    - Simpul menyiarkan paket transaksi secara terus-menerus membentuk grafik multi-arah (DAG) tanpa menunggu antrean konsensus.
-    - Menghabiskan 100 persen kapasitas bandwidth internet yang tersedia, melesatkan throughput hingga melampaui 100.000 TPS.
-  - **Lapisan 2: Pengurutan Konsensus Tanpa Beban Pesan (Bullshark / Mysticeti):**
-    - Setelah grafik DAG tersimpan di penyimpanan disk lokal masing-masing simpul, **tidak ada lagi pesan suara konsensus tambahan yang dikirim lewat internet**.
-    - Setiap validator membaca geometri grafis lokal secara independen dan mengurutkan transaksi menggunakan aturan deterministik identik.
-- *Visual:* Perbandingan pipa sempit rantai blok linier berseri vs jaring laba-laba multi-jalur paralel DAG yang memisahkan lapisan data dari lapisan pengurutan.
+The Next Frontier: Programmable Execution
+
+The Completed Half:
+Consensus solves only half the puzzle: agreeing on the chronological sequence of raw bytes across an untrusted network.
+
+The Unanswered Question:
+What exactly do those raw bytes compute?
+How do we transition from simple digital money to a sovereign, censorship-resistant world computer?
+
+The Evolution of Execution:
+Early networks rely on primitive stack scripts (Bitcoin Script).
+Modern decentralized architecture demands Turing-complete, deterministic virtual machines capable of executing arbitrary logic, dynamic state memory, and complex financial automation.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Blockchain linier membuang bandwidth karena proses pengiriman data dan pemungutan suara antre di satu jalur sempit.
-- Arsitektur DAG memisahkan antara ketersediaan data (Narwhal) dengan pengurutan konsensus (Bullshark).
-- Konsensus dicapai tanpa mengirim pesan tambahan di kabel internet, melainkan membaca geometri graf di disk lokal.
+- Refleksi penutup Bab 3: Konsensus baru menyelesaikan separuh teka-teki buku besar (urutan byte mentah).
+- Pertanyaan baru: Apa sebenarnya yang dihitung oleh byte-byte transaksi tersebut?
+- Evolusi dari skrip tumpukan sederhana (Bitcoin Script) menuju mesin virtual dunia yang Turing-complete.
 
 **Naskah Tutur (Voiceover Script):**
-Evolusi paling mutakhir dalam arsitektur konsensus modern adalah transisi dari rantai blok linier konvensional menuju struktur Directed Acyclic Graph atau DAG, seperti yang dipelopori oleh protokol Narwhal, Bullshark, dan Mysticeti pada jaringan Sui.
-Pada blockchain tradisional, pengiriman data dan pemungutan suara konsensus dikunci di dalam satu jalur antrean linier yang sama.
-Pemimpin harus mengumpulkan transaksi, menyusunnya menjadi blok, menyiarkannya, lalu menunggu seluruh validator memberikan suara sebelum blok berikutnya bisa mulai diproses.
-Akibatnya, saluran kabel internet sering kali menganggur sia-sia saat menunggu hasil voting selesai.
-Arsitektur DAG memecah kebuntuan ini dengan memisahkan dua tugas tersebut menjadi dua lapisan mandiri.
-Lapisan pertama adalah penyebaran data asinkron menggunakan Narwhal.
-Di sini, setiap validator terus-menerus membanjiri jaringan dengan batch transaksi secara paralel membentuk grafik multi-dimensi tanpa perlu memikirkan siapa yang menjadi pemimpin atau urutan mana yang menang.
-Ini membuat kapasitas bandwidth internet terpakai maksimal hingga menghasilkan kecepatan ratusan ribu transaksi per detik.
-Lapisan kedua adalah pengurutan konsensus menggunakan Bullshark.
-Begitu jaring-jaring grafik data tersebut tersimpan di piringan disk lokal, para validator tidak perlu lagi saling berkirim pesan suara lewat internet.
-Setiap komputer cukup membaca pola geometri grafik di komputernya masing-masing menggunakan algoritma matematika yang sama untuk menghasilkan satu urutan transaksi final yang identik secara mandiri.
+Dengan selesainya modul ini, kita telah menguasai seluruh pilar di dalam Bab Consensus and Game Theory.
+Kita telah melihat bagaimana matematika, ekonomi perilaku, dan sistem terdistribusi berpadu menyatukan ribuan komputer independen menyepakati satu garis waktu kebenaran.
+Namun, para ilmuwan komputer segera menyadari bahwa konsensus baru menyelesaikan separuh dari teka-teki desentralisasi.
+Konsensus hanyalah mesin pengatur antrean: ia hanya menyepakati urutan kronologis dari susunan byte mentah.
+Pertanyaan besarnya adalah: apa sebenarnya yang dihitung oleh byte-byte tersebut?
+Bagaimana kita melangkah lebih jauh dari sekadar memindahkan angka saldo mata uang digital, menuju sebuah komputer dunia yang mampu mengeksekusi program perangkat lunak apa pun secara berdaulat dan tahan sensor?
 
 ---
 
-## Slide 11: Matriks Perbandingan Komprehensif Arsitektur Konsensus
+## Slide 11: Bridge to the Next Chapter: Programmability & The Virtual Machine
 
 ### Konten Slide
-- **Tabel Komparasi Lintas Paradigma Utama:**
+Transitioning to the World Computer
 
-| Dimensi Rekayasa | Proof of Work (Bitcoin) | Casper PoS (Ethereum) | Delegated PoS (EOS) | Tendermint (Cosmos) | DAG Consensus (Sui Mysticeti) |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Ketahanan Sybil** | Hashrate Termodinamika | Agunan Modal On-Chain | Suara Bobot Token | Agunan Modal On-Chain | Agunan Modal On-Chain |
-| **Sifat Finalitas** | Probabilistik (Rantai Terberat) | Deterministik (Epoch Checkpoints) | BFT-DPoS Hybrid | Deterministik Seketika (Zero Reorg) | Deterministik Sub-Detik |
-| **Latensi Finalitas** | ~60 Menit (6 Blok) | ~12,8 Menit (2 Epoch) | ~1 hingga 2 Detik | ~6 Detik (1 Blok) | ~400 hingga 800 Milidetik |
-| **Beban Pesan** | $\mathcal{O}(N)$ Gossip | $\mathcal{O}(N)$ Agregasi BLS | $\mathcal{O}(K)$ (21 Delegasi) | $\mathcal{O}(N^2)$ Multi-Putaran | $\mathcal{O}(N)$ Streaming Lepas |
-| **Jumlah Validator** | Tanpa Batas (Bebas Izin) | $> 1.000.000$ Kunci Aktif | Sangat Sedikit (21 Node) | Sedang (100-180 Node) | Tinggi (100+ Simpul Enterprise) |
-| **Toleransi Kerusakan ($f$)** | $< 50\%$ Daya Komputasi | $< 33\%$ Modal Taruhan | $< 33\%$ Delegasi Terpilih | $< 33\%$ Modal Taruhan | $< 33\%$ Modal Taruhan |
-| **Prioritas Kompromi** | Liveness (Tidak Pernah Berhenti) | Keseimbangan Liveness/Safety | Liveness (Abaikan Node Rusak) | Safety Mutlak (Halt saat Partisi) | Safety Mutlak Sub-Detik |
+Next Chapter:
+Chapter 4: Programmability and the Virtual Machine.
 
-- *Visual:* Infografis matriks tabel komparasi performa dan kompromi arsitektural dari kelima pilar konsensus.
+Upcoming Core Modules:
+- Module 04.1: From Static Ledgers to Programmable State.
+- Module 04.2: The Ethereum Virtual Machine (EVM) Internal Mechanics.
+- Module 04.3: EVM Gas Economics and Execution Halting.
+- Module 04.4: Wallets, Cryptographic Identity, and Account Abstraction.
+- Module 04.5: The Oracle Problem: Bridging External Reality.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Rangkum seluruh materi bab ini ke dalam satu tabel perbandingan komprehensif.
-- Tunjukkan bagaimana setiap model memiliki profil kelemahan dan keunggulan masing-masing.
-- Tekankan bahwa pemilihan konsensus bergantung pada tujuan perancangan aplikasi.
+- Menutup Bab 3 (Consensus and Game Theory) dan mengantarkan peserta ke Bab 4 (Programmability and the Virtual Machine).
+- Teaser materi Bab 4: Arsitektur internal EVM, ekonomi pengukuran Gas, Account Abstraction (ERC-4337), dan Dilema Oracle.
 
 **Naskah Tutur (Voiceover Script):**
-Slide ini merangkum seluruh spektrum pemikiran yang telah kita bedah di sepanjang bab ini ke dalam satu matriks komparasi yang utuh.
-Perhatikan bagaimana setiap arsitektur menempati kuadran kompromi yang sangat berbeda.
-Bitcoin dengan Proof of Work menawarkan desentralisasi tanpa batas dan ketahanan liveness mutlak di mana jaringan tidak pernah berhenti berdetak, tetapi harus dibayar dengan waktu finalitas probabilistik sekitar satu jam dan pemborosan energi termodinamika.
-Ethereum dengan Casper Proof of Stake menghadirkan desentralisasi masif dengan satu juta validator aktif dan keamanan modal ekonomi puluhan miliar dolar, namun membutuhkan waktu finalitas sekitar dua belas menit.
-Di sisi lain, Delegated PoS dan Tendermint mengorbankan jumlah validator demi mengejar finalitas instan dalam hitungan detik.
-Hingga akhirnya arsitektur modern berbasis DAG seperti Mysticeti berhasil menyatukan throughput ratusan ribu transaksi per detik dengan finalitas deterministik sub-detik melalui pemisahan cerdas antara ketersediaan data dan pengurutan konsensus.
-Pemilihan algoritma mana yang paling unggul sepenuhnya bergantung pada kebutuhan dan toleransi risiko dari sistem yang ingin kalian bangun.
-
----
-
-## Slide 12: Jembatan ke Modul Berikutnya: Komputabilitas dan Sovereign World Computer
-
-### Konten Slide
-- **Pencapaian Konsensus Terdistribusi:** Kita telah menuntaskan pemahaman tentang bagaimana ribuan komputer asing menyepakati urutan blok data yang identik tanpa perantara terpusat.
-- **Teka-Teki Tingkat Lanjut:**
-  - Menyepakati urutan bit data hanyalah separuh dari revolusi teknologi blockchain.
-  - Pertanyaan berikutnya: **Apa yang sebenarnya dihitung oleh deretan byte transaksi tersebut?**
-- **Evolusi Menuju Komputasi Universal:**
-  - Transaksi Bitcoin hanya mengeksekusi skrip tumpukan sederhana (*stack script*) untuk membuka dan memindahkan unit saldo koin.
-  - Blockchain modern mengeksekusi kode program komputer arbitrer yang turing-complete: **Smart Contracts**.
-- **Materi Bab Berikutnya (Modul 4: Programmability and the Virtual Machine):**
-  - Bagaimana mesin virtual terdesentralisasi (EVM) mengeksekusi kode secara deterministik tanpa risiko *infinite loop* lewat pengukuran bahan bakar (*gas metering*).
-  - Manajemen memori stack, memory, dan persistent storage di tingkat byte.
-  - Mesin eksekusi alternatif berperforma tinggi: WebAssembly (Wasm) dan Solana Virtual Machine (SVM).
-- *Visual:* Pintu gerbang digital yang membuka jalan dari lapisan konsensus menuju inti mesin virtual pemrosesan kode pintar (EVM).
-
-### Catatan Presenter (Cheatsheet)
-**Quick Cues:**
-- Konsensus telah tuntas: kita tahu cara komputer menyepakati urutan data mentah.
-- Pertanyaan baru: bagaimana data tersebut diproses menjadi logika komputasi aplikasi?
-- Teaser Modul 4: Programmability and the Virtual Machine (EVM, Gas, Smart Contracts).
-
-**Naskah Tutur (Voiceover Script):**
-Kita telah menaklukkan salah satu cabang ilmu terpenting dalam teknologi blockchain: lapisan konsensus.
-Kalian sekarang telah memahami bagaimana ribuan mesin di seluruh dunia sanggup menyepakati satu urutan blok data yang sah di tengah lingkungan yang penuh tipuan dan permusuhan.
-Namun, menyepakati urutan data mentah sebenarnya barulah separuh dari revolusi ini.
-Pertanyaan besar berikutnya adalah: apa yang sebenarnya dieksekusi oleh data-data transaksi tersebut di dalam komputer?
-Di Bitcoin, transaksi hanya menjalankan skrip matematika sederhana untuk memindahkan koin dari satu pemilik ke pemilik baru.
-Namun di blockchain modern, transaksi-transaksi ini mengeksekusi program perangkat lunak yang utuh dan independen: Smart Contracts.
-Bagaimana ribuan komputer di dunia bisa mengeksekusi baris kode program yang sama persis tanpa mengalami perbedaan hasil atau crash?
-Bagaimana Ethereum Virtual Machine mencegah peretas membuat program putaran tak terbatas menggunakan mekanisme gas metering?
-Dan bagaimana mesin eksekusi modern seperti Solana VM mendorong kinerja pemrosesan komputasi hingga ke batas fisik prosesor komputer?
-Untuk menemukan bagaimana buku besar terdistribusi bertransformasi menjadi komputer dunia yang berdaulat, di bab berikutnya kita akan melangkah ke Modul 4: Programmability and the Virtual Machine.
-Terima kasih dan sampai jumpa di bab berikutnya.
+Transformasi dari buku besar statis menjadi komputer dunia yang dapat diprogram membawa kita ke bab berikutnya: Chapter 4: Programmability and the Virtual Machine.
+Di bab berikutnya, kita akan membedah bagaimana Ethereum Virtual Machine mengeksekusi bytecode cerdas, bagaimana arsitektur gas metering mencegah halting problem dan serangan infinite loop, bagaimana Account Abstraction merevolusi dompet pengguna, serta bagaimana The Oracle Problem menjembatani jurang data antara dunia fisik dan kontrak pintar di atas rantai.
+Terima kasih atas partisipasi Anda di bab ketiga ini, dan sampai jumpa di Chapter 4.

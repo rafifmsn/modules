@@ -3,18 +3,22 @@ Modul Presentasi: Scalability and Security (06.2)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: Layer 2 Fundamentals: The Taxonomy of Off-Chain Execution
 
 ### Konten Slide
-- **Topik:** Layer 2 Fundamentals: Taksonomi dan Prinsip Eksekusi Off-Chain
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Kriteria fundamental yang membedakan Layer 2 sejati dari sidechain biasa, serta evolusi arsitektur penskalaan dari payment channels hingga rollups.
-- *Visual:* Diagram dua tingkat yang memperlihatkan Layer 1 sebagai jangkar keamanan dasar dan Layer 2 sebagai lingkungan eksekusi cepat di atasnya.
+Layer 2 Fundamentals: The Taxonomy of Off-Chain Execution
+Module 06.2: Scalability and Security
+Track: Fundamentals of Distributed Trust
+
+Core Architectural Focus:
+- Strict technical invariants that distinguish genuine Layer 2 systems from independent sidechains.
+- The evolution of off-chain scaling: State Channels, Plasma, Sidechains, and modern Rollups.
+- The Data Availability Problem and how the Unilateral Exit mechanism guarantees user sovereignty.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Selamat datang di modul kedua: Layer 2 Fundamentals.
-- Menjelaskan batasan istilah marketing Layer 2 vs definisi teknis yang ketat.
+- Membuka modul kedua dari Chapter 06: Scalability and Security.
+- Menjelaskan perbedaan antara jargon pemasaran Layer 2 vs definisi teknis yang ketat.
 - Membedah dua pilar utama Layer 2 sejati: Inherited Security dan Unilateral Exit.
 
 **Naskah Tutur (Voiceover Script):**
@@ -27,81 +31,99 @@ Kita akan membedah taksonomi sistem penskalaan off-chain, mulai dari State Chann
 
 ---
 
-## Slide 2: Motif di Balik Eksekusi Off-Chain
+## Slide 2: The Off-Chain Motif: Navigating Layer 1 Scarcity
 
 ### Konten Slide
-- **Refleksi Batasan Layer 1:**
-  - Kapasitas komputasi dan ruang disk Layer 1 adalah barang publik yang langka dan mahal.
-  - Setiap komputasi on-chain dieksekusi ulang oleh puluhan ribu validator secara global.
-- **Tujuan Arsitektur Off-Chain:**
-  - Memproses transaksi bervolume tinggi di luar rantai utama (*off-chain*) untuk menekan beban komputasi validator L1.
-  - Menjaga agar biaya transaksi pengguna tetap dalam hitungan pecahan sen.
-- **Tantangan Utama Rekayasa:**
-  - Bagaimana memproses jutaan transaksi di luar Layer 1 tanpa kehilangan kedaulatan, keamanan, dan sifat anti-sensor dari Layer 1?
-- *Visual:* Perbandingan pipa sempit L1 yang kelebihan beban vs pipa lebar off-chain yang menyalurkan ringkasan data ke L1.
+The Off-Chain Motif: Navigating Layer 1 Scarcity
+
+The Scarcity of the Layer 1 Court:
+- Layer 1 computational bandwidth and disk state are scarce, expensive global public goods.
+- Every on-chain operation is redundantly executed and permanently stored by tens of thousands of global validators.
+- Treating Layer 1 as an everyday computational engine causes prohibitive congestion and pricing exclusion.
+
+The Off-Chain Architectural Objective:
+- Migrate high-volume transaction throughput off the base layer to reduce validator computational strain.
+- Keep end-user transaction fees in fractions of a cent while maintaining sub-second execution speeds.
+
+The Core Engineering Challenge:
+- How can transactions be executed off-chain without sacrificing the sovereignty, censorship resistance, and security guarantees of Layer 1?
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- L1 adalah ruang persidangan tertinggi yang mahal dan lambat.
-- Tidak semua aktivitas sehari-hari perlu disidangkan di mahkamah agung L1.
-- Tujuan off-chain: geser komputasi ke luar, tapi bawa hasil akhirnya ke L1.
+- L1 dianalogikan sebagai mahkamah agung tertinggi: mahal, lambat, dan sangat selektif.
+- Tidak semua aktivitas mikro harian perlu disidangkan di hadapan puluhan ribu validator L1.
+- Tujuan arsitektur: pindahkan kalkulasi ke luar, namun bawa kepastian hukumnya ke L1.
 
 **Naskah Tutur (Voiceover Script):**
-Mari kita ingat kembali kenapa kita butuh sistem off-chain sejak awal.
-Layer 1 seperti Ethereum adalah ruang sidang mahkamah agung yang sangat aman, tapi kapasitas sidangnya sangat terbatas dan mahal.
+Mari kita ingat kembali mengapa kita membutuhkan sistem off-chain sejak awal.
+Layer 1 seperti Ethereum adalah ruang sidang mahkamah agung yang sangat aman, namun kapasitas sidangnya sangat terbatas dan mahal.
 Jika setiap transaksi kecil seperti membeli kopi atau menukar token receh harus disidangkan oleh puluhan ribu hakim validator di seluruh dunia, sistem akan macet total.
 Idenya adalah: kita ingin memindahkan miliaran transaksi komputasi tersebut ke luar rantai utama atau secara off-chain.
-Pengguna bisa bertransaksi ribuan kali dengan biaya super murah dan latensi instan.
+Pengguna dapat bertransaksi ribuan kali dengan biaya super murah dan latensi instan.
 Namun tantangan rekayasanya sangat berat.
 Bagaimana caranya agar transaksi yang terjadi di luar rantai utama tersebut tetap memiliki kekuatan hukum dan keamanan mutlak yang sama persis seperti Layer 1?
 
 ---
 
-## Slide 3: Definisi Sejati Layer 2 (The Two Invariants)
+## Slide 3: The True Definition of Layer 2: The Two Invariants
 
 ### Konten Slide
-- **Standar Teknis Mutlak:** Tidak semua sistem sekunder yang berada di luar Layer 1 berhak disebut sebagai Layer 2.
-- **Syarat 1: Inherited Security (Keamanan Terwariskan):**
-  - Sistem L2 memperoleh jaminan keamanannya secara langsung dan eksklusif dari konsensus Layer 1 yang mendasarinya.
-  - L2 tidak memiliki validator set independen yang dapat membalikkan transaksi secara sepihak.
-- **Syarat 2: Unilateral Exit (Hak Penarikan Mandiri Sepihak):**
-  - Pengguna memiliki hak matematis mutlak untuk menarik kembali aset mereka ke Layer 1 secara mandiri.
-  - Penarikan dana dijamin tetap berhasil meskipun seluruh operator, sequencer, dan validator Layer 2 mati total atau bersekongkol menyerang sistem.
-- *Visual:* Diagram gembok Layer 1 yang mengamankan brankas Layer 2 dengan pintu darurat unilateral exit yang langsung menuju L1.
+The True Definition of Layer 2: The Two Invariants
+
+Strict Technical Criteria:
+- A secondary scaling network qualifies as a true Layer 2 if and only if it satisfies two non-negotiable invariants.
+
+Invariant 1: Inherited Security:
+- The Layer 2 system derives its security guarantees directly and exclusively from the underlying Layer 1 consensus.
+- The Layer 2 network possesses no independent validator quorum capable of unilaterally reversing or altering state history.
+- An attacker cannot compromise the Layer 2 without first compromising the economic consensus of Layer 1 itself.
+
+Invariant 2: Unilateral Exit (The Escape Hatch):
+- Users possess an unconditional mathematical right to withdraw assets back to Layer 1 autonomously.
+- Fund withdrawals succeed deterministically even if all Layer 2 operators, sequencers, and nodes go offline, censor the user, or collude maliciously.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
 - Dua syarat mutlak Layer 2 sejati: Inherited Security dan Unilateral Exit.
-- Jika pengguna tidak bisa menarik aset saat operator kabur, sistem itu bukan Layer 2.
+- Jika pengguna tidak bisa menarik aset secara mandiri saat operator kabur, sistem itu bukan Layer 2.
 - Jangan terkelola oleh jargon pemasaran; pegang teguh dua prinsip ini.
 
 **Naskah Tutur (Voiceover Script):**
-Ini adalah slide paling penting untuk memfilter klaim-klaim palsu di industri blockchain.
+Ini adalah slide paling penting untuk menyaring klaim-klaim palsu di industri blockchain.
 Sebuah sistem komputasi berhak disebut sebagai Layer 2 sejati jika dan hanya jika memenuhi dua kriteria mutlak ini.
 Kriteria pertama adalah Inherited Security.
 Keamanan dari sistem tersebut harus berasal seratus persen dari konsensus Layer 1.
-Sistem itu tidak boleh bergantung pada voting konsensus baru yang berdiri sendiri.
+Sistem itu tidak boleh bergantung pada pemungutan suara konsensus baru yang berdiri sendiri.
 Kriteria kedua adalah Unilateral Exit.
 Ini adalah prinsip kedaulatan mutlak pengguna.
-Pengguna harus selalu bisa menarik aset mereka kembali ke Layer 1 secara mandiri lewat smart contract di L1.
+Pengguna harus selalu dapat menarik aset mereka kembali ke Layer 1 secara mandiri melalui smart contract di L1.
 Hak penarikan ini harus dijamin secara matematis dan kriptografis, bahkan dalam skenario terburuk di mana seluruh operator dan sequencer Layer 2 sengaja mematikan server mereka atau berkomplot untuk menyensor transaksi kalian.
-Jika sebuah sistem tidak punya pintu darurat mandiri ini, sistem itu bukan Layer 2.
+Jika sebuah sistem tidak memiliki pintu darurat mandiri ini, sistem itu bukan Layer 2.
 
 ---
 
-## Slide 4: Taksonomi Penskalaan Off-Chain
+## Slide 4: Taxonomy of Off-Chain Scaling Paradigms
 
 ### Konten Slide
-- **Empat Paradigma Utama Evolusi Off-Chain:**
-  - **1. State Channels:** Pembayaran dan perubahan status instan antar-pihak melalui tanda tangan kriptografis bilateral (contoh: Lightning Network, Raiden).
-  - **2. Plasma Chains:** Rantai anak yang mengirimkan komitmen Merkle root berkala ke kontrak pintar Layer 1 (contoh: OMG Network).
-  - **3. Sidechains:** Blockchain independen dengan konsensus sendiri yang terhubung ke L1 melalui kontrak jembatan dua arah (contoh: Polygon PoS).
-  - **4. Rollups:** Arsitektur modern yang mengeksekusi transaksi off-chain namun menerbitkan seluruh data mentah langsung ke Layer 1 (contoh: Arbitrum, Optimism, zkSync).
-- *Visual:* Garis waktu evolusi arsitektur penskalaan dari State Channels (2015) hingga era Rollup modern.
+Taxonomy of Off-Chain Scaling Paradigms
+
+Four Major Historical Paradigms:
+
+1. State Channels (2015-Present):
+- Instant bilateral peer-to-peer state exchanges secured by pre-signed cryptographic messages (e.g., Bitcoin Lightning Network, Raiden).
+
+2. Plasma Chains (2017-2019):
+- Autonomous child chains committing periodic Merkle state roots to Layer 1 smart contracts (e.g., OMG Network).
+
+3. Sidechains (2018-Present):
+- Independent sovereign blockchains running custom consensus mechanisms bridged to Layer 1 via multi-sig custody vaults (e.g., Polygon PoS).
+
+4. Rollups (2019-Present):
+- Modern modular execution layers processing off-chain transactions while publishing raw transaction data directly to Layer 1 (e.g., Arbitrum, Optimism, zkSync).
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Sejarah eksplorasi teknik selama satu dekade terakhir.
+- Garis waktu eksplorasi rekayasa selama satu dekade terakhir.
 - Empat rumpun besar: Channels, Plasma, Sidechains, dan Rollups.
 - Masing-masing mewakili evolusi dari cara mengelola data dan sengketa.
 
@@ -116,22 +138,27 @@ Mari kita bedah kelebihan dan kelemahan dari masing-masing model ini satu per sa
 
 ---
 
-## Slide 5: State Channels (e.g. Bitcoin Lightning Network)
+## Slide 5: Paradigm 1: State Channels (e.g. Bitcoin Lightning Network)
 
 ### Konten Slide
-- **Prinsip Kerja:** Hanya mengirimkan dua transaksi ke Layer 1, yaitu transaksi deposit pembukaan saluran dan transaksi penyelesaian penutupan.
-- **Alur Transaksi Off-Chain:**
-  - Alice dan Bob mengunci modal masing-masing 1 BTC ke dalam smart contract multi-sig di Layer 1.
-  - Keduanya melakukan ribuan transaksi pembayaran mikro off-chain secara instan dengan saling bertukar pesan bertanda tangan digital.
-  - Status saldo terus diperbarui: Status 1 (Alice 0.9, Bob 1.1), Status 2 (Alice 0.8, Bob 1.2), hingga Status N (Alice 0.5, Bob 1.5).
-- **Mekanisme Penyelesaian Sengketa:**
-  - Jika Alice berbuat curang dengan menyetorkan Status 1 lama ke L1, Bob memiliki batas waktu sanggahan untuk menyetorkan Status N yang memiliki nomor urut lebih baru.
-  - Kontrak L1 otomatis menghukum Alice dengan menyita seluruh modalnya dan memberikannya kepada Bob.
-- *Visual:* Sequence diagram Alice dan Bob membuka channel multi-sig di L1, bertukar transaksi off-chain, dan menutup channel di L1.
+Paradigm 1: State Channels (e.g. Bitcoin Lightning Network)
+
+Operational Architecture:
+- Requires only two Layer 1 transactions: an opening funding transaction and a closing settlement transaction.
+
+Off-Chain Transaction Workflow:
+- 1. Channel Funding: Alice and Bob lock 1 BTC each into a 2-of-2 multi-signature smart contract on Layer 1.
+- 2. Bilateral Off-Chain Swaps: Alice and Bob execute thousands of micro-transactions instantly by exchanging cryptographic signed state updates off-chain.
+- Balance progression: State 1 (Alice 0.9, Bob 1.1), State 2 (Alice 0.8, Bob 1.2), up to State N (Alice 0.5, Bob 1.5).
+- 3. Settlement: Either party submits the final state (State N) to Layer 1 to unlock their respective funds.
+
+Dispute Resolution Mechanics:
+- If Alice attempts fraud by submitting an obsolete earlier state, Bob is granted a challenge window to submit the higher nonce state (State N).
+- Layer 1 automatically penalizes Alice by slashing her entire deposit and awarding it to Bob.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- State channels: analogi membuka tab di kedai kopi.
+- State channels: analogi membuka tagihan atau tab di kedai kopi.
 - Sangat efisien: jutaan transaksi off-chain hanya butuh dua transaksi on-chain.
 - Penalti kecurangan: siapa yang menyetor data lama akan kehilangan seluruh uang jaminannya.
 
@@ -150,24 +177,27 @@ Jika terbukti Alice curang, kontrak Layer 1 akan menyita seluruh saldo milik Ali
 
 ---
 
-## Slide 6: Batasan Struktural State Channels
+## Slide 6: Structural Limitations of State Channels
 
 ### Konten Slide
-- **1. Capital Lockup (Ketidakefisienan Modal):**
-  - Saldo yang terkunci di dalam saluran tidak dapat digunakan untuk keperluan ekonomi lain sampai saluran ditutup.
-  - Mengharuskan pengguna mengunci modal penuh di muka secara tidak likuid.
-- **2. Online Liveness & Watchtowers:**
-  - Peserta saluran wajib tetap online untuk memantau apakah lawan transaksi mencoba menyetorkan status curang ke Layer 1.
-  - Jika pengguna offline saat kecurangan terjadi dan jendela sanggahan terlewati, dana mereka hilang permanen kecuali menyewa pihak ketiga (*Watchtowers*).
-- **3. Ketiadaan Shared State (Tanpa Smart Contract Global):**
-  - Saluran hanya bekerja dengan baik untuk transaksi bilateral antar-pihak tertentu.
-  - Tidak mampu menjalankan logika aplikasi multi-pengguna global seperti liquidity pool AMM atau protokol peminjaman terdesentralisasi.
-- *Visual:* Ilustrasi modal terperangkap dalam pipa saluran tertutup dan kegagalan menjalankan aplikasi DeFi kolaboratif.
+Structural Limitations of State Channels
+
+1. Severe Capital Inefficiency:
+- Funds locked in payment channels are strictly illiquid and cannot be deployed into other economic activities while the channel remains open.
+- Requires 100 percent upfront capital allocation per counterparty link.
+
+2. Mandatory Online Liveness & Watchtowers:
+- Participants must continuously monitor the Layer 1 chain to detect whether a counterparty has broadcast an obsolete, fraudulent state.
+- If a user loses internet connectivity during the dispute window, their funds can be stolen unless they delegate monitoring to third-party Watchtowers.
+
+3. Total Absence of Shared Global State:
+- Channels only operate over private state shared between predefined participants.
+- Incapable of executing multi-user smart contract applications such as AMM liquidity pools, lending protocols, or public DAOs.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Mengapa State Channels tidak bisa menjadi solusi tunggal untuk DeFi.
-- Capital lockup membuat modal tidur dan tidak efisien.
+- Mengapa State Channels tidak bisa menjadi solusi tunggal untuk ekosistem DeFi.
+- Capital lockup membuat modal membeku dan tidak efisien.
 - Ketergantungan pada status online menciptakan risiko keamanan bagi pengguna kasual.
 
 **Naskah Tutur (Voiceover Script):**
@@ -177,25 +207,28 @@ Uang yang kalian kunci di dalam saluran benar-benar membeku dan tidak bisa diput
 Kedua adalah keharusan untuk selalu online.
 Karena ada jendela waktu sanggahan, kalian harus terus-menerus memantau blockchain agar pihak lawan tidak mengirim data lama.
 Jika internet kalian mati selama seminggu dan lawan transaksi kalian curang, kalian bisa kehilangan seluruh uang kalian kecuali kalian membayar layanan penjaga yang disebut Watchtowers.
-Tetapi kelemahan paling fundamental adalah ketiadaan *shared state*.
+Tetapi kelemahan paling fundamental adalah ketiadaan shared state.
 State Channels hanya bisa mengikat pihak-pihak yang menandatangani saluran tersebut.
 Kalian tidak bisa membuat automated market maker seperti Uniswap di mana ribuan orang asing saling bertukar token dari satu kolam likuiditas bersama yang sama.
 
 ---
 
-## Slide 7: Plasma Chains dan Tragedi Data Availability
+## Slide 7: Paradigm 2: Plasma Chains and the Data Availability Tragedy
 
 ### Konten Slide
-- **Konsep Plasma (Poon & Buterin, 2017):**
-  - Membangun pohon rantai anak (*child chains*) yang memproses transaksi massal secara mandiri.
-  - Operator rantai anak secara berkala mengirimkan komitmen Merkle root dari blok transaksi ke kontrak pintar di Layer 1.
-- **Mekanisme Penarikan (Exit Game):**
-  - Pengguna menarik dana ke L1 dengan menyertakan Merkle proof yang membuktikan kepemilikan saldo sah mereka pada root terakhir.
-- **Kelemahan Fatal: The Data Availability Flaw:**
-  - Operator rantai anak dapat mengirimkan Merkle root baru ke L1, namun dengan sengaja menahan data transaksi mentah (*data withholding attack*).
-  - Tanpa data blok mentah, pengguna biasa tidak dapat membuat Merkle proof untuk membuktikan saldo mereka dalam proses penarikan dana.
-  - Memicu kekacauan *Mass Exit Problem* di mana seluruh pengguna panik berebut keluar ke L1 hingga menyumbat jaringan dasar.
-- *Visual:* Diagram penyerang menahan data transaksi di Plasma -> Pengguna panik mencoba exit -> Jaringan L1 lumpuh karena antrean massal.
+Paradigm 2: Plasma Chains and the Data Availability Tragedy
+
+The Plasma Architectural Vision (Poon & Buterin, 2017):
+- Construct hierarchical trees of autonomous child chains handling bulk transactions.
+- Child chain operators post only periodic Merkle state roots of transaction blocks to Layer 1 smart contracts.
+
+The Exit Game:
+- Users exit back to Layer 1 by submitting a Merkle proof proving their valid account balance against the latest committed root.
+
+The Fatal Flaw: The Data Availability Problem:
+- The operator can post a valid Merkle root to Layer 1 while maliciously withholding the raw transaction data (Data Withholding Attack).
+- Without the underlying block data, honest users cannot generate valid Merkle proofs to prove their account ownership.
+- Triggers the catastrophic Mass Exit Problem: panic-stricken users simultaneously rush to exit on Layer 1, causing total network congestion and state failure.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -216,25 +249,29 @@ Kondisi ini memicu kepanikan massal yang disebut Mass Exit, di mana semua orang 
 
 ---
 
-## Slide 8: Anatomi Sidechain: Mengapa Polygon PoS Bukan Layer 2 Sejati
+## Slide 8: Paradigm 3: Anatomy of Sidechains: Why Polygon PoS is Not a True Layer 2
 
 ### Konten Slide
-- **Karakteristik Sidechain:**
-  - Merupakan blockchain mandiri yang beroperasi penuh dengan mekanisme konsensus terpisah (seperti DPoS atau Proof of Authority).
-  - Berjalan sejajar di samping rantai utama dan terhubung melalui kontrak jembatan dua arah (*two-way bridge*).
-- **Kelemahan Keamanan Fundamental:**
-  - **Zero Inherited Security:** Sidechain sama sekali tidak mewarisi keamanan dari Layer 1.
-  - Keamanan dana sepenuhnya bergantung pada kejujuran dan kekuatan ekonomi sekelompok kecil validator internal sidechain itu sendiri.
-- **Skenario Serangan Kritis:**
-  - Jika validator sidechain bersekongkol atau mengalami serangan 51 persen, mereka dapat memanipulasi konsensus lokal untuk menandatangani pelepasan dana ilegal.
-  - Seluruh aset jaminan yang terkunci di dalam kontrak jembatan Layer 1 dapat dikuras habis tanpa ada mekanisme yang bisa dilakukan oleh Layer 1 untuk mencegahnya.
-- *Visual:* Diagram isolasi keamanan: Serangan 51 persen pada validator sidechain membobol brankas jembatan di Layer 1.
+Paradigm 3: Anatomy of Sidechains: Why Polygon PoS is Not a True Layer 2
+
+Sidechain Characteristics:
+- An independent, sovereign blockchain running a separate consensus mechanism (such as DPoS or Proof of Authority).
+- Operates parallel to the base chain, linked via a custodial two-way bridge contract on Layer 1.
+
+The Core Security Deficit:
+- Zero Inherited Security: The sidechain does not inherit Layer 1 economic security or mathematical consensus guarantees.
+- User assets depend entirely on the honesty and economic stake of the sidechain internal validator committee.
+
+Critical Failure Mode:
+- If a 2/3 supermajority of sidechain validators collude or suffer private key compromise, they can sign fraudulent state transitions.
+- Compromised validators can forge withdrawal authorizations to drain 100 percent of locked collateral from the Layer 1 bridge vault.
+- Layer 1 possesses zero mathematical visibility to detect or prevent this theft.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Kasus umum di pasar: banyak orang menganggap Polygon PoS adalah Layer 2.
-- Secara teknis, Polygon PoS adalah sidechain independen dengan validator set sendiri.
-- Bahaya terbesar: jika validator sidechain kompromi, aset cadangan di L1 bisa dikuras habis.
+- Banyak pelaku pasar salah mengira Polygon PoS adalah Layer 2 sejati.
+- Secara teknis, Polygon PoS adalah sidechain independen dengan validator set terpisah.
+- Bahaya terbesar: jika validator sidechain berkomplot atau kunci bocor, brankas cadangan di L1 bisa dikuras tuntas.
 
 **Naskah Tutur (Voiceover Script):**
 Di tengah kegagalan Plasma, banyak tim memilih jalur pintas pragmatis dengan membangun Sidechains, contoh paling populernya adalah Polygon PoS.
@@ -249,21 +286,26 @@ Layer 1 tidak punya cara matematis untuk memverifikasi apakah transaksi di sidec
 
 ---
 
-## Slide 9: Terobosan Arsitektur Rollup
+## Slide 9: Paradigm 4: The Rollup Breakthrough: Anchoring Data to L1
 
 ### Konten Slide
-- **Resolusi Masalah Data Availability:** Rollup menggabungkan eksekusi off-chain berkecepatan tinggi dengan penerbitan data mentah langsung di Layer 1.
-- **Tiga Pilar Cara Kerja Rollup:**
-  - **1. Off-Chain Execution:** Ribuan transaksi dieksekusi secara instan di luar rantai oleh simpul pengurut (*sequencer*).
-  - **2. On-Chain Data Availability:** Sequencer mengompresi kumpulan data transaksi mentah dan menerbitkannya langsung ke Layer 1 (sebagai `calldata` atau data blobs EIP-4844).
-  - **3. Cryptographic State Proofs:** Sequencer menyertakan bukti kriptografis (bukti kecurangan atau bukti validitas) untuk menjamin keabsahan perubahan status akun.
-- **Prinsip Kedaulatan Mutlak:** Karena seluruh data mentah tersimpan permanen di Layer 1, siapa pun dapat merekonstruksi status Layer 2 dari nol tanpa bergantung pada sequencer.
-- *Visual:* Alur kerja Rollup: Transaksi massal di Sequencer -> Kompresi & Publikasi Data ke L1 -> Penjaminan Ketersediaan Data Global.
+Paradigm 4: The Rollup Breakthrough: Anchoring Data to L1
+
+Resolving the Data Availability Dilemma:
+- Rollups combine lightning-fast off-chain execution with non-negotiable on-chain data publication on Layer 1.
+
+The Three Architectural Pillars of Rollups:
+- 1. Off-Chain Execution: Thousands of transactions are processed and sequenced off-chain by high-performance sequencer nodes.
+- 2. On-Chain Data Availability: The sequencer compresses transaction batch data and publishes it directly to Layer 1 (as calldata or EIP-4844 data blobs).
+- 3. Cryptographic State Verification: The sequencer commits state roots backed by either Fraud Proofs (Optimistic) or Validity Proofs (Zero-Knowledge).
+
+The Guarantee of Sovereignty:
+- Because the complete transaction history is permanently stored on Layer 1, any independent party can reconstruct the entire Layer 2 state from scratch without trusting the sequencer.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Rollup adalah jawaban pamungkas atas kelemahan fatal Plasma.
-- Rumus rollup: Eksekusi di luar rantai, tetapi seluruh data transaksi mentah wajib ditaruh di Layer 1.
+- Rollup adalah jawaban definitif atas kegagalan Plasma.
+- Formula rollup: Eksekusi di luar rantai, tetapi seluruh data transaksi mentah wajib ditaruh di Layer 1.
 - Karena data ada di L1, node independen selalu bisa merekonstruksi state L2 secara otonom.
 
 **Naskah Tutur (Voiceover Script):**
@@ -278,21 +320,25 @@ Karena seluruh data mentah sudah tertanam abadi di blockchain Layer 1, siapa pun
 
 ---
 
-## Slide 10: Garansi Kedaulatan: Mekanisme Unilateral Exit
+## Slide 10: Guaranteeing Sovereignty: The Unilateral Exit Mechanism
 
 ### Konten Slide
-- **Skenario Musuh Terburuk:**
-  - Sequencer Layer 2 mendadak offline permanen karena disita pemerintah, mengalami kerusakan hardware, atau berniat jahat menyensor transaksi Bob.
-- **Prosedur Escape Hatch (Pintu Darurat):**
-  - **1. Pengajuan Penarikan Mandiri ke L1:** Bob memanggil fungsi penarikan langsung pada smart contract rollup di Layer 1, melewati sequencer L2 sepenuhnya.
-  - **2. Pembuktian Kepemilikan Saldo:** Bob menggunakan data transaksi publik yang tersimpan di L1 untuk menyusun bukti kepemilikan asetnya pada state root terakhir.
-  - **3. Eksekusi Pencairan Dana:** Kontrak L1 memvalidasi bukti tersebut secara otonom dan mencairkan aset dasar langsung ke dompet Bob di Layer 1.
-- **Hasil:** Keamanan dana tidak bergantung pada niat baik operator L2; hak penarikan dijamin oleh kode dan matematika L1.
-- *Visual:* Diagram alur Unilateral Exit: Bob melewati L2 Sequencer yang mati dan mengeksekusi penarikan langsung melalui smart contract di L1.
+Guaranteeing Sovereignty: The Unilateral Exit Mechanism
+
+The Worst-Case Adversarial Scenario:
+- The Layer 2 sequencer goes permanently offline, is seized by authorities, or deliberately attempts to censor Bob's account.
+
+The Autonomous Escape Hatch Protocol:
+- 1. Direct L1 Exit Initiation: Bob submits an exit transaction directly to the Rollup smart contract on Layer 1, bypassing the L2 sequencer completely.
+- 2. Self-Generated State Proof: Using public transaction data published on Layer 1, Bob generates a cryptographic Merkle proof proving his account balance at the latest valid state root.
+- 3. Trustless Asset Release: The Layer 1 contract autonomously validates the proof and unlocks Bob's underlying funds directly to his L1 wallet.
+
+Result:
+- User funds cannot be frozen or held hostage by Layer 2 operators; fund safety is guaranteed by Layer 1 mathematics.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Apa yang terjadi jika sequencer rollup bertindak sebagai tiran atau disita polisi?
+- Apa yang terjadi jika sequencer rollup bertindak sebagai tiran atau disita penegak hukum?
 - Mekanisme Escape Hatch menjamin pengguna tidak bisa disandera oleh sequencer.
 - Inilah pembeda paling mutlak antara true Layer 2 dengan sidechain atau server privat.
 
@@ -300,7 +346,7 @@ Karena seluruh data mentah sudah tertanam abadi di blockchain Layer 1, siapa pun
 Mari kita uji klaim kedaulatan ini dalam skenario terburuk.
 Bayangkan sequencer Layer 2 disita oleh pihak berwajib, servernya terbakar, atau operatornya sengaja memblokir alamat dompet Bob agar tidak bisa bertransaksi.
 Di sistem sidechain atau bursa terpusat, uang Bob akan hilang atau disandera.
-Namun di Layer 2 sejati, Bob memiliki hak *unilateral exit* melalui mekanisme pintu darurat atau escape hatch.
+Namun di Layer 2 sejati, Bob memiliki hak unilateral exit melalui mekanisme pintu darurat atau escape hatch.
 Bob tidak perlu meminta izin kepada operator Layer 2.
 Bob cukup mengirimkan transaksi darurat langsung ke kontrak pintar rollup yang ada di Layer 1.
 Karena semua riwayat data transaksi rollup sudah tersimpan secara transparan di Layer 1, Bob bisa mengambil data tersebut untuk membuktikan berapa saldo sah terakhir miliknya.
@@ -309,26 +355,46 @@ Operator Layer 2 tidak punya kuasa apa pun untuk menahan aset kalian.
 
 ---
 
-## Slide 11: Matriks Komparasi Arsitektur Off-Chain
+## Slide 11: Architectural Comparison Matrix of Off-Chain Scaling
 
 ### Konten Slide
-- **Perbandingan Mendalam Empat Paradigma Penskalaan:**
+Architectural Comparison Matrix of Off-Chain Scaling
 
-| Dimensi Rekayasa | State Channels | Sidechains | Optimistic Rollups | Zero-Knowledge Rollups |
-| :--- | :--- | :--- | :--- | :--- |
-| **Jangkar Keamanan** | Sengketa Multi-sig L1 | Validator set independen | Warisan penuh konsensus L1 | Warisan penuh konsensus L1 |
-| **Data Availability** | Off-chain (Pengguna) | Off-chain (Node sidechain) | On-chain L1 (Calldata / Blobs) | On-chain L1 (Calldata / Blobs) |
-| **Dukungan Smart Contract** | Terbatas (Tanpa shared state) | Kompatibel penuh EVM | Kesetaraan penuh EVM | zkEVM / zkVM spesifik |
-| **Efisiensi Modal** | Rendah (Modal terkunci) | Tinggi | Tinggi | Tinggi |
-| **Penarikan ke L1** | Instan jika kooperatif | Cepat (Batas jembatan) | Jeda sanggahan 7 hari | Instan setelah bukti terverifikasi |
+Comprehensive Off-Chain Architecture Comparison:
 
-- *Visual:* Tabel matriks arsitektur dengan penyorotan warna hijau pada keunggulan Rollup dibanding alternatif lain.
+1. State Channels:
+- Security Anchor: Layer 1 multi-sig dispute contract.
+- Data Availability: Off-chain between private participants.
+- Smart Contract Support: Highly restricted (no shared global state).
+- Capital Efficiency: Low (capital locked in payment routes).
+- L1 Withdrawal Speed: Instant if cooperative; subject to dispute delay if contested.
+
+2. Sidechains:
+- Security Anchor: Independent validator set.
+- Data Availability: Off-chain on sidechain nodes.
+- Smart Contract Support: Full EVM compatibility.
+- Capital Efficiency: High.
+- L1 Withdrawal Speed: Fast bridge transfer (subject to external validator signing).
+
+3. Optimistic Rollups:
+- Security Anchor: Full Layer 1 consensus inheritance.
+- Data Availability: On-chain Layer 1 (calldata / blobs).
+- Smart Contract Support: Full EVM equivalence.
+- Capital Efficiency: High.
+- L1 Withdrawal Speed: 7-day challenge window.
+
+4. Zero-Knowledge Rollups:
+- Security Anchor: Full Layer 1 consensus inheritance.
+- Data Availability: On-chain Layer 1 (calldata / blobs).
+- Smart Contract Support: zkEVM / specialized zkVM.
+- Capital Efficiency: High.
+- L1 Withdrawal Speed: Instant once validity proof is verified on Layer 1.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Rangkuman komparatif seluruh paradigma off-chain.
-- Perhatikan trade-off masing-masing: Channels minim komputasi tapi tanpa shared state; Sidechain fleksibel tapi lemah keamanannya.
-- Rollup menawarkan kombinasi terbaik antara keamanan L1 dan fungsionalitas smart contract penuh.
+- Rangkuman komparatif seluruh paradigma penskalaan off-chain.
+- Perhatikan trade-off masing-masing: Channels minim komputasi tapi tanpa shared state; Sidechains fleksibel tapi lemah keamanannya.
+- Rollup menawarkan kombinasi terbaik antara warisan keamanan L1 dan fungsionalitas smart contract penuh.
 
 **Naskah Tutur (Voiceover Script):**
 Mari kita rangkum perbandingan arsitektur ini ke dalam satu tabel matriks komparasi.
@@ -340,23 +406,27 @@ Perbedaan terbesar di antara keluarga rollup terletak pada bagaimana mereka memb
 
 ---
 
-## Slide 12: Jembatan ke Modul Berikutnya (Optimistic vs. ZK Rollups)
+## Slide 12: Transition to Module 06.3: Rollup Architectures (Optimistic vs ZK)
 
 ### Konten Slide
-- **Dilema Rekayasa Rollup:**
-  - Kita telah membuktikan bahwa Rollup adalah satu-satunya arsitektur yang mewarisi keamanan penuh Layer 1 melalui publikasi Data Availability.
-  - Namun, muncul pertanyaan fundamental baru:
-  - Ketika sequencer off-chain menyerahkan komitmen state root yang mengklaim 5.000 transaksi berhasil dieksekusi, bagaimana Layer 1 tahu bahwa sequencer tidak berbohong?
-- **Dua Mazhab Kriptografi Besar:**
-  - **1. Optimistic Rollups:** Berasumsi sequencer jujur secara default, namun memberi jendela waktu 7 hari bagi verifier untuk mengajukan **Fraud Proofs** jika terjadi kecurangan.
-  - **2. Zero-Knowledge Rollups:** Tidak mempercayai siapa pun sejak awal, mewajibkan penyertaan bukti matematis **Validity Proofs** (SNARKs/STARKs) sebelum blok disahkan di Layer 1.
-- **Materi Modul Berikutnya:** **Rollup Architectures: Optimistic vs. Zero-Knowledge**.
-- *Visual:* Ilustrasi perbandingan visual antara Fraud Proofs (Sanggahan Interaktif) vs Validity Proofs (Kalkulasi Kriptografi Instan).
+Transition to Module 06.3: Rollup Architectures (Optimistic vs ZK)
+
+The Rollup Verification Dilemma:
+- We have established that Rollups are the only scaling architecture inheriting true Layer 1 security via on-chain Data Availability.
+- However, an essential cryptographic dilemma emerges:
+- When an off-chain sequencer submits a state root claiming 10,000 transactions were executed, how does Layer 1 verify the claim without executing the transactions?
+
+Two Dominant Cryptographic Schools:
+- 1. Optimistic Rollups: Assume sequencer honesty by default, but enforce a 7-day challenge window allowing verifiers to submit Fraud Proofs.
+- 2. Zero-Knowledge Rollups: Enforce zero human trust, requiring mathematical Validity Proofs (SNARKs/STARKs) before any state transition is accepted.
+
+Next Up:
+- Module 06.3: Rollup Architectures: Optimistic vs. Zero-Knowledge.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
 - Kita sudah sepakat rollup adalah masa depan penskalaan.
-- Pertanyaan baru: bagaimana memverifikasi bahwa perhitungan sequencer itu benar?
+- Pertanyaan baru: bagaimana memverifikasi bahwa perhitungan sequencer itu benar tanpa eksekusi ulang?
 - Teaser materi modul 6.3: Fraud Proofs vs Validity Proofs.
 
 **Naskah Tutur (Voiceover Script):**

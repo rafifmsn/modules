@@ -3,350 +3,346 @@ Modul Presentasi: Programmability and Virtual Machines (04.1)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: Programmable State Evolution
 
 ### Konten Slide
-- **Topik:** From Static Ledgers to Programmable State
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Transformasi blockchain dari ledger transaksi statis berspesialisasi tunggal menjadi state machine komputasi universal.
-- *Visual:* Ilustrasi kalkulator mekanik berdampingan dengan arsitektur superkomputer terdistribusi global.
+The Evolution of Distributed Computation
+Programmability and Virtual Machines (Module 04.1)
+
+The Architectural Leap:
+Moving from single-purpose, static accounting ledgers to a Turing-complete, decentralized World Computer.
+Why Bitcoin Script deliberately avoided looping opcodes, how overlay metacoin networks failed, and how gas economics finally solved the halting dilemma.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Selamat datang di modul pertama Chapter 4.
-- Mengulas lompatan terbesar blockchain: dari sekadar mencatat saldo uang ke komputasi kode program universal.
-- Mengapa kalkulator desentralistik berevolusi menjadi komputer dunia.
+- Membuka Bab 4: Programmability and Virtual Machines.
+- Mengulas lompatan dari ledger transaksi statis ke komputer dunia Turing-complete.
+- Menjelaskan evolusi dari pembatasan Bitcoin Script hingga penemuan mekanisme gas di Ethereum.
 
 **Naskah Tutur (Voiceover Script):**
-Selamat datang di modul pertama dari Chapter 4 trek Fundamentals.
-Pada modul-modul sebelumnya, kita sudah membedah tuntas bagaimana konsensus terdistribusi memungkinkan ribuan komputer asing menyepakati urutan blok data yang sama secara permanen.
-Namun menyepakati urutan baris data saja baru menyelesaikan setengah dari revolusi desentralisasi.
+Selamat datang di modul pertama Chapter 4: Programmability and Virtual Machines.
+Pada modul-modul sebelumnya, kita telah membedah bagaimana konsensus terdistribusi memungkinkan ribuan simpul asing menyepakati urutan blok data yang sama secara permanen.
+Namun, menyepakati urutan baris data saja baru menyelesaikan setengah revolusi desentralisasi.
 Pertanyaan krusial berikutnya adalah: apa sebenarnya yang dihitung oleh baris-baris data tersebut?
-Hari ini kita akan menjelajahi transisi historis yang sangat radikal, yaitu pergeseran dari ledger statis ala Bitcoin menuju programmable state machine yang melahirkan Ethereum.
+Hari ini kita akan menjelajahi transisi historis yang radikal, yaitu pergeseran dari ledger statis ala Bitcoin menuju programmable state machine yang melahirkan Ethereum.
 Kita akan membedah mengapa Bitcoin Script sengaja dibatasi, apa risiko fatal jika komputasi tanpa batas diizinkan di jaringan terbuka, dan bagaimana mekanisme gas berhasil menjembatani paradoks tersebut.
 
 ---
 
-## Slide 2: Batasan Desain Ledger Spesialisasi Tunggal
+## Slide 2: The Limits of Single-Purpose Ledgers
 
 ### Konten Slide
-- **Tujuan Asli Bitcoin:** Dirancang secara sengaja sebagai *peer-to-peer electronic cash system*.
-- **Fungsi Ledger Tunggal:** Sistem hanya mengeksekusi operasi aritmatika dasar seperti pengurangan saldo pengirim dan penambahan saldo penerima.
-- **Pertanyaan Fundamental Para Ilmuwan Komputer:**
-  - Jika jaringan desentralistik mampu menyepakati mutasi saldo moneter sederhana tanpa pihak ketiga, bisakah jaringan yang sama menyepakati eksekusi program komputer apa pun?
-  - Apakah blockchain bisa bertransformasi dari sekadar buku kas digital menjadi komputer desentralistik global?
-- *Visual:* Bagan perbandingan buku kas akuntansi pasif versus sistem operasi komputasi aktif.
+The Limits of Single-Purpose Ledgers
+
+The Accounting Ledger Paradigm:
+Bitcoin revolutionized monetary transfer via a decentralized ledger, but its execution logic is strictly non-programmable by design.
+
+Core Architectural Boundaries:
+- Arithmetic Simplicity: The system validates basic debits and credits across UTXOs. It functions as a global decentralized balance sheet.
+- Single-Purpose Design: Nodes evaluate balance transfers and cryptographic signatures, nothing more.
+- The Evolutionary Question: If a distributed network can trustlessly agree on the mutation of numerical balances, can it also reach consensus on the execution of arbitrary computer code?
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Bitcoin sangat hebat, tetapi merupakan mesin berspesialisasi tunggal.
-- Ledger Bitcoin hanya mengenal debit dan kredit saldo pada UTXO.
-- Muncul pertanyaan: bisakah kita menjalankan program apa pun di atas konsensus desentralistik?
+- Jelaskan keterbatasan ledger bertujuan tunggal pada Bitcoin.
+- Bitcoin adalah neraca akuntansi terdesentralisasi global untuk mutasi saldo UTXO.
+- Pertanyaan evolusioner: Bisakah jaringan konsensus yang sama menyepakati eksekusi kode komputer arbitrer?
 
 **Naskah Tutur (Voiceover Script):**
-Ketika Satoshi Nakamoto merilis Bitcoin pada tahun 2008, tujuannya sangat fokus dan spesifik.
-Bitcoin diciptakan sebagai uang elektronik murni peer-to-peer, tanpa perantara bank sentral.
+Ketika Satoshi Nakamoto merilis Bitcoin pada tahun 2008, tujuannya sangat fokus dan spesifik: menciptakan uang elektronik murni peer-to-peer.
 Secara teknis, jaringan Bitcoin adalah sebuah spreadsheet raksasa yang mencatat mutasi angka.
-Ketika Alice mengirim lima koin ke Bob, jaringan hanya memverifikasi bahwa saldo Alice berkurang lima dan saldo Bob bertambah lima.
-Namun para peneliti ilmu komputer segera melihat potensi yang jauh lebih besar di balik arsitektur ini.
-Mereka mulai bertanya: jika ribuan komputer di seluruh dunia bisa sepakat tanpa perantara mengenai hasil operasi pengurangan dan penambahan saldo, mengapa kita tidak menggunakan mesin konsensus yang sama untuk menyepakati hasil eksekusi kode program komputer sembarang?
-Ide inilah yang memicu eksplorasi menuju programmable blockchain.
+Ketika Alice mengirim koin ke Bob, jaringan hanya memverifikasi pengurangan saldo pengirim dan penambahan saldo penerima pada set UTXO.
+Namun, para ilmuwan komputer segera melihat potensi yang jauh lebih besar di balik arsitektur konsensus ini.
+Mereka mulai bertanya: jika ribuan komputer di seluruh dunia bisa sepakat tanpa perantara mengenai hasil operasi matematika saldo, mengapa kita tidak menggunakan mesin konsensus yang sama untuk menyepakati hasil eksekusi kode program komputer sembarang?
+Ide inilah yang memicu eksplorasi panjang menuju programmable blockchain.
 
 ---
 
-## Slide 3: Anatomi dan Pembatasan Bitcoin Script
+## Slide 3: Bitcoin Script Anatomy & Deliberate Constraints
 
 ### Konten Slide
-- **Keberadaan Script di Bitcoin:** Setiap output transaksi Bitcoin (UTXO) dilindungi oleh instruksi penguncian berbasis *Bitcoin Script*.
-- **Karakteristik Bitcoin Script:**
-  - Bahasa berbasis tumpukan (*stack-based Forth-like language*).
-  - Mengevaluasi instruksi secara linear dari atas ke bawah.
-- **Tiga Batasan Sengaja (Deliberate Constraints):**
-  - *Non-Turing Complete:* Tidak memiliki instruksi perulangan (*looping opcodes*).
-  - *Stateless Execution:* Eksekusi murni di dalam RAM sementara tanpa memori persisten.
-  - *Value-Blindness:* Script tidak dapat memeriksa nilai nominal dana yang ditransfer.
-- *Visual:* Diagram eksekusi linear Bitcoin Script satu arah tanpa percabangan mundur.
+Bitcoin Script Anatomy & Deliberate Constraints
+
+Stack-Based Execution:
+Bitcoin uses a Forth-like, linear, stack-based bytecode language evaluated strictly from top to bottom.
+
+Three Deliberate Constraints:
+1. Non-Turing Complete: Zero looping opcodes (no FOR, WHILE, or JUMP). Execution terminates in finite, predictable steps.
+2. Stateless Execution: Scripts run in ephemeral memory. No persistent contract storage exists between transactions.
+3. Value-Blindness: A script cannot inspect the precise transaction value or enforce fine-grained payout conditions across UTXOs.
+
+Security Choice: Bitcoin sacrificed programmability to guarantee absolute deterministic termination and block predictability.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Bitcoin sebenarnya punya bahasa pemrograman bernama Bitcoin Script.
-- Satoshi sengaja mengebiri kemampuan bahasa ini demi keamanan.
-- Tidak ada loop, tidak ada penyimpanan data permanen, dan tidak bisa membaca nilai saldo.
+- Pembedahan arsitektur Bitcoin Script berbasis tumpukan (stack).
+- Tiga batasan sengaja: Non-Turing complete (tanpa loop), stateless (tanpa memori persisten), dan value-blind (buta terhadap nilai transaksi).
+- Penegasan bahwa batasan ini sengaja dipilih demi keamanan maksimal jaringan moneter.
 
 **Naskah Tutur (Voiceover Script):**
-Perlu kita pahami bahwa Bitcoin sebenarnya tidak sepenuhnya tanpa program.
-Setiap kali ada transaksi di Bitcoin, outputnya dikunci dengan rangkaian instruksi kode yang disebut Bitcoin Script.
-Bahasa ini mirip dengan Forth, di mana data dimasukkan ke dalam stack lalu dievaluasi instruksi per instruksi dari baris awal sampai akhir.
-Namun Satoshi Nakamoto sengaja mengebiri fitur bahasa pemrograman ini.
-Ada tiga pembatasan fundamental yang ditanamkan secara sadar ke dalam protokol.
-Pertama, bahasa ini tidak Turing-complete karena sama sekali tidak menyediakan instruksi perulangan seperti for atau while.
-Kedua, eksekusinya bersifat stateless, artinya memori langsung terhapus dari RAM setelah verifikasi selesai tanpa bisa menyimpan variabel ke disk.
-Ketiga, script tersebut buta nilai atau value-blind, di mana logika penguncian tidak bisa membatasi berapa jumlah koin yang boleh ditarik.
+Banyak pemula mengira Bitcoin sama sekali tidak memiliki kode pemrograman.
+Kenyataannya, setiap output transaksi Bitcoin dilindungi oleh rangkaian instruksi yang disebut Bitcoin Script.
+Namun, Satoshi sengaja merancang Bitcoin Script dengan bahasa berbasis tumpukan yang sangat primitif dan terbatas.
+Ada tiga batasan fundamental yang sengaja ditanamkan.
+Pertama, Non-Turing Complete, yang berarti tidak ada instruksi loop atau lompatan kode mundur.
+Kedua, Stateless Execution, di mana script dieksekusi secara terisolasi tanpa ada variabel atau basis data yang tersimpan permanen antar-transaksi.
+Ketiga, Value-Blindness, artinya script tidak bisa membaca berapa jumlah nominal satoshi yang sedang dipindahkan untuk membuat logika kondisi bersyarat.
+Bagi Bitcoin, pengorbanan fleksibilitas ini adalah harga mutlak yang harus dibayar demi mencegah serangan penolakan layanan pada node validator.
 
 ---
 
-## Slide 4: Alasan Mengapa Looping Dilarang di Bitcoin
+## Slide 4: The Denial-of-Service Vector: Why Looping Was Banned
 
 ### Konten Slide
-- **Model Validasi P2P:** Setiap full node di dunia wajib memverifikasi setiap transaksi sebelum meneruskannya ke jaringan.
-- **Ancaman Denial-of-Service (DoS):**
-  - Jika perulangan diizinkan, penyerang dapat menyiarkan transaksi berisi kode perulangan tak terhingga (`while(true) {}`).
-  - Setiap komputer validator yang mencoba memverifikasi transaksi tersebut akan membeku (*hang*) selamanya pada utilisasi CPU 100 persen.
-- **Keputusan Desain Satoshi:** Menghapus semua opcode loop demi menjamin setiap script berhenti dalam batas waktu yang pasti (*finite predictable termination*).
-- *Visual:* Skema node validator mengalami freeze CPU akibat jebakan infinite loop.
+The Denial-of-Service Vector: Why Looping Was Banned
+
+The Infinite Loop Attack:
+If an open, permissionless network permits arbitrary looping instructions, an adversary can broadcast a zero-cost infinite loop:
+
+```text
+WHILE (true) {
+    // Infinite computation
+}
+```
+
+The Catastrophic Outcome:
+- Every validating node in the global network enters an unhalting CPU execution loop.
+- Nodes freeze, mempools clog, and block validation halts indefinitely.
+- The decentralized consensus mechanism collapses under catastrophic Denial of Service (DoS).
+
+To prevent this existential failure mode, Satoshi Nakamoto stripped Bitcoin Script of all looping primitives.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Kenapa Satoshi tidak menambahkan fitur loop sederhana?
-- Karena serangan infinite loop sangat mudah merontokkan ribuan node di dunia.
-- Menghilangkan loop adalah cara instan menjamin script pasti selesai dieksekusi.
+- Analisis vektor serangan Denial of Service (DoS) melalui infinite loop.
+- Simulasi kode perulangan tanpa henti yang dipancarkan ke jaringan publik.
+- Mengapa tanpa mekanisme penghentian, seluruh validator di dunia akan mengalami crash dan jaringan lumpuh total.
 
 **Naskah Tutur (Voiceover Script):**
-Mengapa Satoshi mengambil keputusan drastis untuk melarang fitur perulangan atau looping?
-Jawabannya berakar pada arsitektur verifikasi peer-to-peer.
-Di dalam jaringan desentralistik, setiap full node di bumi bertugas memvalidasi setiap transaksi yang lewat.
-Bayangkan jika seorang peretas jahat menyiarkan transaksi yang di dalamnya tertulis instruksi while true atau perulangan tanpa ujung.
-Saat ribuan komputer validator di seluruh dunia mencoba menjalankan kode tersebut untuk memeriksa keabsahannya, prosesor mereka akan seketika terkunci seratus persen.
-Komputer mereka akan membeku dan seluruh jaringan pembayaran global akan lumpuh total.
-Dengan melarang perulangan, Satoshi memastikan secara mutlak bahwa setiap transaksi Bitcoin dijamin selesai diverifikasi dalam hitungan milidetik.
-Ketiadaan loop adalah fitur keamanan, bukan cacat teknis yang tidak disengaja.
+Mari kita telaah mengapa instruksi perulangan atau looping dilarang keras di Bitcoin Script.
+Bayangkan apa yang terjadi jika jaringan publik tanpa perantara mengizinkan siapa saja mengirim instruksi looping tanpa batas.
+Seorang penyerang dapat membuat transaksi dengan sebaris kode sederhana: WHILE TRUE, lakukan komputasi terus-menerus tanpa henti.
+Ketika transaksi ini disiarkan ke seluruh dunia, setiap komputer validator yang jujur akan mengeksekusi instruksi tersebut.
+Akibatnya, CPU mereka akan terperangkap dalam komputasi abadi, memori meluap, dan node akan hang.
+Seluruh jaringan global akan lumpuh total karena tidak ada satu pun simpul yang bisa menyelesaikan validasi blok berikutnya.
+Inilah alasan teknis mengapa Satoshi memilih mematikan fitur looping sepenuhnya.
 
 ---
 
-## Slide 5: Keterbatasan Statelessness dan Value-Blindness
+## Slide 5: The Halting Problem in Distributed Consensus
 
 ### Konten Slide
-- **Stateless Execution:**
-  - Script tidak memiliki akses ke state variabel eksternal di luar transaksi langsung.
-  - Script tidak dapat membaca saldo alamat lain atau menyimpan riwayat variabel on-chain.
-  - Setelah script bernilai `TRUE`, seluruh tumpukan data stack terhapus dari memori.
-- **Value-Blindness pada Model UTXO:**
-  - Script penguncian hanya menentukan *siapa* yang boleh mencairkan dana lewat tanda tangan.
-  - Script tidak dapat menetapkan batas penarikan bersyarat, misalnya: penarikan maksimal 1 BTC per hari.
-- **Konsekuensi Logis:** Tidak memungkinkan membangun aplikasi keuangan kompleks seperti lending pool, automated market maker, atau escrow multi-tahap.
-- *Visual:* Perbandingan eksekusi stateless yang langsung bersih dari RAM versus stateful database yang menyimpan variabel ke disk.
+The Halting Problem in Distributed Consensus
+
+Alan Turing's Mathematical Proof (1936):
+It is mathematically impossible for an external static analyzer to inspect an arbitrary computer program and determine whether it will halt or run forever.
+
+The Dilemma for Public Blockchains:
+- A node cannot pre-scan an incoming smart contract to know whether its execution terminates in 10 milliseconds or runs forever.
+- Deterministic consensus requires absolute certainty of execution termination across all validating nodes.
+- Dilemma: How can a public network support Turing-complete computation without succumbing to the mathematical impossibility of the Halting Problem?
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Stateless berarti memori langsung hilang setelah selesai diverifikasi.
-- Value-blind berarti script tidak bisa mengatur kuota penarikan parsial.
-- Dampaknya: protokol DeFi seperti lending atau AMM mustahil dibuat langsung di Bitcoin Script.
+- Hubungkan tantangan ini dengan bukti matematis The Halting Problem oleh Alan Turing (1936).
+- Mustahil membuat program pemeriksa yang tahu apakah kode sembarang akan berhenti atau berjalan selamanya.
+- Dilemma: Bagaimana mendukung komputasi universal jika kita tidak bisa menebak kode tersebut akan berhenti atau tidak?
 
 **Naskah Tutur (Voiceover Script):**
-Dua pembatasan berikutnya membuat pembangunan aplikasi modern menjadi mustahil di atas Bitcoin Script murni.
-Pertama adalah sifatnya yang stateless.
-Script Bitcoin tidak punya memori jangka panjang.
-Begitu sebuah transaksi selesai diverifikasi dan menghasilkan nilai boolean true, seluruh memori stack langsung dibersihkan dari RAM.
-Script tidak bisa mengingat status kemarin, tidak bisa menaikkan hitungan angka variabel, dan tidak bisa membaca saldo akun lain di jaringan.
-Kedua adalah sifat value-blindness.
-Script hanya bisa memvalidasi kunci kriptografi siapa yang berhak mengambil uang, tetapi tidak bisa memeriksa nominalnya.
-Kita tidak bisa membuat aturan seperti: dana ini hanya boleh ditarik maksimal satu koin per minggu.
-Karakteristik serba semua-atau-tidak-sama-sekali ini membuat pembangunan instrumen keuangan modern seperti lending market atau automated market maker sama sekali tidak bisa diwujudkan.
+Tantangan tadi membawa kita langsung ke salah satu pilar teoretis paling penting dalam ilmu komputer: The Halting Problem yang dibuktikan oleh Alan Turing pada tahun 1936.
+Turing membuktikan secara matematis bahwa tidak ada algoritma pemeriksa statis yang dapat menentukan apakah suatu program sembarang akan berhenti berjalan atau berputar selamanya.
+Bagi blockchain publik, ini adalah dilema yang sangat mematikan.
+Node validator tidak bisa hanya membaca kode kontrak pintar dan menebak apakah kode tersebut aman atau merupakan jebakan infinite loop.
+Di sisi lain, konsensus terdistribusi menuntut kepastian mutlak bahwa setiap simpul akan menyelesaikan eksekusi dalam waktu yang seragam.
+Lalu, bagaimana kita bisa membangun komputer desentralistik yang universal tanpa terbentur oleh batasan Halting Problem ini?
 
 ---
 
-## Slide 6: Eksperimen Metacoins dan Overlay Networks (2012 - 2014)
+## Slide 6: Metacoins & The Overlay Network Era (2012-2014)
 
 ### Konten Slide
-- **Kebutuhan Pasar:** Komunitas pengembang sangat mendambakan penerbitan token kustom dan logika finansial canggih di atas blockchain.
-- **Colored Coins (2012):**
-  - Gagasan menandai (*coloring*) satoshi tertentu untuk merepresentasikan aset dunia nyata seperti saham atau sertifikat emas.
-  - *Kelemahan:* Penambang Bitcoin tidak memahami tanda warna tersebut, sehingga satoshi berharga mahal berisiko terbelanja sebagai biaya gas biasa.
-- **Mastercoin / Omni Layer (2013):**
-  - Memanfaatkan opcode `OP_RETURN` untuk menyematkan data sembarang hingga 80 byte pada transaksi Bitcoin.
-  - Digunakan sebagai fondasi awal penerbitan stablecoin USDT pertama di dunia.
-- *Visual:* Diagram transaksi Bitcoin membawa payload `OP_RETURN` yang dibaca oleh klien sekunder di luar konsensus.
+Metacoins & The Overlay Network Era (2012-2014)
+
+Early Attempts at Smart Contracts:
+Before Ethereum, developers attempted to build programmable logic directly on top of Bitcoin using secondary overlay layers (e.g., Mastercoin, Counterparty, Colored Coins).
+
+The OP_RETURN Architecture:
+- Developers encoded custom transaction metadata inside Bitcoin's OP_RETURN payload (limited to 40-80 bytes).
+- Bitcoin miners processed and validated only base BTC transfers, completely oblivious to the secondary protocol data.
+- Specialized off-chain client software parsed these bytes to calculate token balances and execution state.
+
+Result: A clumsy, fragmented dual-state architecture that struggled with consensus synchronization.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Developer tahun 2012 tidak menyerah dan mencoba mengakali batasan Bitcoin.
-- Colored Coins menandai satoshi tertentu sebagai aset riil.
-- Mastercoin menyisipkan data transaksi token ke dalam opcode OP_RETURN.
+- Sejarah awal smart contract sebelum Ethereum: Mastercoin, Counterparty, Colored Coins (2012-2014).
+- Memanfaatkan opcode OP_RETURN pada transaksi Bitcoin untuk menyelipkan metadata 40-80 byte.
+- Penambang Bitcoin hanya memvalidasi BTC, sementara state pintar dihitung oleh klien off-chain terpisah.
 
 **Naskah Tutur (Voiceover Script):**
-Antara tahun 2012 dan 2014, komunitas pengembang mulai frustrasi dengan keterbatasan ini.
-Mereka ingin menerbitkan token saham, obligasi, dan aset digital kustom, tetapi tidak mau membuat blockchain dari nol karena likuiditas dan keamanan Bitcoin adalah yang terkuat saat itu.
-Lahirlah era yang disebut Metacoins atau Overlay Networks.
-Eksperimen pertama adalah Colored Coins, di mana sebutir satoshi dilacak silsilahnya dan dianggap merepresentasikan satu lembar saham perusahaan.
-Sayangnya, karena penambang Bitcoin tidak tahu konsep warna tersebut, pengguna bisa tanpa sengaja membelanjakan satoshi saham bernilai ribuan dolar sebagai fee transaksi biasa.
-Kemudian hadir Mastercoin yang dipelopori J.R. Willett.
-Mastercoin memanfaatkan celah opcode OP_RETURN untuk menempelkan teks data hingga delapan puluh byte pada transaksi biasa.
-Lewat skema inilah stablecoin legendaris Tether USDT pertama kali diluncurkan ke dunia.
+Sebelum Ethereum diciptakan, para pengembang mencoba mengakali keterbatasan Bitcoin dengan membangun protokol lapisan atas yang dikenal sebagai Metacoins.
+Proyek-proyek seperti Mastercoin, Counterparty, dan Colored Coins beroperasi antara tahun 2012 hingga 2014.
+Mereka memanfaatkan opcode khusus Bitcoin bernama OP_RETURN untuk menyelipkan metadata tambahan sebesar 40 hingga 80 byte ke dalam transaksi Bitcoin biasa.
+Bagi penambang Bitcoin, transaksi tersebut hanyalah pemindahan recehan biasa.
+Namun bagi perangkat lunak khusus di luar jaringan, deretan byte itu diurai sebagai instruksi pencetakan token atau transfer aset digital baru.
+Meskipun brilian, pendekatan ini memisahkan konsensus keamanan jaringan dasar dari eksekusi aplikasi di atasnya, menciptakan fragmentasi data yang sangat rapuh.
 
 ---
 
-## Slide 7: Paradoks Kerapuhan Protokol Overlay
+## Slide 7: The Fragility of the Overlay Network Model
 
 ### Konten Slide
-- **The Decoupling Flaw:** Jaringan dasar Bitcoin bertindak sebagai pembawa data buta (*blind carrier*).
-  - Penambang hanya memvalidasi transfer nominal BTC, tanpa memverifikasi validitas logika data di dalam `OP_RETURN`.
-- **Ketergantungan Ekstrem pada Klien Off-Chain:**
-  - Node Bitcoin menganggap transaksi valid meskipun saldo token Mastercoin di dalamnya fiktif.
-  - Verifikasi keabsahan kepemilikan token menuntut pengguna menjalankan perangkat lunak klien terpisah yang berat untuk memindai seluruh riwayat blockchain.
-- **Ketiadaan Komposabilitas:** Dua aplikasi berbeda pada lapisan overlay tidak dapat berinteraksi secara langsung atau melakukan pertukaran atomik.
-- *Visual:* Skema pemisahan konsensus L1 yang buta data versus klien off-chain yang menghitung saldo secara terisolasi.
+The Fragility of the Overlay Network Model
+
+Architectural Disconnection:
+Layer 1 miners secure raw bytes, but remain entirely unaware of the execution semantics occurring within the overlay state.
+
+Systemic Vulnerabilities:
+1. Two-Tier Verification Latency: Complex logic requires re-parsing the entire underlying blockchain history via specialized indexers.
+2. Incomplete State Proofs: A light client cannot verify an overlay state transition without downloading and verifying every base-layer transaction.
+3. Reorganization Vulnerability: A minor deep reorganization on the base layer causes catastrophic desynchronization in the secondary state machine.
+4. Fragmented Developer Experience: Smart contracts cannot natively interact or share composable liquidity pools.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Masalah fatal overlay: penambang Bitcoin tidak memvalidasi isi data token.
-- Node harus menjalankan software berat kedua di luar Bitcoin Core.
-- Tidak ada smart contract composability: aplikasi tidak bisa saling memanggil.
+- Mengapa model overlay network terbukti rapuh dan gagal menjadi fondasi komputasi masa depan.
+- Penambang L1 tidak mengerti semantik aplikasi L2, verifikasi state memerlukan indexer terpisah.
+- Risiko reorg pada L1 yang mengacaukan konsensus sekunder dan ketiadaan komposabilitas antar-aplikasi.
 
 **Naskah Tutur (Voiceover Script):**
-Meskipun Mastercoin membuktikan bahwa pasar sangat haus akan aset terprogram, arsitektur overlay ini menyimpan cacat desain yang sangat rapuh.
-Kita menyebutnya sebagai decoupling flaw.
-Penambang Bitcoin yang mengamankan konsensus sama sekali buta terhadap aturan main Mastercoin.
-Bagi penambang, payload OP_RETURN hanyalah deretan byte acak yang tidak berarti apa-apa.
-Jika seseorang memalsukan transfer token tanpa saldo, penambang Bitcoin tetap akan mencatat transaksi itu ke dalam blok tanpa curiga.
-Akibatnya, siapa pun yang ingin mengecek saldo token wajib menjalankan software klien khusus yang terpisah.
-Klien ini harus membaca ulang seluruh rekaman Bitcoin dari masa lalu dan menyaring datanya di luar jaringan.
-Lebih buruk lagi, tidak ada konsep komposabilitas, program tidak bisa saling berinteraksi secara instan dalam satu eksekusi.
-Jelas bahwa menambal logika komputasi di atas rantai yang buta data adalah jalan buntu secara arsitektur.
+Model overlay network ini terbukti memiliki kelemahan struktural yang fatal.
+Karena penambang Bitcoin di lapisan pertama sama sekali buta terhadap aturan aplikasi di lapisan kedua, tidak ada penegakan konsensus terpadu.
+Jika terjadi chain reorganization kecil di jaringan Bitcoin dasar, status database pada lapisan sekunder bisa mengalami desinkronisasi massal dan menghasilkan saldo hantu.
+Selain itu, aplikasi tidak memiliki sifat composability; sebuah token tidak bisa secara otomatis berinteraksi dengan kontrak pintar lainnya dalam satu transaksi atomik yang mulus.
+Pengguna harus mengunduh indeks data yang masif hanya untuk memverifikasi satu saldo sederhana.
+Komunitas menyadari bahwa menempelkan logika komputasi di atas ledger yang kaku tidak akan pernah menghasilkan sistem komputasi terdistribusi yang tangguh.
 
 ---
 
-## Slide 8: Vitalik Buterin dan Paradigma World Computer
+## Slide 8: The Breakthrough: Vitalik Buterin & The World Computer
 
 ### Konten Slide
-- **Gagasan Radikal (Akhir 2013):** Vitalik Buterin menyadari bahwa menciptakan blockchain spesifik untuk setiap use case adalah inefisiensi arsitektur.
-- **Tesis Utama Ethereum Whitepaper:**
-  - Membangun satu blockchain tunggal dengan bahasa pemrograman Turing-complete terintegrasi langsung di lapisan konsensus.
-- **Blockchain Sebagai World Computer:**
-  - State blockchain bukan lagi sekadar tabel saldo akun moneter.
-  - State blockchain adalah mesin virtual raksasa terpadu yang memuat kode program executable (*smart contracts*) dan basis data persisten.
-  - Sekali dideploy, program berjalan persis seperti kodenya tanpa risiko sensor, downtime, atau intervensi pihak ketiga.
-- *Visual:* Perbandingan kalkulator moneter Bitcoin versus Ethereum World Computer yang menjalankan ratusan smart contracts di atas satu mesin virtual.
+The Breakthrough: Vitalik Buterin & The World Computer
+
+The Ethereum Paradigm Shift (2013-2015):
+Rather than forcing programmable features into an accounting ledger, invert the architecture: Build a universal, Turing-complete virtual machine with a native ledger embedded inside it.
+
+Key Paradigm Evolutions:
+- From Calculator to Supercomputer: A globally shared, single-state execution environment running on thousands of redundant nodes.
+- Native Execution Layer: Every validator directly executes contract bytecode as part of base-layer block verification.
+- Universal State Machine: A transaction is no longer merely a balance mutation; it is an arbitrary state transition function:
+  Y(S, T) = S'
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Vitalik Buterin melihat jalan buntu pada pendekatan Bitcoin overlay.
-- Pertanyaan revolusioner: kenapa tidak menaruh bahasa pemrograman langsung ke layer konsensus?
-- Lahirlah Ethereum sebagai satu komputer desentralistik untuk seluruh dunia.
+- Paradigma baru yang digagas Vitalik Buterin (2013-2015): Ethereum World Computer.
+- Membalik paradigma: Bukan menempelkan program pada buku kas, tetapi menaruh buku kas di dalam komputer virtual universal.
+- Formula transisi state global: Y(S, T) = S'.
 
 **Naskah Tutur (Voiceover Script):**
-Pada akhir tahun 2013, seorang pemuda berusia sembilan belas tahun bernama Vitalik Buterin melihat kerapuhan ini secara jernih.
-Alih-alih membuat blockchain terpisah untuk tiap kebutuhan, satu rantai untuk nama domain, satu rantai untuk penyimpanan data, dan satu rantai untuk token, Vitalik mengajukan lompatan paradigma yang sangat berani.
-Bagaimana jika kita membuat satu blockchain tunggal yang memiliki bahasa pemrograman komputasi umum terintegrasi langsung di lapisan konsensusnya?
-Gagasan ini dituangkan dalam Ethereum Whitepaper.
-Ethereum mengubah blockchain dari buku kas pasif menjadi sebuah World Computer atau komputer dunia.
-Di dalam Ethereum, isi blockchain bukan hanya saldo koin, melainkan seluruh memori dari sebuah mesin virtual global.
-Mesin ini menyimpan kode program yang disebut smart contract beserta database variabelnya secara permanen.
-Siapa pun bisa meluncurkan kode aplikasi ke dalamnya, dan program tersebut akan berjalan abadi persis seperti yang tertulis tanpa bisa disensor atau dimatikan oleh siapa pun.
+Melihat kegagalan pendekatan tambal-sulam tersebut, seorang pemuda berusia sembilan belas tahun bernama Vitalik Buterin mengajukan terobosan konseptual yang sangat berani pada akhir tahun 2013.
+Vitalik membalik fondasi berpikir sistem ini secara total.
+Alih-alih memaksakan fitur komputasi di atas buku kas akuntansi yang sempit, mengapa kita tidak membangun mesin virtual komputer universal, lalu menaruh sistem pencatatan saldo di dalam mesin tersebut?
+Inilah kelahiran Ethereum: The World Computer.
+Di dalam Ethereum, setiap komputer validator di seluruh dunia mengeksekusi bytecode yang sama secara langsung di lapisan konsensus inti.
+Transaksi tidak lagi sekadar memindahkan angka, melainkan memicu fungsi transisi status global yang secara deterministik mengubah status dunia lama menjadi status dunia baru.
 
 ---
 
-## Slide 9: Paradoks Halting Problem dalam Sistem Konsensus
+## Slide 9: The Economic Solution: Computation as a Metered Commodity
 
 ### Konten Slide
-- **Teorema Alan Turing (1936):** Tidak ada algoritma umum yang mampu memeriksa program sembarang dan memastikan secara statis apakah program tersebut akan berhenti (*halt*) atau berjalan selamanya dalam infinite loop.
-- **Dilema Validasi Desentralistik:**
-  - Validator tidak dapat mengetahui berapa iterasi perulangan sebuah kode sebelum benar-benar mengeksekusinya di CPU.
-- **Vektor Serangan Mematikan:**
-  - Jika smart contract Turing-complete diizinkan berjalan bebas di blockchain, peretas dapat menyiarkan kode komputasi tak terbatas.
-  - Seluruh node global akan terperangkap mengeksekusi kode tanpa henti, memicu kegagalan konsensus total.
-- *Visual:* Skema alur keputusan undecidable Halting Problem yang mengancam kestabilan node jaringan desentralistik.
+The Economic Solution: Computation as a Metered Commodity
+
+Taming the Halting Problem via Economic Physics:
+Ethereum does not solve the Halting Problem mathematically; it neutralizes it economically through Gas.
+
+The Metered Execution Model:
+- Deterministic Fuel: Every low-level EVM opcode has an immutable gas cost calibrated to its physical computational and storage burden.
+- Upfront Allocation (Gas Limit): Every transaction specifies the maximum computational steps it is willing to finance.
+- Guaranteed Halting: The EVM decrements gas with every instruction. If execution does not terminate before the gas counter reaches zero, execution halts violently.
+
+Infinite loops become economically self-terminating, preventing global node denial-of-service.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Begitu Ethereum menambahkan loop, masalah klasik komputer sains muncul kembali: The Halting Problem.
-- Alan Turing membuktikan kita tidak bisa menebak kode berhenti atau tidak sebelum dijalankan.
-- Jika validator dipaksa mengeksekusi infinite loop tanpa batas, jaringan akan mati seketika.
+- Menjinakkan Halting Problem dengan hukum ekonomi: Mekanisme Gas.
+- Setiap opcode memiliki tarif gas deterministik sesuai beban perangkat keras (CPU, RAM, disk).
+- Gas Limit: Transaksi membeli kuota bahan bakar di awal; jika bensin habis, eksekusi dipaksa berhenti seketika.
 
 **Naskah Tutur (Voiceover Script):**
-Namun menambahkan bahasa komputasi umum yang Turing-complete ke dalam blockchain langsung membentur tembok ilmu komputer paling mendasar: The Halting Problem.
-Pada tahun 1936, matematikawan legendaris Alan Turing membuktikan bahwa secara matematis mustahil membuat algoritma statis yang bisa membaca sebuah kode sembarang lalu memastikan apakah program itu pasti akan berhenti atau berputar selamanya dalam infinite loop.
-Ini dilema raksasa bagi blockchain.
-Jika validator tidak bisa menebak apakah sebuah smart contract akan berhenti atau tidak sebelum menjalankannya, bagaimana cara mencegah serangan denial of service?
-Seorang penyerang bisa saja menyebarkan kode dengan kalkulasi tak terhingga.
-Ketika puluhan ribu komputer validator mencoba mengeksekusi blok tersebut, mereka tidak akan pernah selesai dan jaringan terhenti total.
-Inilah alasan mengapa Satoshi melarang loop di masa lalu.
-Bagaimana Ethereum mengatasi tantangan matematika yang tidak bisa dipecahkan ini?
+Lalu bagaimana Ethereum mengatasi ancaman infinite loop yang sebelumnya sangat ditakuti oleh Satoshi Nakamoto?
+Ethereum tidak memecahkan Halting Problem secara matematis, karena Turing telah membuktikan hal itu mustahil.
+Sebagai gantinya, Ethereum menjinakkan Halting Problem menggunakan hukum fisika ekonomi melalui konsep Gas.
+Di dalam Ethereum, setiap instruksi komputasi terkecil atau opcode memiliki tarif gas tetap yang mencerminkan beban kerja CPU dan penyimpanan data pada komputer fisik validator.
+Setiap pengguna yang ingin menjalankan program harus menyetor bahan bakar gas di muka melalui parameter Gas Limit.
+Ketika komputer mengeksekusi instruksi baris demi baris, meteran gas akan terus berkurang.
+Jika sebuah program terjebak dalam perulangan tanpa henti, bahan bakarnya akan habis dan mesin akan mematikan program tersebut secara paksa.
+Infinite loop kini tidak lagi mematikan jaringan, melainkan hanya menghanguskan uang penyerang itu sendiri.
 
 ---
 
-## Slide 10: Solusi Gas: Mengubah Komputasi Menjadi Komoditas Ekonomi
+## Slide 10: Execution Termination & The Out-of-Gas State Reversion
 
 ### Konten Slide
-- **Transformasi Paradigma:** Ethereum tidak memecahkan Halting Problem secara matematis, melainkan mengikatnya pada batasan ekonomi fisik (*economic metering*).
-- **Mekanisme Gas Terukur:**
-  - Setiap instruksi mesin tingkat rendah (opcode) memiliki tarif pasti dalam **satuan gas**.
-  - Operasi penambahan sederhana (`ADD`) berbiaya 3 gas; penulisan data ke storage disk (`SSTORE`) berbiaya 20.000 gas.
-- **Parameter Transaksi Pengguna:**
-  - Pengguna wajib menentukan batas konsumsi maksimum (**`gasLimit`**) pada setiap transaksi.
-  - Biaya gas dibayar di muka menggunakan mata uang kripto native (Ether).
-- *Visual:* Diagram tangki bahan bakar kendaraan yang menyusut seiring jarum odometer melaju mengeksekusi instruksi kode.
+Execution Termination & The Out-of-Gas State Reversion
+
+The Anatomy of an Out-of-Gas (OOG) Exception:
+When remaining Gas drops below the required cost of the next opcode, the EVM immediately aborts execution.
+
+Strict Reversion Rules:
+1. Complete State Rollback: All state changes made during the transaction (balances, storage, internal contract calls) are entirely reverted to the pre-transaction state.
+2. Zero Refund for Burnt Gas: The validator keeps 100% of the consumed gas fee as compensation for the physical CPU cycles expended.
+3. Denial-of-Service Immunization: An attacker attempting to spam the network with infinite loops burns their own capital rapidly while leaving the network uncorrupted.
+
+Determinism, security, and economic sustainability are simultaneously maintained.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Ethereum tidak menentang hukum Alan Turing, melainkan membatasi komputasi dengan uang.
-- Setiap baris instruksi mesin punya argo meteran bernama Gas.
-- Pengguna harus membayar bahan bakar di muka sebelum mesin mulai bekerja.
+- Pembedahan kondisi Out-of-Gas (OOG) saat transaksi kehabisan bahan bakar di tengah jalan.
+- Prinsip rollback total: Semua mutasi data dibatalkan kembali ke titik awal.
+- Tidak ada refund biaya gas: Validator tetap menerima kompensasi atas siklus CPU yang telah dipakai.
+- Penyerang yang mencoba melakukan spam hanya akan membakar modalnya sendiri tanpa merusak jaringan.
 
 **Naskah Tutur (Voiceover Script):**
-Solusi brilian Ethereum bukan memecahkan Halting Problem secara teori matematika, melainkan menyelesaikannya lewat rekayasa ekonomi.
-Ethereum memperkenalkan konsep yang kita kenal sebagai Gas.
-Komputasi di Ethereum tidak pernah gratis.
-Setiap satu instruksi mesin paling mendasar yang dieksekusi oleh komputer validator diberi harga pasti dalam satuan gas.
-Menjumlahkan dua angka berharga tiga gas, sementara menulis data baru ke hard drive berharga dua puluh ribu gas.
-Ketika Alice ingin menjalankan sebuah smart contract, Alice wajib menyertakan parameter gasLimit, yaitu batas maksimal bahan bakar yang dia izinkan untuk dibakar oleh transaksi tersebut.
-Alice harus menyetor biaya gas ini di muka menggunakan saldo Ether miliknya.
-Dengan cara ini, komputasi komputer diubah menjadi komoditas ekonomi yang terukur dan terbatas.
+Mari kita cermati apa yang sebenarnya terjadi ketika sebuah transaksi mengalami kondisi Out-of-Gas atau kehabisan bensin di tengah jalan.
+Begitu sisa gas lebih kecil daripada biaya opcode berikutnya, EVM akan memicu pengecualian sistemik seketika.
+Ada dua aturan mutlak yang diberlakukan.
+Pertama, seluruh mutasi status yang sempat terjadi selama transaksi berjalan akan di-rollback atau dibatalkan total kembali ke status sebelum transaksi dimulai.
+Tidak ada saldo yang hilang dan tidak ada data kontrak yang tersimpan setengah jalan.
+Kedua, seluruh gas yang telah terbakar tidak akan pernah dikembalikan kepada pengirim.
+Validator berhak menyita seluruh biaya gas tersebut sebagai kompensasi atas daya komputasi fisik yang telah mereka kerahkan.
+Dengan arsitektur ini, siapa pun yang berniat jahat mengirimkan kode berbahaya hanya akan menguras rekening dompetnya sendiri tanpa berhasil merusak integritas database global.
 
 ---
 
-## Slide 11: Terminasi Eksekusi dan Out-of-Gas Exception
+## Slide 11: Bridge to the Next Module: The Ethereum Virtual Machine
 
 ### Konten Slide
-- **Eksekusi Langkah Demi Langkah:** Mesin virtual memotong sisa gas setiap kali satu opcode berhasil diproses.
-- **Kondisi Out-of-Gas (OOG):**
-  - Jika transaksi memuat infinite loop, sisa gas akan habis terbakar sebelum instruksi selesai.
-  - Begitu gas tersisa menjadi nol, EVM seketika memicu interupsi darurat *Out-of-Gas Exception*.
-- **Pemberlakuan Hukuman Ganda (Dual Enforcement):**
-  - *State Rollback:* Seluruh modifikasi variabel dan perpindahan saldo dibatalkan secara atomik ke kondisi awal transaksi.
-  - *Fee Forfeiture:* Seluruh saldo gas yang dibayarkan di muka disita seratus persen dan diserahkan kepada validator sebagai kompensasi utilisasi CPU.
-- *Visual:* Bagan alur eksekusi opcode: pengurangan gas -> gas habis -> pembatalan state perubahan -> penyerahan denda ke penambang.
+Entering the Ethereum Virtual Machine
+
+From Economic Stabilization to Hardware Emulation:
+We have traced the philosophical and technical shift from Bitcoin's static ledger to a Turing-complete World Computer, stabilized entirely by the economic physics of Gas.
+
+The Next Frontier:
+How does this decentralized computer physically operate under the hood?
+How do the Volatile Stack (1,024 slots), Linear Ephemeral Memory, and 256-bit Persistent Key-Value Storage interact during raw bytecode execution?
+
+Next Module:
+Module 04.2: The Ethereum Virtual Machine (EVM Architecture and Execution Mechanics).
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Mesin memotong sisa gas di setiap instruksi.
-- Jika gas habis di tengah jalan, terjadi Out-of-Gas exception.
-- Semua mutasi data dibatalkan, tetapi seluruh saldo gas disita untuk validator.
+- Slide transisi penutup modul 04.1 menuju modul 04.2: The Ethereum Virtual Machine.
+- Menghubungkan mekanisme ekonomi gas dengan cara kerja perangkat keras virtual EVM.
+- Teaser materi modul 04.2: Stack 1.024 slot, Volatile Memory, Persistent Storage, dan eksekusi bytecode opcode tingkat rendah.
 
 **Naskah Tutur (Voiceover Script):**
-Mari kita lihat apa yang terjadi di tingkat mesin saat kode dieksekusi.
-Setiap kali mesin virtual memproses satu instruksi opcode, meteran saldo gas Alice langsung dipotong.
-Jika penyerang mencoba memasukkan infinite loop, saldo gas yang sudah disetor di muka akan langsung habis terbakar dalam beberapa milidetik.
-Saat sisa gas menyentuh angka nol, mesin virtual seketika memicu Out-of-Gas exception dan mematikan eksekusi paksa.
-Ada dua konsekuensi penting yang terjadi saat Out-of-Gas terjadi.
-Pertama, seluruh perubahan data dibatalkan secara atomik, saldo tidak berpindah dan database kembali ke kondisi sebelum transaksi dikirim.
-Kedua, seluruh biaya gas yang disetor Alice disita seratus persen dan diberikan kepada validator.
-Penyitaan ini adalah kompensasi nyata atas tenaga listrik dan waktu CPU yang telah dibakar oleh validator.
-Melalui aturan tegas ini, serangan denial of service menjadi mustahil karena penyerang akan bangkrut sendiri sebelum mampu membekukan jaringan.
-
----
-
-## Slide 12: Jembatan ke Modul Berikutnya (Arsitektur EVM)
-
-### Konten Slide
-- **Capaian Modul Ini:** Kita telah memahami pergeseran filosofis dan teknis dari ledger statis Bitcoin menuju world computer Ethereum yang teratur oleh gas.
-- **Pertanyaan Rekayasa Sistem Berikutnya:**
-  - Bagaimana mesin virtual desentralistik ini sebenarnya bekerja pada level byte dan register?
-  - Bagaimana data dipartisi di antara volatile stack, linear memory, persistent storage disk, dan calldata?
-  - Bagaimana compiler seperti Solidity menerjemahkan logika bisnis manusia menjadi bytecode yang dieksekusi mesin?
-- **Materi Modul Berikutnya:** Membedah anatomi internal runtime terpenting di dunia Web3: **The Ethereum Virtual Machine (EVM)**.
-- *Visual:* Pratinjau visual susunan internal EVM: Stack 1.024 slot, Memory linear, dan Storage key-value 256-bit.
-
-### Catatan Presenter (Cheatsheet)
-**Quick Cues:**
-- Fondasi transisi dan mekanisme gas sudah kokoh kita kuasai.
-- Membuka rasa ingin tahu audiens mengenai isi jeroan mesin virtual Ethereum.
-- Teaser materi modul 4.2: Anatomi arsitektur EVM.
-
-**Naskah Tutur (Voiceover Script):**
-Kita telah menelusuri evolusi luar biasa dari keterbatasan Bitcoin Script hingga lahirnya konsep komputer dunia Ethereum yang kebal terhadap serangan infinite loop berkat mekanisme gas.
-Namun pemahaman konseptual ini memicu pertanyaan rekayasa perangkat lunak yang jauh lebih mendalam.
-Bagaimana sebenarnya mesin virtual desentralistik ini bekerja di tingkat perangkat keras dan byte instruksi?
-Bagaimana mesin ini membagi memori antara stack sementara, buffer memori linear, database persisten di hard drive, dan calldata transaksi?
-Bagaimana ribuan komputer di seluruh dunia bisa mengeksekusi instruksi biner yang rumit secara serempak dan menghasilkan status angka kriptografi yang identik tanpa ada selisih sedikit pun?
-Untuk membedah jeroan dari mesin komputasi terpenting di industri Web3 hari ini, di modul berikutnya kita akan masuk ke dalam: The Ethereum Virtual Machine Architecture.
-Sampai jumpa di modul berikutnya.
+Kita telah menyelesaikan perjalanan memahami transisi konseptual dari ledger akuntansi statis menuju komputer dunia yang dapat diprogram.
+Kita telah melihat bagaimana pembatasan Bitcoin Script melahirkan inovasi gas di Ethereum untuk menjinakkan ancaman infinite loop dan Halting Problem.
+Namun, bagaimana komputer dunia ini sebenarnya bekerja di tingkat perangkat keras virtual?
+Bagaimana tumpukan Stack 1.024 slot memproses angka secara instan?
+Bagaimana memori sementara berinteraksi dengan basis data penyimpanan permanen yang mahal?
+Dan bagaimana mesin ini mengeksekusi instruksi biner tingkat rendah dari para pengembang di seluruh dunia?
+Semua jawaban ini akan kita bongkar di modul berikutnya: The Ethereum Virtual Machine Architecture.
+Sampai jumpa di modul selanjutnya.

@@ -3,13 +3,14 @@ Modul Presentasi: Fondasi Distributed Trust (01.1)
 
 ---
 
-## Slide 1: Judul Presentasi
+---
+
+## Slide 1: History of Digital Cash
 
 ### Konten Slide
-- **Topik:** The Double-Spending Problem and the History of Digital Cash
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Mengapa uang digital mustahil tanpa otoritas terpusat sebelum Bitcoin, dan bagaimana Nakamoto Consensus menyelesaikannya.
-- *Visual:* Ilustrasi batu Rai Island atau analogi ledger historis berdampingan dengan jaringan peer-to-peer.
+History of Digital Cash
+Fundamentals of Distributed Trust: Module 01.1
+Why pure peer-to-peer digital cash was mathematically impossible without trusted intermediaries, and how Nakamoto Consensus resolved the coordination paradox.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -25,16 +26,15 @@ Kita akan lihat kenapa masalah ini begitu sulit, eksperimen apa saja yang pernah
 
 ---
 
-## Slide 2: Hakikat Uang adalah Ledger
+---
+
+## Slide 2: Money is a Ledger
 
 ### Konten Slide
-- **Uang Bukan Benda Fisik:** Uang pada hakikatnya adalah *coordination game* dan teknologi sosial untuk mencatat utang.
-- **Konsensus Mengalahkan Penguasaan Fisik:** Nilai uang tersimpan pada validitas rekaman, bukan pada materialnya.
-- **Preseden Historis:**
-  - *Rai Stones (Pulau Yap):* Batu kapur raksasa tidak pernah dipindahkan, mutasi kepemilikan disepakati lewat oral consensus warga.
-  - *Tally Sticks (Inggris Abad Pertengahan):* Kayu hazelwood dibelah dua (*stock* & *foil*), serat kayu alami menjadi cryptographic key analog.
-  - *Shanxi Piaohao (Dinasti Qing):* Wesel kertas terenkripsi menggantikan risiko membawa batangan perak fisik.
-- *Visual:* Bagan 3 era: Batu Rai Yap -> Tally Sticks -> Wesel Piaohao -> Ledger Digital.
+Money is a Ledger
+Rai Stones (Yap Island): Giant limestone discs never moved; ownership changes agreed upon via community oral consensus.
+Tally Sticks (Medieval England): Hazelwood sticks split into stock and foil, natural wood grain acting as an analog cryptographic key.
+Shanxi Piaohao (Qing Dynasty): Encrypted paper drafts replacing the physical hazard of transporting silver ingots.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -55,15 +55,16 @@ Dari batu Rai sampai kayu Tally Stick di Inggris abad pertengahan, polanya selal
 
 ---
 
-## Slide 3: Dilema Data Digital (Unchecked Replication)
+---
+
+## Slide 3: The Digital Data Dilemma
 
 ### Konten Slide
-- **Sifat Alami Data Digital:** Terdiri dari bit (0 dan 1) yang dapat disalin tanpa batas dengan biaya marjinal nol.
-- **Scarcity Fisik vs Duplikasi Digital:**
-  - *Fisik:* Menyerahkan lembar uang tunai berarti pemilik sebelumnya kehilangan akses fisik terhadap aset tersebut.
-  - *Digital:* Mengirim file menghasilkan salinan identik di sisi penerima tanpa menghapus file di perangkat pengirim.
-- **The Core Tension:** Sifat duplikasi sempurna sangat baik untuk distribusi informasi, tetapi menjadi bencana untuk konsep nilai dan kelangkaan (*scarcity*).
-- *Visual:* Perbandingan alur perpindahan cash fisik (hilang dari pengirim) vs pengiriman file digital (terduplikasi di kedua pihak).
+The Digital Data Dilemma
+Consists of bits (0 and 1) that duplicate without limit at zero marginal cost.
+
+1. Physical: Handing over physical cash means the previous owner loses physical possession of the asset.
+2. Digital: Sending a file creates an identical copy on the recipient's side without deleting the file on the sender's device.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -84,17 +85,14 @@ Kalau uang digital bisa diperlakukan seperti file biasa, katakanlah file `token.
 
 ---
 
-## Slide 4: Mekanisme Serangan Double-Spending
+---
+
+## Slide 4: The Double-Spending Attack
 
 ### Konten Slide
-- **Definisi Serangan:** Tindakan membelanjakan unit saldo digital yang sama lebih dari satu kali secara simultan.
-- **Skenario Eksploitasi:**
-  1. Alice memiliki saldo digital senilai sepuluh dolar.
-  2. Alice mengirim token tersebut ke Bob untuk membeli barang fisik.
-  3. Pada detik yang sama persis, Alice menyiarkan token identik ke Charlie untuk layanan lain.
-  4. Bob dan Charlie memverifikasi keaslian token secara independen dan menganggap pembayaran tuntas.
-- **Dampak Fatal:** Alice melipatgandakan daya beli dari ketiadaan, merugikan salah satu atau kedua pedagang.
-- *Visual:* Diagram alur transaksi Alice bercabang dua ke Bob dan Charlie secara paralel.
+The Double-Spending Attack
+Attack Definition: The act of spending the same digital balance more than once simultaneously.
+Fatal Impact: Alice multiplies purchasing power out of nothing, inflicting permanent financial loss on merchants.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -116,13 +114,20 @@ Celah eksploitasi inilah yang dinamakan *double-spending problem*.
 
 ---
 
-## Slide 5: Tiga Syarat Mutlak Uang Digital
+---
+
+## Slide 5: 3 Absolute Prerequisites for Digital Cash
 
 ### Konten Slide
-- **1. Unforgeability (Kebal Pemalsuan):** Unit moneter tidak dapat dibuat secara ilegal di luar aturan pencetakan sistem (*minting rules*).
-- **2. Authenticity (Otoritas Valid):** Hanya pemilik sah dari suatu saldo yang memiliki kewenangan matematis untuk mentransfernya.
-- **3. Exclusivity (Pencegahan Belanja Ganda):** Sekali nilai berhasil dipindahkan, pemilik lama kehilangan hak membelanjakan unit yang sama secara permanen.
-- *Visual:* Tiga pilar keamanan: Asymmetric Cryptography (Authenticity), Strict Emission Curves (Unforgeability), Distributed Consensus (Exclusivity).
+3 Absolute Prerequisites for Digital Cash
+Unforgeability (Counterfeit Resistance):
+Monetary units cannot be created illegally outside the strict minting rules of the system.
+
+Authenticity (Valid Authority):
+Only the legitimate owner of a balance possesses the mathematical authority to transfer it.
+
+Exclusivity (Double-Spending Prevention):
+Once value is transferred, the previous owner permanently loses the right to spend that specific unit again.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -141,17 +146,17 @@ Bagaimana cara mencegahnya jika tidak ada polisi atau server pusat yang mengawas
 
 ---
 
-## Slide 6: Solusi Tradisional (Centralized Clearinghouses)
+---
+
+## Slide 6: Centralized Clearinghouses
 
 ### Konten Slide
-- **Mekanisme Server Sentral:** Uang bukan file di perangkat pengguna, melainkan baris data (*entry*) pada private database milik institusi.
-- **Penyelesaian Double-Spending:**
-  - Alice mengirim instruksi transfer ke server bank.
-  - Database engine mengunci baris data akun Alice (*database row lock / serialization*).
-  - Mutasi debit saldo Alice dan kredit saldo Bob dieksekusi secara atomik.
-  - Permintaan kedua yang mencoba membelanjakan saldo yang sama ditolak oleh server.
-- *Pondasi Sistem Modern:* Bank komersial, Visa, Mastercard, PayPal, dan ACH.
-- *Visual:* Sequence diagram Alice -> Server Bank (Row Lock + Mutasi Ledger) -> Notifikasi ke Bob.
+Centralized Clearinghouses
+Centralized Double-Spending Resolution:
+Alice sends transfer instructions to the bank server.
+Database engine locks Alice's account row (database row lock / serialization).
+Debit of Alice's balance and credit to Bob's balance execute atomically.
+Any concurrent attempt to spend the same balance is rejected by the server.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -171,15 +176,17 @@ Masalah double-spending selesai dengan rapi, tapi arsitektur ini memicu masalah 
 
 ---
 
-## Slide 7: Biaya Struktural Sistem Terpusat
+---
+
+## Slide 7: Structural Costs of Centralized Systems
 
 ### Konten Slide
-- **Single Point of Failure:** Gangguan teknis atau serangan siber pada server pusat melumpuhkan seluruh aktivitas ekonomi jaringan.
-- **Censorship & Financial Exclusion:** Pengelola database memiliki kuasa mutlak untuk membekukan rekening atau menolak transaksi sepihak.
-- **Surveillance & Erosi Privasi:** Setiap jejak transaksi finansial terekam, dianalisis, dan rentan terhadap penyalahgunaan data.
-- **Monetary Debasement:** Pasokan moneter terpusat rentan terhadap inflasi dan pencetakan tanpa batas oleh otoritas penerbit.
-- **Rent Extraction:** Beban potongan biaya transaksi (*interchange fees*) berkisar 2 sampai 4 persen pada setiap aliran ekonomi global.
-- *Visual:* Ikon matriks risiko sentralisasi: outage, blokir akun, profiling data, inflasi fiat, dan potongan biaya perantara.
+Structural Costs of Centralized Systems
+Single Point of Failure: Technical outages or cyberattacks on central servers paralyze the entire economic network.
+Censorship & Financial Exclusion: Database administrators possess absolute power to freeze accounts or deny transactions unilaterally.
+Surveillance & Privacy Erosion: Every financial transaction trail is logged, profiled, and susceptible to mass surveillance.
+Monetary Debasement: Centralized money supplies remain vulnerable to unchecked inflation and arbitrary currency printing.
+Rent Extraction: Middlemen extract continuous interchange fees of 2% to 4% on global economic flows.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -200,15 +207,16 @@ Dari sinilah para peneliti kriptografi di era 1980-an dan 1990-an yang dikenal s
 
 ---
 
-## Slide 8: Era Cypherpunk: David Chaum & DigiCash (1982 - 1998)
+---
+
+## Slide 8: The Cypherpunk Era: David Chaum & DigiCash (1982 - 1998)
 
 ### Konten Slide
-- **Inovasi Blind Signatures (1982):** Memungkinkan bank memvalidasi keabsahan token digital tanpa pernah melihat nomor seri koin tersebut.
-- **Analogi Amplop Berkarbon:** Pengguna memasukkan nomor seri ke dalam amplop berkarbon; teller menandatangani amplop dari luar, cap tembus ke slip di dalam.
-- **Kelemahan Fatal DigiCash:**
-  - *Verifikasi Waktu Nyata:* Penerima tetap wajib menghubungi mint server pusat untuk memastikan nomor seri belum pernah dicairkan.
-  - *Sentralisasi Operasional:* DigiCash adalah perusahaan berbadan hukum. Ketika bangkrut pada 1998, server mint mati dan seluruh token eCash seketika menjadi tidak bernilai.
-- *Visual:* Sequence diagram alur Blind Signature: Blinding -> Bank Signs Blinded Token -> Unblinding -> Settlement Check ke Mint Server.
+The Cypherpunk Era: David Chaum & DigiCash (1982 - 1998)
+David Chaum & DigiCash
+Mechanism: Blind Signatures.
+Allowed a bank to cryptographically validate digital tokens without inspecting serial numbers (carbon-copy envelope analogy).
+Fatal Flaw: Required real-time verification against a centralized Mint Server. When DigiCash went bankrupt in 1998, all eCash became worthless.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -230,16 +238,16 @@ Begitu perusahaan DigiCash bangkrut pada tahun 1998 dan servernya dimatikan, sem
 
 ---
 
-## Slide 9: Adam Back & Hashcash (1997)
+---
+
+## Slide 9: The Cypherpunk Era: Adam Back & Hashcash (1997)
 
 ### Konten Slide
-- **Latar Belakang:** Protokol email terbuka (SMTP) kewalahan menghadapi spam massal karena biaya marjinal mengirim pesan mendekati nol.
-- **Konsep Proof of Work (PoW):** Mengharuskan CPU pengirim memecahkan teka-teki kriptografi yang membutuhkan daya komputasi nyata sebelum pesan diterima.
-- **Asymmetric Verification:**
-  - *Sangat Sulit Dihitung:* Pengirim harus menguji jutaan *nonce* secara sekuensial hingga menghasilkan hash SHA-1 dengan awalan puluhan bit nol.
-  - *Sangat Mudah Diverifikasi:* Penerima hanya butuh satu kali kalkulasi hash untuk membuktikan keabsahan bukti kerja tersebut.
-- **Batas Kemampuan:** Efektif membendung spam, tetapi belum bisa menjadi uang karena tidak dapat ditransfer dan tergerus peningkatan efisiensi hardware (Moore's Law).
-- *Visual:* Diagram komputasi sender mencari nonce (1 detik CPU) vs penerima verifikasi instan (1 kalkulasi hash).
+The Cypherpunk Era: Adam Back & Hashcash (1997)
+Adam Back & Hashcash
+Mechanism: Proof of Work / Asymmetric Verification.
+Imposed thermodynamic friction: 1 CPU second to compute a valid nonce, but 1 microsecond for recipients to verify.
+Fatal Flaw: Designed purely as an email anti-spam tool. Nonce proofs were non-transferable and could not circulate as money.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -262,15 +270,19 @@ Inilah cikal bakal Proof of Work, meskipun Hashcash waktu itu belum bisa ditrans
 
 ---
 
-## Slide 10: Rintangan Terakhir: B-Money & Bit Gold (1998)
+---
+
+## Slide 10: The Final Hurdles: B-Money & Bit Gold
 
 ### Konten Slide
-- **B-Money (Wei Dai):** Ide pertama ledger moneter tanpa server sentral; setiap simpul P2P menyimpan salinan saldo masing-masing.
-  - *Hambatan:* Tidak ada mekanisme konsensus desentralistik untuk menyepakati urutan kronologis transaksi tanpa jam global (*global clock*).
-- **Bit Gold (Nick Szabo):** Mengaitkan kelangkaan digital dengan pengorbanan komputasi nyata (*unforgeable costliness*), merantai solusi hash secara berurutan.
-  - *Hambatan:* Title registry kepemilikan mengandalkan voting berbasis alamat server atau alamat IP.
-- **Ancaman Sybil Attack:** Penyerang dapat membuat ribuan identitas virtual palsu dengan biaya murah untuk menguasai mayoritas suara jaringan.
-- *Visual:* Peta komparasi b-money (terkendala urutan waktu) vs Bit Gold (terkendala Sybil Attack pada title registry).
+The Final Hurdles: B-Money & Bit Gold
+B-Money (Wei Dai):
+The first design of a serverless monetary ledger where every P2P node maintains an independent copy of balances.
+Obstacle: Network latency prevented agreeing on chronological transaction order without a global clock.
+
+Bit Gold (Nick Szabo):
+Tied digital scarcity directly to computational sacrifice (unforgeable costliness) by chaining sequential hashes.
+Obstacle: Title registry relied on IP-address quorum voting, leaving it completely vulnerable to Sybil attacks.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -294,16 +306,17 @@ Ini adalah celah mematikan bernama *Sybil Attack*.
 
 ---
 
-## Slide 11: Sintesis Nakamoto (Bitcoin 2008)
+---
+
+## Slide 11: The Nakamoto Synthesis (Bitcoin 2008)
 
 ### Konten Slide
-- **Bukan Menemukan Primitif Baru:** Satoshi Nakamoto menggabungkan fondasi yang sudah ada menjadi satu mesin konsensus yang koheren.
-  - *Asymmetric Cryptography (1970-an):* Mengamankan hak kepemilikan dan otorisasi transfer nilai.
-  - *Peer-to-Peer Networking (1990-an):* Menghilangkan ketergantungan pada server sentral.
-  - *Merkle Trees (1979):* Memungkinkan verifikasi data transaksi dalam skala besar secara ringkas.
-  - *Hashcash Proof of Work (1997):* Mengikat hak konsensus pada daya komputasi termodinamika riil.
-- **Solusi Sybil Attack:** Mengganti voting "satu IP satu suara" menjadi **"satu CPU satu suara"** (kekuatan hash termodinamika riil).
-- *Visual:* Diagram arsitektur Nakamoto Synthesis: 4 pilar (Kriptografi, P2P, Merkle Tree, PoW) mengerucut ke Nakamoto Consensus Engine.
+The Nakamoto Synthesis (Bitcoin 2008)
+Satoshi Nakamoto synthesized pre-existing foundational primitives into one coherent consensus engine:
+Asymmetric Cryptography (1970s): Secures mathematical ownership and transfer authorization.
+Peer-to-Peer Networking (1990s): Eliminates dependence on central servers.
+Merkle Trees (1979): Enables compact, logarithmic verification of transaction data at scale.
+Hashcash Proof of Work (1997): Tethers consensus voting directly to real physical thermodynamic mass.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -323,15 +336,15 @@ Untuk bisa memanipulasi jaringan, penyerang tidak cukup membuat ribuan akun pals
 
 ---
 
-## Slide 12: Resolusi Konsensus & The Longest-Chain Rule
+---
+
+## Slide 12: Consensus Resolution & The Longest-Chain Rule
 
 ### Konten Slide
-- **Blok Transaksi Terantai:** Transaksi dikelompokkan ke dalam blok yang saling mengikat secara kriptografis menggunakan hash blok sebelumnya.
-- **Penyelesaian Dilema Urutan Waktu:**
-  - Jika terjadi dua transaksi bertentangan (upaya double-spend), para penambang akan memproses blok mana pun yang mereka terima pertama kali.
-  - Probabilitas penemuan hash memastikan salah satu cabang rantai akan menemukan blok berikutnya lebih dulu.
-- **The Longest Chain Rule:** Seluruh simpul jaringan wajib mengadopsi rantai terpanjang dengan akumulasi Proof of Work terbesar sebagai kebenaran objektif.
-- *Visual:* Diagram percabangan fork (dua cabang blok bersaing) yang akhirnya dimenangkan oleh rantai terpanjang dengan Proof of Work terbanyak.
+Consensus Resolution & The Longest-Chain Rule
+When conflicting transactions occur (double-spending attempts), miners process whichever valid block they receive first.
+Hash discovery probability guarantees that one chain branch will produce subsequent blocks faster.
+All network nodes are programmed to submit to the chain with the heaviest accumulated Proof of Work.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -353,15 +366,14 @@ Dengan dua pilar ini, untuk pertama kalinya dalam sejarah, masalah double spendi
 
 ---
 
-## Slide 13: Jembatan ke Modul Berikutnya (Verification at Scale)
+---
+
+## Slide 13: Verification at Scale
 
 ### Konten Slide
-- **Tantangan Baru yang Muncul:** Nakamoto Consensus berhasil menyepakati urutan kronologis transaksi global tanpa server pusat.
-- **Pertanyaan Skalabilitas & Verifikasi:**
-  - Bagaimana sebuah simpul (*node*) memverifikasi keabsahan jutaan transaksi tanpa harus mengunduh dan membaca ulang seluruh riwayat dunia dari awal?
-  - Jika verifikasi data menuntut membaca setiap byte dari nol, jaringan akan runtuh oleh beban datanya sendiri.
-- **Materi Modul Berikutnya:** Membedah pondasi matematis verifikasi instan dalam *O(log n)*: **Cryptographic Hash Functions and Merkle Trees**.
-- *Visual:* Ilustrasi node ringan memverifikasi potongan kecil data transaksi menggunakan Merkle Proof jalur hijau menuju Merkle Root.
+Verification at Scale
+Consensus is achieved, but a new engineering challenge emerges: data verification.
+How does an independent node verify millions of historical transactions without downloading and parsing the entire global history from genesis?
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**

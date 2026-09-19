@@ -3,13 +3,14 @@ Modul Presentasi: Fondasi Distributed Trust (01.3)
 
 ---
 
-## Slide 1: Judul Presentasi
+---
+
+## Slide 1: Asymmetric Cryptography and Digital Signatures
 
 ### Konten Slide
-- **Topik:** Asymmetric Cryptography and Digital Signatures
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Fondasi matematis kepemilikan absolut, kurva eliptik, algoritma tanda tangan digital, dan otorisasi terdesentralisasi.
-- *Visual:* Ilustrasi sepasang kunci digital (Private Key dan Public Key) yang terhubung secara matematis ke kurva eliptik dan dokumen transaksi bertanda tangan kriptografis.
+Asymmetric Cryptography and Digital Signatures
+Fundamentals of Distributed Trust: Module 01.3
+The mathematical foundations of sovereign ownership, elliptic curve keypairs, and non-repudiable digital signatures.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -29,16 +30,16 @@ Hari ini kita akan membedah pilar kedua dari kriptografi desentralistik: Kriptog
 
 ---
 
-## Slide 2: Dilema Kriptografi Simetris (The Key Distribution Problem)
+---
+
+## Slide 2: The Symmetric Dilemma: The Key Distribution Problem
 
 ### Konten Slide
-- **Kriptografi Simetris Klasik:** Menggunakan kunci rahasia $K$ yang identik untuk proses enkripsi dan dekripsi pesan (seperti standar AES).
-- **The Key Distribution Problem:**
-  - Bagaimana dua entitas yang belum pernah bertemu tatap muka dapat menyepakati kunci rahasia $K$ melalui internet publik tanpa disadap oleh pihak ketiga?
-  - Jika kunci dikirimkan melalui jalur komunikasi biasa, pengintai (*eavesdropper*) dapat mencegat kunci tersebut dan membuka seluruh data.
-- **Keterbatasan Skala Global:** Dalam jaringan dengan $N$ pengguna, setiap pasangan memerlukan saluran kunci unik yang menuntut pengelolaan $\mathcal{O}(N^2)$ kunci rahasia.
-- **Ketergantungan pada Pihak Ketiga:** Institusi keuangan sentral mengatasi dilema ini dengan bertindak sebagai perantara pemegang kredensial, menciptakan titik kegagalan tunggal.
-- *Visual:* Diagram alur Alice dan Bob yang berusaha menyepakati kunci rahasia melalui saluran internet terbuka dengan pihak pengintai Eve berada di tengah jalur.
+The Symmetric Dilemma: The Key Distribution Problem
+The Symmetric Dilemma:
+- Mechanism: Classical cryptography relies on a shared secret key K for both encryption and decryption (e.g., AES).
+- The Fatal Flaw: Agreeing on K over an open network exposes it to eavesdroppers. Scaling to N users requires O(N^2) secret communication channels.
+- Legacy Fix: Centralized financial intermediaries act as trust brokers, holding passwords in closed databases, creating a single point of failure.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -60,17 +61,17 @@ Namun di jaringan terdesentralisasi, kita memerlukan mekanisme baru yang memungk
 
 ---
 
-## Slide 3: Revolusi Kriptografi Kunci Publik
+---
+
+## Slide 3: The Asymmetric Revolution: Public Key Cryptography
 
 ### Konten Slide
-- **Terobosan Akhir 1970-an:** Whitfield Diffie, Martin Hellman, dan Ralph Merkle menemukan paradigma baru untuk memecahkan dilema distribusi kunci.
-- **Konsep Pasangan Kunci Matematis (Mathematical Keypair):**
-  - **Private Key ($sk$ atau $d$):** Disimpan secara sangat rahasia oleh pemiliknya; berfungsi menghasilkan tanda tangan digital dan mengotorisasi transfer nilai.
-  - **Public Key ($pk$ atau $Q$):** Dipublikasikan secara terbuka ke seluruh dunia; berfungsi memverifikasi keabsahan tanda tangan yang dibuat oleh private key pasangannya.
-- **Hubungan Asimetris Satu Arah:**
-  - Komputasi untuk menurunkan Public Key dari Private Key berlangsung instan.
-  - Merekayasa balik Private Key dari Public Key adalah hal yang secara komputasi mustahil dilakukan.
-- *Visual:* Bagan perbandingan: Kunci Privat rahasia di dalam brankas menghasilkan Kunci Publik terbuka melalui fungsi matematis satu arah.
+The Asymmetric Revolution: Public Key Cryptography
+The Asymmetric Revolution (1970s):
+- Mechanism: Diffie, Hellman, and Merkle introduced the Mathematical Keypair.
+- Private Key (sk): Secret scalar value. Used to authorize value transfer.
+- Public Key (pk): Openly distributed coordinate. Used by the entire network to independently verify signatures.
+- Mathematical Absolutism: Deriving pk from sk is instantaneous. Reverse-engineering sk from pk is computationally impossible.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -92,18 +93,21 @@ Namun, secara matematika mustahil bagi superkomputer terkuat di dunia untuk memb
 
 ---
 
-## Slide 4: Trapdoor One-Way Functions & Keunggulan ECC
+---
+
+## Slide 4: Trapdoor One-Way Functions & ECC Superiority
 
 ### Konten Slide
-- **Konsep Trapdoor One-Way Function:** Fungsi matematika yang sangat mudah dihitung ke depan ($y = f(x)$), namun mustahil dibalik ($x = f^{-1}(y)$) kecuali memiliki informasi rahasia (*trapdoor*).
-- **Dua Keluarga Masalah Trapdoor Utama:**
-  - *Integer Factorization (RSA):* Mudah mengalikan dua bilangan prima raksasa ($N = p \cdot q$), namun sangat berat memfaktorkan $N$ kembali menjadi $p$ dan $q$.
-  - *Elliptic Curve Discrete Logarithm Problem (ECC):* Mudah mengalikan titik kurva dengan angka bulat skalar, namun mustahil mencari angka skalar dari titik hasil perkalian.
-- **Perbandingan Ukuran Kunci (Tingkat Keamanan 128-bit):**
-  - Standar RSA membutuhkan panjang kunci 3.072 bit.
-  - Elliptic Curve Cryptography (ECC) hanya membutuhkan panjang kunci 256 bit.
-- **Rasional Desain Blockchain:** Kunci ECC sekitar 12 kali lebih ringkas dari RSA, memangkas kebutuhan bandwidth jaringan dan kapasitas penyimpanan disk pada node secara masif.
-- *Visual:* Tabel matriks perbandingan ukuran bit kunci RSA vs ECC pada tingkat keamanan 80-bit, 128-bit, dan 256-bit beserta rasio efisiensi kapasitasnya.
+Trapdoor One-Way Functions & ECC Superiority
+Integer Factorization (RSA):
+- Mechanism: Easy to multiply primes (N = p * q), but infeasible to factor N without the trapdoor.
+- Security Standard: 128-bit industry security requires a massive 3,072-bit key length.
+- Blockchain Verdict: Too bloated. Explodes validator state storage.
+
+Elliptic Curve Cryptography (ECC):
+- Mechanism: Easy to multiply a curve point by a scalar, but impossible to find the scalar from the resulting point (Discrete Logarithm).
+- Security Standard: 128-bit security requires only a 256-bit key length.
+- Blockchain Verdict: The undisputed standard. 12x smaller than RSA, maximizing state storage efficiency.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -126,19 +130,23 @@ Di dalam sistem blockchain di mana jutaan transaksi harus disimpan selamanya di 
 
 ---
 
-## Slide 5: Mekanika Aljabar Elliptic Curve Cryptography (ECC)
+---
+
+## Slide 5: Elliptic Curve Algebra & Finite Fields
 
 ### Konten Slide
-- **Persamaan Kurva Eliptik pada Bilangan Real:** Didefinisikan lewat persamaan aljabar $y^2 = x^3 + ax + b$.
-- **Kebutuhan Evaluasi pada Medan Hingga (Finite Field):**
-  - Perhitungan kontinu pada bilangan real menghasilkan galat pembulatan desimal (*floating-point rounding errors*).
-  - Galat pembulatan menghasilkan inkonsistensi status antar-perangkat keras komputer, merusak konsensus desentralistik.
-- **Kurva Modular Modulo Bilangan Prima $p$ ($\mathbb{F}_p$):**
-  $$y^2 \equiv x^3 + ax + b \pmod p$$
-- **Perubahan Wujud Geometris:**
-  - Kurva mulus bertransformasi menjadi kisi-kisi titik diskret (*discrete lattice*) pada koordinat bilangan bulat.
-  - Struktur aljabar grup abstrak tetap terpelihara secara sempurna di bawah operasi aritmatika modulo.
-- *Visual:* Ilustrasi pergeseran dari kurva mulus simetris $y^2 = x^3 + 7$ ke sebaran titik-titik diskret modular pada grid integer finite field $\mathbb{F}_p$.
+Elliptic Curve Algebra & Finite Fields
+The Algebraic Baseline:
+Defined geometrically by the equation y^2 = x^3 + ax + b.
+
+The Floating-Point Hazard:
+Evaluating continuous curves on real numbers requires decimals.
+Different CPU architectures execute floating-point rounding differently, permanently fracturing decentralized consensus.
+
+The Modular Solution:
+Curves are restricted to a finite field modulo a massive prime number p:
+y^2 = x^3 + ax + b (mod p)
+The curve collapses into discrete integers, preserving group laws with deterministic precision.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -160,86 +168,53 @@ Meskipun wujud visualnya berubah menjadi titik-titik terpisah, sifat aljabar gru
 
 ---
 
-## Slide 6: Group Law: Point Addition, Doubling, dan Perkalian Skalar
+---
+
+## Slide 6: Group Law and the ECDLP Fortress
 
 ### Konten Slide
-- **Aritmatika Grup pada Kurva Eliptik:**
-  - *Point Addition ($P + Q$):* Tarik garis lurus melalui titik $P$ dan $Q$. Garis memotong kurva pada titik ketiga $-R$. Cerminkan titik $-R$ terhadap sumbu $x$ untuk memperoleh hasil: $R = P + Q$.
-  - *Point Doubling ($P + P = 2P$):* Tarik garis singgung (*tangent line*) pada titik $P$, temukan titik potong ketiga $-R$, lalu cerminkan untuk memperoleh $2P$.
-- **Perkalian Skalar Titik (Scalar Multiplication):**
-  - Mengalikan titik generator standar $G$ dengan angka bulat skalar $k$:
-    $$P = k \cdot G = \underbrace{G + G + \dots + G}_{k \text{ kali}}$$
-- **Efisiensi Algoritma Double-and-Add:**
-  - Menghitung $k \cdot G$ hanya membutuhkan waktu logaritmik $\mathcal{O}(\log k)$ langkah kalkulasi.
-  - Selesai dalam pecahan milidetik pada prosesor modern meskipun skalar $k$ bernilai 256-bit.
-- *Visual:* Diagram geometris penambahan titik $P + Q = R$ melalui garis potong sekran dan pencerminan sumbu, serta garis singgung doubling $2P$.
+Group Law and the ECDLP Fortress
+Group Law Operations:
+- Point Addition (P + Q = R): Intersect curve with secant line, reflect across x-axis.
+- Point Doubling (P + P = 2P): Intersect tangent line with curve, reflect across x-axis.
+- Scalar Multiplication: P = k * G computed in logarithmic time O(log k) via Double-and-Add.
+
+The ECDLP Fortress:
+Given private key scalar k and generator point G, calculating public key P is instantaneous.
+Given only P and G, the Elliptic Curve Discrete Logarithm Problem dictates finding k requires 2^128 operations (Pollard rho), strictly impossible for classical supercomputers.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Aturan penambahan titik: tarik garis lurus, temukan perpotongan ketiga, cerminkan terhadap sumbu x.
-- Operasi doubling: gunakan garis singgung pada titik kurva yang sama.
-- Perkalian skalar $k \cdot G$ dihitung sangat cepat via double-and-add dalam kompleksitas logaritmik.
+- Aritmatika grup kurva eliptik: Point Addition (P + Q) dan Point Doubling (P + P = 2P).
+- Perkalian skalar P = k * G dihitung dalam waktu logaritmik O(log k) lewat algoritma Double-and-Add.
+- Benteng ECDLP: menghitung maju P = k * G sangat instan, membalik mencari k membutuhkan 2^128 operasi Pollard rho.
+- Mengamankan kedaulatan private key dari serangan komputer tercanggih di dunia.
 
 **Naskah Tutur (Voiceover Script):**
-Bagaimana kita melakukan operasi hitung matematika di atas kurva ini?
-Para matematikawan merumuskan hukum grup aljabar khusus bernama *Point Addition*.
-Jika kalian memiliki dua titik berbeda di kurva, sebut saja titik $P$ dan titik $Q$, tariklah garis lurus yang memotong keduanya.
-Secara geometri, garis tersebut dijamin memotong kurva pada tepat satu titik ketiga, yang kita beri label minus $R$.
-Lalu cerminkan titik minus $R$ tersebut melewati sumbu $x$.
-Titik pantulan itulah yang didefinisikan sebagai hasil penjumlahan $P$ ditambah $Q$.
-Jika titik yang ingin dijumlahkan adalah titik yang sama, kita menarik garis singgung kurva, sebuah proses yang disebut *Point Doubling* untuk menghasilkan nilai $2P$.
-Dengan mengombinasikan penjumlahan dan doubling ini secara berulang, kita mendapatkan operasi perkalian skalar: mengalikan titik dasar kurva yang disebut generator point $G$ dengan angka bulat rahasia $k$.
-Berkat algoritma cerdas bernama *double-and-add*, prosesor kita dapat menghitung perkalian titik ini dalam kompleksitas logaritmik, tuntas hanya dalam hitungan sepersekian milidetik meskipun nilai $k$ adalah angka raksasa 256 bit.
+Di atas medan berhingga ini, kurva eliptik memiliki operasi aritmatika penambahan titik yang unik.
+Jika Anda menghubungkan dua titik P dan Q dengan garis lurus, garis tersebut akan memotong kurva pada titik ketiga.
+Dengan mencerminkan titik tersebut terhadap sumbu x, kita memperoleh hasil penjumlahan titik: R sama dengan P ditambah Q.
+Jika kita menjumlahkan titik P dengan dirinya sendiri, kita menarik garis singgung untuk memperoleh Point Doubling: dua P.
+Dari kedua operasi dasar ini, kita dapat melakukan perkalian skalar titik.
+Kita mengambil titik generator publik G, lalu menjumlahkannya sebanyak k kali: P sama dengan k dikali G.
+Perhitungan maju ini berjalan sangat cepat berkat algoritma Double-and-Add yang bekerja dalam waktu logaritmik O(log k), selesai dalam fraksi milidetik di prosesor standar.
+Namun, keajaiban kriptografis kurva eliptik terletak pada asimetri satu arahnya yang dikenal sebagai Elliptic Curve Discrete Logarithm Problem atau ECDLP.
+Jika seseorang mengetahui titik generator G dan titik hasil akhir P, mencari nilai skalar privat k membutuhkan rata-rata 2 pangkat 128 operasi pencarian algoritma Pollard rho.
+ECDLP adalah benteng matematika yang mustahil ditembus oleh superkomputer terkuat di dunia saat ini, menjadikannya fondasi kedaulatan private key Anda.
 
 ---
 
-## Slide 7: The Elliptic Curve Discrete Logarithm Problem (ECDLP)
+## Slide 7: Layer 1 Curve Standards: secp256k1 vs. Ed25519
 
 ### Konten Slide
-- **Asimetri Komputasi Mutlak:**
-  - Diberikan bilangan bulat skalar $k$ dan titik acuan generator $G$, menghitung titik koordinat $P = k \cdot G$ berlangsung instan.
-  - Diberikan titik hasil $P$ dan titik generator $G$, secara komputasi mustahil menemukan bilangan bulat skalar $k$.
-- **Pondasi Akun Kripto:**
-  - **Private Key ($k$):** Bilangan bulat acak berukuran 256-bit: $k \in [1, n-1]$.
-  - **Public Key ($P$):** Koordinat titik $(x, y)$ pada kurva eliptik hasil dari perkalian skalar $k \cdot G$.
-- **Ketahanan terhadap Peretasan Brute-Force:**
-  - Algoritma pembongkaran klasik terbaik (Pollard's rho) membutuhkan komputasi sebesar $\mathcal{O}(\sqrt{n})$.
-  - Untuk kurva 256-bit, penyerang membutuhkan sekitar $2^{128}$ operasi kalkulasi, mustahil ditembus oleh superkomputer klasik mana pun.
-- *Visual:* Diagram kontras: Komputasi arah maju (Private Key ke Public Key) berjalan instan vs Komputasi arah mundur (Public Key ke Private Key) membentur tembok matematis ECDLP.
+Layer 1 Curve Standards: secp256k1 vs. Ed25519
+secp256k1 (Koblitz Curve, Bitcoin & Ethereum):
+- Equation: y^2 = x^3 + 7 (mod p).
+- The NSA Suspicion: Satoshi rejected NIST curves due to backdoor concerns. Deterministic parameters with a=0 endomorphism acceleration (30% faster verification).
 
-### Catatan Presenter (Cheatsheet)
-**Quick Cues:**
-- Inti keamanan kunci privat di blockchain: ECDLP (Elliptic Curve Discrete Logarithm Problem).
-- Private key adalah angka bulat acak $k$, public key adalah titik koordinat $(x, y)$ dari $k \cdot G$.
-- Membalikkan koordinat untuk mencari $k$ butuh $2^{128}$ langkah komputasi, mustahil dibongkar secara brute-force.
-
-**Naskah Tutur (Voiceover Script):**
-Di sinilah letak benteng pertahanan utama seluruh akun kripto kita: Elliptic Curve Discrete Logarithm Problem atau ECDLP.
-Menghitung ke arah depan sangat mudah dan cepat: jika kalian memiliki angka skalar $k$ dan titik generator $G$, komputer menghitung titik hasil $P$ sama dengan $k$ dikali $G$ dalam sekejap mata.
-Tetapi jika saya hanya memberikan koordinat titik $P$ dan titik $G$, tidak ada rumus matematika di dunia yang bisa langsung memecahkan berapa nilai angka rahasia $k$.
-Di arsitektur blockchain:
-Private Key kalian sebenarnya hanyalah sebuah bilangan bulat acak sepanjang 256 bit yang dipilih dari ruang angka raksasa.
-Sedangkan Public Key kalian adalah titik koordinat $(x, y)$ di atas kurva eliptik yang didapat dari perkalian skalar private key tersebut dengan titik generator.
-Untuk membongkar private key seseorang dari public key miliknya, seorang peretas wajib memecahkan masalah logaritma diskret.
-Algoritma terbaik yang dikenal manusia saat ini, yaitu algoritma Pollard's rho, masih membutuhkan sekitar dua pangkat 128 langkah komputasi.
-Ini membuat kunci privat kalian kebal terhadap pembajakan brute-force selama menggunakan komputer klasik.
-
----
-
-## Slide 8: Standar Kurva di Blockchain: secp256k1 vs. Ed25519
-
-### Konten Slide
-- **Pemilihan Standar Kurva:** Berakar pada pertimbangan kinerja, keamanan implementasi, dan independensi dari intervensi eksternal.
-- **1. secp256k1 (Koblitz Curve):**
-  - Digunakan oleh: **Bitcoin** dan **Ethereum**.
-  - Persamaan Kurva: $y^2 \equiv x^3 + 7 \pmod p$.
-  - Rasional Satoshi Nakamoto: Sengaja menghindari kurva standar NIST (seperti secp256r1) karena kekhawatiran adanya pintu belakang rahasia (*NSA mathematical backdoor*); parameter kurva Koblitz dipilih secara deterministik.
-  - Efisiensi: Koefisien $a = 0$ memungkinkan optimasi endomorfisme yang mempercepat verifikasi hingga 30 persen.
-- **2. Ed25519 / Curve25519 (Twisted Edwards Curve):**
-  - Digunakan oleh: **Solana**, **Polkadot**, **NEAR**, dan **Cosmos**.
-  - Dirancang oleh Daniel J. Bernstein pada tahun 2011.
-  - Keunggulan: Rumus penambahan titik lengkap (*complete addition formulas*) tanpa kondisi pembagian nol, kebal terhadap serangan kebocoran waktu (*side-channel attacks*), dan verifikasi tanda tangan sangat cepat.
-- *Visual:* Peta komparasi dua kubu standar: Kubu secp256k1 (Bitcoin dan Ethereum) vs Kubu Ed25519 (Solana dan Polkadot).
+Ed25519 (Twisted Edwards Curve, Solana, Polkadot, NEAR):
+- Designed by Daniel J. Bernstein (2011).
+- The Security Edge: Features complete addition formulas without zero-division exceptions. Grants natural immunity against timing side-channel attacks and ultra-fast verification.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -261,93 +236,52 @@ Hal ini membuat Ed25519 secara alami kebal terhadap eksploitasi kebocoran waktu 
 
 ---
 
-## Slide 9: Tanda Tangan Digital: Autentikasi, Non-Repudiasi, Integritas
+---
+
+## Slide 8: The Digital Signature Trilemma & ECDSA
 
 ### Konten Slide
-- **Definisi Digital Signature:** Bukti matematika yang membuktikan bahwa pemegang private key menyetujui transaksi tertentu tanpa membocorkan kunci rahasianya.
-- **Tiga Jaminan Keamanan Mutlak:**
-  - *Authentication:* Membuktikan secara matematis bahwa pesan transaksi dibuat oleh pemilik akun yang sah.
-  - *Non-Repudiation:* Pengirim tidak dapat menyangkal pengiriman transaksi di masa depan karena tanda tangan hanya dapat dibentuk menggunakan private key miliknya.
-  - *Integrity:* Menjamin bahwa transaksi tidak mengalami perubahan atau manipulasi satu karakter pun selama transit di internet.
-- **Tiga Algoritma Formal Skema Tanda Tangan:**
-  - $\text{KeyGen}() \to (sk, pk)$: Menghasilkan pasangan private key dan public key.
-  - $\text{Sign}(sk, m) \to \sigma$: Menghasilkan tanda tangan digital dari muatan pesan dan private key.
-  - $\text{Verify}(pk, m, \sigma) \to \{\text{True}, \text{False}\}$: Memeriksa validitas tanda tangan secara terbuka bagi publik.
-- *Visual:* Sequence diagram proses penandatanganan transaksi oleh Alice, transmisi payload publik ke jaringan, dan verifikasi independen oleh simpul Bob.
+The Digital Signature Trilemma & ECDSA
+The Digital Signature Trilemma:
+- Authentication: Mathematically proves instruction originated from the true private key holder.
+- Non-Repudiation: Sender cannot later deny authorizing the transaction.
+- Integrity: Modifying a single byte of payload invalidates signature instantly.
+
+The ECDSA Mechanism:
+Pipeline: KeyGen() -> (sk, pk), Sign(sk, m) -> (r, s), Verify(pk, m, (r, s)) -> True / False.
+Uses ephemeral nonce k to sign transaction hash z into final signature pair (r, s).
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Tanda tangan digital bukan gambar tanda tangan basah di dokumen PDF.
-- Tiga jaminan mutlak: autentikasi, tidak bisa disangkal (non-repudiation), dan integritas data.
-- Tiga fungsi inti: KeyGen, Sign, dan Verify.
+- Tiga jaminan mutlak tanda tangan digital: Autentikasi, Non-Repudiasi, dan Integritas.
+- Autentikasi membuktikan kepemilikan tanpa membocorkan kunci privat.
+- Non-Repudiasi mencegah penyangkalan otorisasi transaksi.
+- Mekanisme ECDSA: memetakan hash transaksi z dan kunci privat menggunakan ephemeral nonce k menghasilkan pasangan tanda tangan (r, s).
 
 **Naskah Tutur (Voiceover Script):**
-Sekarang kita melangkah ke fungsi terpenting dari kriptografi kunci publik di blockchain: Tanda Tangan Digital.
-Tanda tangan digital bukanlah scan tanda tangan basah di atas dokumen PDF yang mudah dipalsukan lewat Photoshop.
-Tanda tangan digital adalah bukti kriptografis murni yang mengikat isi transaksi dengan kunci privat pengirim secara matematis.
-Protokol ini memberikan tiga jaminan keamanan mutlak.
-Pertama, *Authentication*: seluruh dunia tahu pasti bahwa instruksi transfer dana dibuat oleh pemilik kunci privat yang sah.
-Kedua, *Non-Repudiation*: pengirim tidak bisa menyangkal pernah mengirim transaksi tersebut di kemudian hari, karena tidak ada entitas lain di dunia yang memiliki private key miliknya.
-Ketiga, *Integrity*: jika ada pihak penengah di jaringan yang mencoba mengubah nominal transfer atau alamat penerima walau hanya satu karakter, tanda tangan tersebut seketika menjadi batal dan tertolak.
-Secara formal, skema ini terdiri dari tiga fungsi matematika: fungsi KeyGen untuk membuat pasangan kunci, fungsi Sign untuk menandatangani pesan, dan fungsi Verify untuk memvalidasi tanda tangan tersebut secara terbuka.
+Dengan kurva eliptik ini, kita dapat membangun skema tanda tangan digital modern yang memenuhi tiga jaminan kedaulatan informasi.
+Jaminan pertama adalah Authentication: tanda tangan membuktikan secara matematis bahwa pesan transfer benar-benar dibuat oleh pemegang kunci privat sah tanpa pernah membocorkan kunci tersebut ke publik.
+Jaminan kedua adalah Non-Repudiation: pengirim tidak dapat menyangkal bahwa ia telah menyetujui transaksi tersebut, karena hanya kunci privat miliknya yang sanggup menciptakan bukti matematis tersebut.
+Jaminan ketiga adalah Integrity: jika ada peretas yang mengubah nilai transfer atau alamat penerima sebesar satu byte saja di tengah jalan, tanda tangan digital akan seketika menjadi tidak sah dan ditolak oleh seluruh simpul jaringan.
+Algoritma standar industri yang mengimplementasikan ketiga pilar ini pada Bitcoin dan Ethereum adalah ECDSA.
+Dalam alur kerja ECDSA, penandatangan mengambil hash transaksi z, kunci privat d, serta sebuah angka acak sementara bernama ephemeral nonce k.
+Melalui perkalian skalar kurva, algoritma memetakan nilai-nilai ini menjadi sepasang angka koordinat tanda tangan yang kompak: r dan s.
+Seluruh simpul di dunia dapat memvalidasi pasangan r dan s ini hanya menggunakan kunci publik Anda.
 
 ---
 
-## Slide 10: Algoritma ECDSA dan Bahaya Fatal Nonce Reuse
+## Slide 9: Signature Malleability and the BIP-141 Resolution
 
 ### Konten Slide
-- **Mekanisme Tanda Tangan ECDSA:**
-  - Diberikan hash transaksi $z = \text{Hash}(m)$ dan private key $d$.
-  - Sistem wajib menghasilkan angka acak sementara bernama **ephemeral key** atau nonce: $k \in [1, n-1]$.
-  - Hitung titik kurva $(x_1, y_1) = k \cdot G$, lalu tentukan skalar $r = x_1 \pmod n$.
-  - Hitung skalar $s = k^{-1}(z + r \cdot d) \pmod n$. Tanda tangan digital adalah pasangan $\sigma = (r, s)$.
-- **Ancaman Mematikan: Penggunaan Ulang Nonce ($k$ Reuse):**
-  - Jika penandatangan menggunakan nonce $k$ yang sama untuk menandatangani dua transaksi berbeda ($m_1$ dan $m_2$), nilai $r$ pada kedua tanda tangan bernilai kembar.
-  - Pihak luar dapat menghitung nonce $k$ secara aljabar dasar: $k = (z_1 - z_2)(s_1 - s_2)^{-1} \pmod n$.
-  - Begitu nilai $k$ diketahui, private key $d$ terbongkar seketika: $d = r^{-1}(s_1 \cdot k - z_1) \pmod n$.
-- **Preseden Nyata & Solusi RFC 6979:**
-  - Keruntuhan proteksi kode pada Sony PlayStation 3 (2010) akibat penggunaan nonce $k$ statis.
-  - Pencurian massal dompet Bitcoin Android (2013) akibat kelemahan generator bilangan acak semu (PRNG).
-  - *Solusi Industri (RFC 6979):* Menghasilkan nonce $k$ secara deterministik dari hash kombinasi private key dan data transaksi.
-- *Visual:* Rumus matematika penurunan private key akibat tabrakan nonce, disandingkan dengan diagram pembangkitan nonce deterministik RFC 6979.
+Signature Malleability and the BIP-141 Resolution
+The Fatal Nonce Reuse (k Reuse):
+Reusing ephemeral nonce k across two signatures exposes private key via elementary linear algebra (PS3 breach 2010, Android Bitcoin 2013).
+Resolution: RFC 6979 deterministic nonce generation.
 
-### Catatan Presenter (Cheatsheet)
-**Quick Cues:**
-- Tanda tangan ECDSA menghasilkan pasangan angka (r, s).
-- Membutuhkan angka acak sementara bernama nonce k.
-- Jika nonce k dipakai dua kali, private key bisa dibongkar lewat aljabar biasa (kasus PS3 dan bug Android).
-- Solusi modern: standar RFC 6979 untuk menghasilkan nonce k secara deterministik.
-
-**Naskah Tutur (Voiceover Script):**
-Mari kita bedah algoritma tanda tangan yang paling umum di dunia blockchain: Elliptic Curve Digital Signature Algorithm atau ECDSA.
-Di dalam ECDSA, tanda tangan digital kalian berwujud sepasang angka 256-bit yang kita beri simbol $r$ dan $s$.
-Untuk menghitung nilai ini, algoritma membutuhkan sebuah angka acak rahasia sekali pakai yang disebut ephemeral key atau nonce $k$.
-Di sinilah letak salah satu celah keamanan paling berbahaya dalam sejarah kriptografi terapan.
-Nilai nonce $k$ ini wajib selalu unik dan tidak boleh ditebak untuk setiap transaksi baru.
-Jika sebuah aplikasi dompet menandatangani dua transaksi yang berbeda dengan nilai nonce $k$ yang sama persis, nilai $r$ pada kedua tanda tangan tersebut akan kembar identik.
-Begitu ada dua tanda tangan dengan $r$ yang sama beredar di jaringan publik, siapa pun yang mengamati transaksi dapat membongkar nilai $k$ hanya dengan pengurangan dan pembagian aljabar biasa.
-Begitu nilai $k$ terbongkar, private key korban dapat dihitung dalam hitungan detik.
-Bencana ini pernah meruntuhkan sistem proteksi konsol PlayStation 3 pada tahun 2010 ketika Sony ceroboh menggunakan nonce statis, serta memicu pencurian jutaan dolar dari dompet Bitcoin Android pada tahun 2013 akibat generator acak yang cacat.
-Untuk mengatasi celah mematikan ini, standar modern mengadopsi RFC 6979.
-Algoritma ini menghasilkan nonce $k$ secara deterministik dengan me-hash private key dan muatan pesan, menjamin nilai yang selalu unik, tidak dapat ditebak pihak luar, dan seratus persen aman.
-
----
-
-## Slide 11: Kerentanan Signature Malleability dan Solusi BIP-141 (SegWit)
-
-### Konten Slide
-- **Fenomena Malleability pada Kurva Eliptik:**
-  - Karena simetri kurva eliptik terhadap sumbu horizontal, jika $(r, s)$ adalah tanda tangan sah untuk hash pesan $z$, maka $(r, -s \pmod n)$ juga sah secara matematis untuk public key yang sama.
-  - Siapa pun di jaringan dapat membalik nilai $s$ tanpa perlu mengetahui private key milik pengirim.
-- **Eksploitasi TxID pada Arsitektur Klasik Bitcoin:**
-  - Pada desain awal, Transaction ID (TxID) dihitung dari hash seluruh payload transaksi mentah termasuk tanda tangan.
-  - Penyerang dapat mencegat transaksi di jaringan mempool, mengubah tanda tangan ke bentuk alternatif $(-s)$, dan memancarkan ulang transaksi tersebut.
-  - Transaksi tetap valid dan diproses penambang, namun memiliki TxID baru yang berbeda dari transaksi asli.
-  - Memicu kekacauan pada bursa pertukaran otomatis: sistem menduga penarikan dana gagal sehingga mengirimkan ulang saldo.
-- **Resolusi Protokol:**
-  - **BIP-66 (2015):** Menolak secara konsensus tanda tangan yang memiliki nilai $s$ tinggi (*high-s values*).
-  - **BIP-141 Segregated Witness / SegWit (2017):** Memisahkan data tanda tangan (*witness*) sepenuhnya dari formula penghitungan TxID.
-- *Visual:* Diagram perbandingan formula TxID lama (mencakup data signature) vs formula SegWit (TxID hanya menghitung payload transaksi dasar, data witness dipisahkan).
+Signature Malleability:
+Because curves are symmetric, if (r, s) is valid, so is (r, -s mod n).
+Attackers could mutate legacy TxIDs without private keys.
+Resolution (SegWit BIP-141): Segregated Witness separates witness data completely out of TxID calculation, rendering core transactions immutable.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -370,19 +304,19 @@ SegWit memisahkan data tanda tangan yang disebut *witness* keluar dari perhitung
 
 ---
 
-## Slide 12: Public Key Recovery dan Schnorr Signatures
+---
+
+## Slide 10: Advanced Compaction: Public Key Recovery & Schnorr Signatures
 
 ### Konten Slide
-- **Public Key Recovery pada Ethereum (Parameter $v$):**
-  - Transaksi Ethereum tidak mencantumkan public key pengirim sebesar 64 byte untuk menghemat ukuran calldata.
-  - Menyertakan recovery identifier byte $v \in \{27, 28\}$ (atau $v \in \{35, 36 + 2 \cdot \text{ChainID}\}$ di bawah EIP-155).
-  - Opcode EVM `ecrecover` merekonstruksi public key pengirim secara langsung dari hash pesan dan tanda tangan $(r, s, v)$, memangkas biaya gas on-chain.
-- **Revolusi Schnorr Signatures (Bitcoin Taproot BIP-340):**
-  - Dipatenkan oleh Claus Schnorr pada tahun 1990; paten kedaluwarsa sehingga dapat diaktifkan di Bitcoin pada tahun 2021.
-  - Bersifat linear secara aljabar: penjumlahan tanda tangan setara dengan tanda tangan dari penjumlahan kunci publik.
-  - **Agregasi Multi-Signature (MuSig2):** Transaksi multi-signature 3-dari-3 dapat digabungkan secara off-chain menjadi satu tanda tangan kompak 64-byte tunggal.
-  - **Privasi dan Efisiensi:** Transaksi multi-signature terlihat identik dengan transaksi tunggal biasa di mata para pengamat blockchain.
-- *Visual:* Diagram alur kerja opcode ecrecover di Ethereum berdampingan dengan skema penggabungan tiga tanda tangan menjadi satu tanda tangan Schnorr tunggal.
+Advanced Compaction: Public Key Recovery & Schnorr Signatures
+Public Key Recovery (Ethereum):
+- Utilizes recovery byte v in {27, 28}.
+- EVM opcode ecrecover reconstructs sender public key directly from signature and hash, saving 64 bytes per transaction.
+
+Schnorr Signatures (Bitcoin Taproot / BIP-340):
+- Linear algebra allows multi-signature aggregation (MuSig2).
+- Complex 3-of-3 multi-signatures combine off-chain into a single 64-byte signature indistinguishable from standard single-user transactions.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -405,20 +339,18 @@ Ini menghadirkan lompatan besar dalam hal efisiensi kapasitas blok sekaligus mel
 
 ---
 
-## Slide 13: Pipeline Derivasi Alamat: Bitcoin Base58Check vs. Ethereum EIP-55
+---
+
+## Slide 11: Address Derivation Pipelines: Bitcoin Base58Check vs. Ethereum EIP-55
 
 ### Konten Slide
-- **Distingsi Public Key vs. Alamat:** Public key adalah titik koordinat kurva eliptik yang berukuran besar; alamat adalah representasi ringkas dengan proteksi salah ketik.
-- **1. Pipeline Alamat Bitcoin (Legacy P2PKH):**
-  - Kunci privat menghasilkan kunci publik terkompresi 33-byte: $P = k \cdot G$.
-  - Double Hash (HASH160): $\text{Hash160} = \text{RIPEMD-160}(\text{SHA-256}(P))$ menghasilkan digest 20-byte.
-  - Tambahkan version byte ($0x00$) dan 4-byte checksum dari double SHA-256.
-  - Encode menggunakan **Base58Check**: Menghilangkan karakter ambigu visual ($0, O, I, l$) untuk mencegah kesalahan baca manual.
-- **2. Pipeline Alamat Ethereum:**
-  - Kunci publik koordinat $(x, y)$ sepanjang 64 byte di-hash menggunakan Keccak-256.
-  - Ambil 20 byte paling kanan (40 karakter heksadesimal terakhir) dan tambahkan awalan `0x`.
-  - **Checksum EIP-55 (Mixed-Case):** Kapitalisasi huruf heksadesimal ditentukan oleh hash dari alamat huruf kecil; kesalahan ketik satu karakter memicu penolakan transaksi otomatis oleh dompet.
-- *Visual:* Diagram alur perbandingan dua pipa derivasi alamat: Jalur Bitcoin (HASH160 ke Base58Check) vs Jalur Ethereum (Keccak-256 ke EIP-55 checksum).
+Address Derivation Pipelines: Bitcoin Base58Check vs. Ethereum EIP-55
+Bitcoin Legacy Pipeline (P2PKH):
+Compressed public key -> SHA-256 -> RIPEMD-160 (20 bytes) -> Base58Check encoding with typo-resistant character stripping (0, O, I, l).
+
+Ethereum Pipeline (EIP-55):
+Uncompressed public key -> Keccak-256 -> rightmost 20 bytes -> EIP-55 mixed-case capitalization checksum.
+A single typo triggers immediate wallet rejection.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -442,19 +374,19 @@ Jika ada satu huruf saja yang salah ketik, aplikasi dompet seketika menolak tran
 
 ---
 
-## Slide 14: Jembatan ke Modul Berikutnya: Propagasi Transaksi di Jaringan P2P
+---
+
+## Slide 12: Bridge to the Next Module: Transaction Propagation in P2P Networks
 
 ### Konten Slide
-- **Kelengkapan Fondasi Kriptografis Kedaulatan:**
-  - Alice menandatangani transaksi menggunakan private key miliknya, membuktikan otoritas kepemilikan secara mutlak tanpa bantuan bank sentral.
-  - Setiap simpul jaringan di seluruh dunia dapat memverifikasi keabsahan transaksi menggunakan public key milik Alice.
-  - Transaksi dirangkum dan disegel ke dalam blok menggunakan Merkle tree untuk menjamin integritas permanen.
-- **Tantangan Komunikasi Baru:**
-  - Transaksi sah yang tersimpan di laptop Alice tidak menghasilkan penyelesaian nilai jika tidak terdistribusi ke validator di belahan dunia lain.
-  - Tanpa server sentral seperti Amazon AWS, Cloudflare, atau API gateway terpusat, bagaimana instruksi pembayaran disiarkan ke ribuan komputer secara serentak?
-  - Bagaimana simpul-simpul independen saling menemukan (*peer discovery*), menyebarkan blok, dan bertahan dari sensor ISP?
-- **Materi Modul Berikutnya:** Membedah tulang punggung komunikasi terdesentralisasi: **Peer-to-Peer Networks and Network Topologies**.
-- *Visual:* Ilustrasi laptop Alice memancarkan gelombang transaksi ke jaringan jala simpul komputer yang saling terhubung di seluruh bola dunia.
+Bridge to the Next Module: Transaction Propagation in P2P Networks
+The Completion of Sovereign Cryptography:
+Private keys authorize state changes mathematically, public keys allow universal verification, and Merkle trees seal records permanently.
+
+The Physical Distribution Barrier:
+A perfectly signed transaction on Alice laptop cannot settle value without reaching global validators.
+Without central relays (AWS, Cloudflare), how does data propagate to thousands of nodes in milliseconds?
+Next Module: Peer-to-Peer Networks and Network Topologies.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**

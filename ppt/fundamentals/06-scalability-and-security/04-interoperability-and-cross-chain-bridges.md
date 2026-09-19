@@ -3,18 +3,22 @@ Modul Presentasi: Scalability and Security (06.4)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: Interoperability and Cross-Chain Bridges: The Multi-Chain Paradox
 
 ### Konten Slide
-- **Topik:** Interoperability and Cross-Chain Bridges: Menghubungkan Ekosistem Terfragmentasi
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Membedah arsitektur verifikasi jembatan lintas rantai, risiko sistemik aset representasi (wrapped assets), dan analisis teknis di balik peretasan terbesar dalam sejarah Web3.
-- *Visual:* Ilustrasi jembatan jaringan digital yang mentransfer data dan modal antara dua blockchain berdaulat yang terpisah.
+Interoperability and Cross-Chain Bridges: The Multi-Chain Paradox
+Module 06.4: Scalability and Security
+Track: Fundamentals of Distributed Trust
+
+Core Architectural Focus:
+- Why sovereign blockchains are inherently blind to external state transitions.
+- The trust spectrum of bridge verification: Externally Verified (Multi-Sig), Optimistic, Light Clients, and ZK Bridges.
+- Token transfer mechanics, wrapped asset depeg death spirals, and why bridges suffer the largest exploits in Web3 history.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Selamat datang di modul keempat: Interoperability and Cross-Chain Bridges.
-- Membahas bagaimana menghubungkan rantai-rantai yang terfragmentasi.
+- Membuka modul keempat dari Chapter 06: Interoperability and Cross-Chain Bridges.
+- Menghubungkan ekosistem yang terfragmentasi akibat maraknya L1 dan L2 independen.
 - Menyoroti kenyataan bahwa jembatan lintas rantai adalah komponen paling rentan dan paling sering dieksploitasi di dunia blockchain.
 
 **Naskah Tutur (Voiceover Script):**
@@ -29,23 +33,29 @@ Hari ini kita akan membongkar cara kerja jembatan lintas rantai, model-model ver
 
 ---
 
-## Slide 2: Masalah Isolasi Konsensus (Sovereign State Machines)
+## Slide 2: The Consensus Isolation Problem: Sovereign State Machines
 
 ### Konten Slide
-- **Sifat Alami Blockchain Publik:** Merupakan mesin status tertutup yang berdaulat dan terisolasi (*sovereign isolated state machines*).
-- **Hambatan Komunikasi Asli (Native Blindness):**
-  - Mesin virtual Ethereum tidak memiliki akses memori atau kapabilitas untuk membaca status internal jaringan Solana.
-  - Bitcoin tidak memiliki cara bawaan untuk memverifikasi apakah sebuah pembayaran telah terjadi di Avalanche.
-- **Ketiadaan Pengadilan Bersama:**
-  - Masing-masing jaringan beroperasi dengan aturan kriptografi, format transaksi, dan mesin konsensus independen.
-  - Tidak ada otoritas penengah alami yang dapat membatalkan transaksi di Rantai B jika terjadi kesalahan di Rantai A.
-- *Visual:* Dua benteng blockchain independen (Ethereum dan Solana) dengan dinding tebal tanpa pintu tembus langsung.
+The Consensus Isolation Problem: Sovereign State Machines
+
+The Isolated State Machine Invariant:
+- Public blockchains are deterministic, sovereign, closed-loop state machines.
+- A blockchain consensus mechanism only validates internal state transitions signed by valid private keys within its own network.
+
+Native Blindness Across Chains:
+- The Ethereum Virtual Machine has zero native memory access or computational ability to inspect Solana state.
+- Bitcoin has no native capability to verify whether a transaction occurred on Avalanche.
+- Blockchains lack external sensory organs; they cannot verify external events without trusted relays or mathematical proofs.
+
+The Absence of a Shared Court:
+- Different chains operate under disparate cryptographic primitives, transaction schemas, and consensus rules.
+- There is no universal arbiter capable of atomically reverting a transaction on Chain B if an invalid state occurs on Chain A.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
 - Mengapa blockchain tidak bisa langsung saling bicara secara alami.
 - Setiap blockchain didesain sebagai sistem tertutup yang hanya percaya pada aturan konsensusnya sendiri.
-- Menghubungkan keduanya membutuhkan pihak ketiga atau lapisan pembuktian khusus.
+- Menghubungkan keduanya membutuhkan perantara manusia, komite off-chain, atau lapisan pembuktian khusus.
 
 **Naskah Tutur (Voiceover Script):**
 Untuk memahami mengapa bridging itu sulit, kita harus melihat bagaimana blockchain dirancang dari prinsip pertama.
@@ -59,15 +69,28 @@ Kalian wajib membangun sebuah mekanisme yang dapat membuktikan ke Rantai B bahwa
 
 ---
 
-## Slide 3: Anatomi Alur Kerja Cross-Chain Bridge
+## Slide 3: Anatomy of a Cross-Chain Bridge Workflow
 
 ### Konten Slide
-- **Empat Fase Perpindahan Nilai Lintas Rantai:**
-  - **1. Lock / Burn di Rantai Asal (Chain A):** Pengguna (Alice) menyetorkan dan mengunci 10 ETH ke dalam smart contract brankas jembatan (*bridge escrow vault*).
-  - **2. Event Emission:** Kontrak pintar di Chain A memancarkan log peristiwa (*event log*) yang memuat detail setoran, penerima, dan rantai tujuan.
-  - **3. Relay & Verification:** Entitas perantara (relayer atau komite verifikator) mendeteksi peristiwa tersebut dan memverifikasi keabsahannya.
-  - **4. Mint / Unlock di Rantai Tujuan (Chain B):** Setelah verifikasi diterima, kontrak jembatan di Chain B mencetak token representasi (10 wETH) atau melepaskan likuiditas lokal ke dompet Alice.
-- *Visual:* Sequence diagram alur 4 tahap: Alice -> Lock di Chain A -> Event Log -> Bridging Verification Mechanism -> Mint di Chain B -> Alice menerima token.
+Anatomy of a Cross-Chain Bridge Workflow
+
+Four Sequential Phases of Value Relaying:
+
+1. Lock / Burn on Source Chain (Chain A):
+- The user (Alice) deposits and locks 10 ETH into the bridge smart contract vault on Chain A.
+
+2. Event Emission:
+- The bridge vault contract emits a standardized event log detailing deposit amount, recipient address, and destination network ID.
+
+3. Relay & Verification:
+- An off-chain intermediary (relayer, validator committee, or light client prover) detects the event log and verifies its validity.
+
+4. Mint / Release on Destination Chain (Chain B):
+- Upon successful verification, the bridge contract on Chain B mints wrapped representative tokens (10 wETH) or unlocks local native liquidity to Alice.
+
+The Non-Physical Transit Invariant:
+- Native tokens never physically cross the internet between blockchains.
+- The original collateral remains permanently immobilized in the source chain escrow vault.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -89,22 +112,31 @@ Dan di sinilah titik paling kritisnya: seluruh keamanan sistem ini bertumpu pada
 
 ---
 
-## Slide 4: Taksonomi Model Verifikasi Jembatan
+## Slide 4: Taxonomy of Bridge Verification Models: The Trust Spectrum
 
 ### Konten Slide
-- **Spektrum Asumsi Kepercayaan (Trust Spectrum):**
+Taxonomy of Bridge Verification Models: The Trust Spectrum
 
-```mermaid
-flowchart TD
-    Models["Model Verifikasi Jembatan Lintas Rantai"]
-    Models --> M1["1. Externally Verified (Multi-Sig / MPC)<br/>Asumsi M-of-N Operator Eksternal"]
-    Models --> M2["2. Optimistic Bridges<br/>Asumsi 1-of-N Watcher Jujur"]
-    Models --> M3["3. Light Client & Relay Bridges<br/>Verifikasi Konsensus Asli On-Chain"]
-    Models --> M4["4. Zero-Knowledge Bridges<br/>Verifikasi Proof Kriptografis Ringkas"]
-```
+The Bridge Verification Hierarchy:
 
-- **Prinsip Dasar Evaluasi:** Keamanan sebuah jembatan berbanding lurus dengan seberapa sedikit asumsi kepercayaan manusia yang dibutuhkan untuk memvalidasi pesan lintas rantai.
-- *Visual:* Diagram spektrum dari yang paling bergantung pada kepercayaan manusia (Multi-Sig) hingga yang murni bersandar pada matematika (ZK Bridges).
+1. Externally Verified Bridges (Multi-Sig & MPC):
+- Relies on an external federation or committee to validate state.
+- Trust assumption: Honest majority among off-chain signers (M-of-N).
+
+2. Optimistic Bridges:
+- Relies on a bonded relayer proposing roots subject to an on-chain challenge window.
+- Trust assumption: 1-of-N honest verifier/watcher.
+
+3. Native Light Client Bridges:
+- On-chain smart contract on Chain B directly parses block headers and consensus signatures of Chain A.
+- Trust assumption: Underlying consensus security of Chain A (no external committee).
+
+4. Zero-Knowledge (ZK) Bridges:
+- Prover generates a succinct ZK validity proof of Chain A consensus state verified on Chain B.
+- Trust assumption: Pure mathematical and cryptographic validity (constant gas cost).
+
+Governing Security Law:
+- Bridge security is inversely proportional to human trust assumptions required to validate cross-chain messages.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -126,14 +158,19 @@ Mari kita telaah satu per satu risiko dan arsitektur dari keempat model ini.
 ## Slide 5: Model 1: Externally Verified Bridges (Multi-Sig & MPC)
 
 ### Konten Slide
-- **Prinsip Operasional:**
-  - Mempekerjakan sekelompok kecil simpul eksternal (sering kali 5 hingga 9 validator) atau federasi Multi-Party Computation (MPC).
-  - Ketika mendeteksi deposit di Rantai A, komite ini menandatangani instruksi otorisasi secara kolektif untuk mencetak token di Rantai B.
-- **Asumsi Kepercayaan:** Bergantung sepenuhnya pada ambang batas kejujuran $M$-of-$N$ (misalnya 4 dari 7 tanda tangan sah).
-- **Kerentanan Fatal:**
-  - **Single Point of Social Failure:** Penyerang tidak perlu membobol protokol blockchain yang mendasarinya; mereka hanya perlu mencuri kunci pribadi segelintir manusia pengelola server.
-  - Menjadi penyebab langsung kerugian terbesar di industri: peretasan Ronin Network ($625 juta) dan Harmony Horizon ($100 juta).
-- *Visual:* Diagram penyerang membobol threshold kunci privat multi-sig (5 dari 9) untuk memalsukan instruksi pencetakan dana.
+Model 1: Externally Verified Bridges (Multi-Sig & MPC)
+
+Operational Mechanics:
+- Employs a small off-chain committee (typically 5 to 9 validator keys) or Multi-Party Computation (MPC) cluster.
+- When a deposit event is observed on Chain A, signers collectively sign an authorization payload to mint tokens on Chain B.
+
+Trust Assumption:
+- Strictly dependent on an M-of-N threshold honesty assumption (e.g., 4 of 7 valid signatures).
+
+The Fatal Vulnerability: Single Point of Social Failure:
+- Attackers do not need to compromise the underlying blockchain protocols.
+- Compromising the private keys of a handful of human server operators is sufficient to forge mint messages.
+- Directly responsible for the most catastrophic exploits in Web3 history: Ronin Network ($625M) and Harmony Horizon ($100M).
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -157,15 +194,22 @@ Inilah pola yang menghancurkan Ronin Network dan Harmony Horizon.
 ## Slide 6: Model 2: Optimistic Bridges
 
 ### Konten Slide
-- **Inspirasi dari Optimistic Rollups:** Menerapkan filosofi praduga tak bersalah pada transmisi pesan lintas rantai.
-- **Mekanisme Kerja (contoh: Nomad):**
-  - Relayer mengajukan akar pesan (*proposed message root*) ke kontrak pintar di rantai tujuan.
-  - Membuka jendela waktu sanggahan (*fraud challenge window*, misalnya 30 menit).
-  - Simpul pengawas independen (*watchers*) terus memantau apakah ada pesan penarikan palsu yang tidak pernah ada di rantai asal.
-  - Jika pesan terdeteksi curang, watcher mengirimkan bukti kecurangan (*fraud proof*) untuk membekukan jembatan secara otomatis sebelum dana bisa dicairkan.
-- **Asumsi Kepercayaan:** $1$-of-$N$ honest watcher assumption (jauh lebih aman dibanding model multi-sig).
-- **Trade-off:** Mengharuskan pengguna menunggu jeda waktu sengketa (latensi 30 menit atau lebih) sebelum dana dapat digunakan di rantai tujuan.
-- *Visual:* Alur transmisi pesan Optimistic Bridge yang melewati gerbang timer sanggahan 30 menit yang diawasi oleh Watcher independen.
+Model 2: Optimistic Bridges
+
+Inspiration from Optimistic Rollups:
+- Applies retrospective dispute resolution to cross-chain messaging.
+
+Operational Workflow (e.g., Nomad):
+- 1. A bonded relayer proposes a cross-chain message root to the destination chain smart contract.
+- 2. A mandatory challenge window opens (e.g., 30 to 60 minutes).
+- 3. Independent Watchers continuously monitor both chains, checking if the proposed messages match genuine deposits on the source chain.
+- 4. If a fraudulent message is detected, a watcher submits a fraud proof to freeze the bridge contract before funds can be withdrawn.
+
+Trust Assumption:
+- 1-of-N honest watcher assumption (significantly stronger than multi-sig majorities).
+
+Engineering Trade-off:
+- Users must accept a latency delay (dispute window duration) before funds can be released on the destination chain.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -185,20 +229,22 @@ Pengguna dipaksa menunggu jeda waktu puluhan menit sebelum token mereka bisa dic
 
 ---
 
-## Slide 7: Model 3 & 4: Light Client Bridges dan ZK Bridges
+## Slide 7: Models 3 & 4: Native Light Client and Zero-Knowledge Bridges
 
 ### Konten Slide
-- **Model 3: Native Light Client Bridges (Cosmos IBC, Rainbow Bridge):**
-  - Kontrak pintar di Rantai B mengimplementasikan **klien ringan (light client)** penuh dari konsensus Rantai A.
-  - Relayer hanya bertugas mengantarkan block header dari Rantai A ke Rantai B.
-  - Kontrak di Rantai B memverifikasi secara langsung tanda tangan validator konsensus Rantai A dan memeriksa bukti Merkle transaksi.
-  - *Tingkat Keamanan:* Setara dengan keamanan konsensus asli kedua rantai tanpa ada komite perantara.
-- **Kendala Utama Light Client Tradisional:**
-  - Sangat boros gas pada rantai seperti Ethereum, karena memverifikasi ratusan tanda tangan validator asing per blok dapat melampaui batas gas blok L1.
-- **Model 4: Zero-Knowledge (ZK) Bridges:**
-  - Mengatasi beban komputasi on-chain dengan memindahkan verifikasi tanda tangan validator ke sirkuit ZK off-chain.
-  - Kontrak pintar di Rantai B hanya memverifikasi satu bukti ZK-SNARK ringkas ($\approx 250.000$ gas) yang membuktikan bahwa blok asing telah ditandatangani secara sah oleh mayoritas validator.
-- *Visual:* Perbandingan verifikasi ratusan tanda tangan on-chain yang mahal vs verifikasi satu bukti ZK-SNARK yang ringkas di smart contract.
+Models 3 & 4: Native Light Client and Zero-Knowledge Bridges
+
+Model 3: Native Light Client Bridges (Cosmos IBC, Rainbow Bridge):
+- The destination chain smart contract embeds a full light client of the source chain consensus.
+- Relayers merely transport block headers and Merkle inclusion proofs.
+- The destination contract directly verifies source chain validator signatures and state roots.
+- Security Profile: Equal to the consensus security of the connected blockchains; zero intermediary committee risk.
+- Major Limitation: Prohibitive gas costs when verifying hundreds of external validator signatures on chains like Ethereum.
+
+Model 4: Zero-Knowledge (ZK) Bridges:
+- Overcomes on-chain gas costs by offloading signature verification to off-chain ZK circuits.
+- Provers generate a succinct validity proof (ZK-SNARK) proving that the source chain consensus signed the block header.
+- The destination contract verifies only the succinct proof for approx. 250,000 gas, achieving trustless verification with minimal overhead.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -220,18 +266,22 @@ Smart contract cukup memverifikasi satu bukti kecil itu dengan biaya gas yang sa
 
 ---
 
-## Slide 8: Mekanisme Transfer Nilai: Lock-and-Mint dan Risiko Depeg
+## Slide 8: Value Transfer Mechanics: Lock-and-Mint and Depeg Systemic Risks
 
 ### Konten Slide
-- **Mekanisme Lock-and-Mint (Wrapped Assets):**
-  - Alice mengunci 100 ETH asli di brankas jembatan Ethereum.
-  - Smart contract jembatan di Solana mencetak 100 token representasi sintetis (`wETH`).
-- **Risiko Sistemik Kontra-Pihak (Counterparty Risk):**
-  - Nilai ekonomi `wETH` di Solana hanya ada karena adanya jaminan 100 ETH asli yang terkunci di Ethereum.
-  - Jika brankas penyimpanan di Ethereum diretas atau dibobol, token representasi `wETH` di Solana seketika kehilangan 100 persen nilai jaminan dasarnya.
-- **Efek Domino Keruntuhan Likuiditas (Depeg Death Spiral):**
-  - Token sintetis terdepeg ke nol, melumpuhkan protokol pinjaman (*lending pools*) dan kolam AMM di seluruh ekosistem tujuan yang menerima aset tersebut sebagai jaminan.
-- *Visual:* Diagram brankas asal dibobol penyerang -> Token representasi di rantai tujuan mendadak tidak bernilai dan mengalami depeg tajam ke nol.
+Value Transfer Mechanics: Lock-and-Mint and Depeg Systemic Risks
+
+The Lock-and-Mint Protocol:
+- Alice deposits 100 native ETH into the Ethereum bridge vault contract.
+- The bridge smart contract on Solana mints 100 synthetic wrapped tokens (wETH).
+
+The Systemic Counterparty Deficit:
+- The economic value of wETH on Solana exists exclusively due to the backing of 100 native ETH locked in Ethereum escrow.
+- If the Ethereum vault is hacked or drained, the circulating wETH on Solana becomes unbacked counterfeit tokens.
+
+The Depeg Cascading Death Spiral:
+- Synthetic tokens instantly depeg toward zero.
+- Liquidations cascade through Solana lending protocols (e.g., Solend) and AMM liquidity pools holding wETH as collateral, triggering broader insolvency.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -251,19 +301,19 @@ Jika token representasi ini sudah terlanjur digunakan sebagai agunan di berbagai
 
 ---
 
-## Slide 9: Mekanisme Alternatif: Burn-and-Mint & Liquidity Networks
+## Slide 9: Alternative Mechanics: Burn-and-Mint & Liquidity Networks
 
 ### Konten Slide
-- **1. Burn-and-Mint (Native Minting):**
-  - *Contoh:* Circle Cross-Chain Transfer Protocol (CCTP) untuk USDC.
-  - *Alur:* Token USDC asli **dibakar (*burned*)** secara permanen di Rantai A, dan penerbit resmi **mencetak (*mint*)** token USDC asli baru langsung di Rantai B.
-  - *Keunggulan:* Menghilangkan keberadaan wrapped assets dan risiko depeg; pengguna selalu memegang aset asli berlisensi.
-- **2. Cross-Chain Liquidity Networks (Across, Stargate):**
-  - *Mekanisme:* Penyedia likuiditas independen (*liquidity providers*) menempatkan kolam cadangan aset asli di kedua sisi rantai.
-  - Saat Alice menyetor USDC di Arbitrum, market maker off-chain langsung mencairkan USDC asli dari cadangan lokal di Optimism ke dompet Alice dalam hitungan detik.
-  - Market maker kemudian menyeimbangkan kembali (*rebalancing*) modal mereka melalui lapisan penyelesaian yang lambat namun aman.
-  - *Keunggulan:* Pengguna menerima aset asli instan tanpa risiko brankas terpusat yang rentan terkuras habis.
-- *Visual:* Perbandingan diagram alur Burn-and-Mint (Bakar dan Cetak Asli) vs Liquidity Pool Network (Pertukaran Saldo Kas Lokal).
+Alternative Mechanics: Burn-and-Mint & Liquidity Networks
+
+1. Native Burn-and-Mint (e.g., Circle CCTP):
+- Workflow: Native USDC is permanently burned on Chain A, and an authorized issuer mints genuine native USDC directly on Chain B.
+- Advantage: Completely eliminates wrapped assets, custodial bridge vaults, and depeg vulnerabilities; users always hold official native currency.
+
+2. Cross-Chain Liquidity Networks (Across, Stargate):
+- Mechanism: Independent liquidity providers deposit pools of native assets on both sides of the bridge.
+- Fast Settlement: Off-chain market makers fulfill user intent instantly from local reserves on Chain B, then rebalance asynchronously via slower messaging layers.
+- Advantage: Users receive native assets within seconds without exposing capital to centralized multi-billion-dollar escrow vault honeypots.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -286,19 +336,28 @@ Pengguna langsung mendapatkan koin asli dan aman dari risiko peretasan brankas r
 
 ---
 
-## Slide 10: Kuburan Jembatan: Analisis Kasus Eksploitasi Terbesar
+## Slide 10: The Cemetery of Bridges: Historical Case Studies of Exploits
 
 ### Konten Slide
-- **Catatan Sejarah Kerentanan Bridge Paling Berdarah:**
+The Cemetery of Bridges: Historical Case Studies of Exploits
 
-| Insiden Peretasan | Total Kerugian | Akar Penyebab Kerentanan Teknis |
-| :--- | :--- | :--- |
-| **Ronin Network (2022)** | **$625 Juta** | *Key Compromise:* Peretas mencuri 5 dari 9 private keys validator multi-sig lewat serangan spear-phishing karyawan. |
-| **Wormhole Bridge (2022)** | **$320 Juta** | *Smart Contract Logic Bypass:* Peretas memalsukan instruksi sysvar di Solana untuk melewati verifikasi tanda tangan Guardian. |
-| **Nomad Bridge (2022)** | **$190 Juta** | *Uninitialized Storage Pointer:* Pembaruan kontrak menyetel akar pesan tepercaya ke `0x00`, membuat semua pesan otomatis lolos verifikasi. |
-| **Harmony Horizon (2022)** | **$100 Juta** | *Infrastructure Breach:* Kompromi infrastruktur server multi-sig 2-dari-5 validator. |
+Major Historical Bridge Exploits:
 
-- *Visual:* Infografis kerugian miliaran dolar pada insiden bridge hacks utama dengan visual akar penyebabnya.
+1. Ronin Network (March 2022) - $625 Million:
+- Attack Vector: Private Key Compromise.
+- Root Cause: Attackers compromised 5 out of 9 validator keys via targeted spear-phishing, forging withdrawal authorizations on the Ethereum escrow bridge.
+
+2. Wormhole Bridge (February 2022) - $320 Million:
+- Attack Vector: Smart Contract Logic Bypass.
+- Root Cause: Exploiters forged a Solana sysvar instruction to bypass signature verification checks, minting 120k wETH without depositing collateral on Ethereum.
+
+3. Nomad Bridge (August 2022) - $190 Million:
+- Attack Vector: Uninitialized Storage Pointer.
+- Root Cause: Routine contract upgrade mistakenly initialized trusted roots to zero (0x00), causing the bridge to auto-verify any transaction with an empty proof.
+
+4. Harmony Horizon (June 2022) - $100 Million:
+- Attack Vector: Infrastructure Breach.
+- Root Cause: Compromise of 2 out of 5 multi-sig server private keys.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -319,17 +378,24 @@ Akibatnya, kontrak pintar menganggap semua pesan transaksi kosong sebagai bukti 
 
 ---
 
-## Slide 11: Peringatan Vitalik Buterin: Batasan Fundamental Keamanan Bridge
+## Slide 11: Vitalik Buterin's Warning: Fundamental Security Limits of Bridges
 
 ### Konten Slide
-- **Tesis Terkenal Vitalik Buterin (2022):** *"The future is multi-chain, but it is not cross-chain."*
-- **Asimetri Keamanan Rollup vs Bridge:**
-  - **Di dalam Rollup:** Jika Ethereum Layer 1 diserang atau mengalami reorganisasi, status Layer 2 akan ikut mundur secara sinkron karena Rollup terikat mati dengan konsensus L1.
-  - **Antar Jembatan Lintas Rantai:** Jika Rantai A mengalami serangan 51 persen atau reorganisasi dalam (*deep reorg*):
-    - Penyerang dapat membelanjakan ganda (*double-spend*) koin di Rantai A setelah koin representasi terlanjur dicairkan di Rantai B.
-    - Rantai B tidak memiliki cara untuk membatalkan blok di Rantai A atau menarik kembali aset yang sudah terlanjur dicairkan.
-- **Kesimpulan Arsitektur:** Jembatan lintas rantai selalu menambahkan asumsi kepercayaan baru di luar asumsi konsensus dasar, menjadikannya vektor serangan permanen.
-- *Visual:* Diagram perbandingan: Sinkronisasi pemulihan L1-L2 saat reorganisasi vs Kerusakan permanen pada jembatan lintas rantai independen.
+Vitalik Buterin's Warning: Fundamental Security Limits of Bridges
+
+The Core Thesis (Vitalik Buterin, 2022):
+- "The future is multi-chain, but it is not cross-chain."
+
+The Asymmetry Between Rollups and Cross-Chain Bridges:
+- Intra-Rollup Recovery:
+- If Ethereum Layer 1 undergoes a 51 percent reorganization, Layer 2 rollups automatically reorg in perfect unison because their state is inextricably bound to L1 consensus.
+- Cross-Chain Bridge Decoupling:
+- If Chain A suffers a 51 percent attack or deep reorganization:
+- Attackers can double-spend assets on Chain A after wrapped assets have already been redeemed and utilized on Chain B.
+- Chain B has no sovereign authority or technical capability to revert state on Chain A or recover drained assets.
+
+Architectural Conclusion:
+- Cross-chain bridges inevitably introduce security assumptions weaker than either connected chain, creating permanent systemic attack vectors.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
@@ -349,17 +415,21 @@ Inilah batasan matematika fundamental kenapa jembatan lintas rantai independen a
 
 ---
 
-## Slide 12: Jembatan ke Modul Berikutnya (Protocol Security and MEV)
+## Slide 12: Transition to Module 06.5: Protocol Security and MEV
 
 ### Konten Slide
-- **Pelajaran Berharga dari Keruntuhan Bridge:**
-  - Blockchain publik adalah medan tempur yang sangat kejam (*deeply adversarial environment*).
-  - Sekali kode smart contract diterapkan ke buku besar abadi, setiap celah logika, reentrancy bug, atau manipulasi urutan transaksi dapat dieksploitasi dalam hitungan detik tanpa bantuan hukum.
-- **Ancaman dari Dalam Blok: Maximal Extractable Value (MEV):**
-  - Selain celah pada baris kode smart contract, terdapat kekuatan predator lain yang beroperasi di dalam setiap blok: **MEV**.
-  - Bot pencari (*searchers*) mengintai mempool publik untuk menyalip (*front-run*), menjepit (*sandwich attack*), dan memeras keuntungan dari transaksi pengguna biasa.
-- **Materi Modul Berikutnya:** **Protocol Security and Maximum Extractable Value (MEV)**.
-- *Visual:* Ilustrasi radar pemindai bot MEV di ruang gelap mempool publik memburu transaksi smart contract yang rentan.
+Transition to Module 06.5: Protocol Security and MEV
+
+Lessons from the Bridge Battlefield:
+- Public blockchains are brutal, zero-sum adversarial environments.
+- Once smart contracts are deployed to an immutable ledger, every logic flaw, reentrancy bug, or transaction ordering exploit is harvested within seconds.
+
+The Threat From Within the Block: Maximal Extractable Value (MEV):
+- Beyond smart contract code vulnerabilities, another predator operates in the mempool: MEV.
+- Searcher bots monitor public mempools 24/7 to front-run, sandwich, and extract value from everyday users and decentralized protocols.
+
+Next Up:
+- Module 06.5: Protocol Security and Maximum Extractable Value (MEV).
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**

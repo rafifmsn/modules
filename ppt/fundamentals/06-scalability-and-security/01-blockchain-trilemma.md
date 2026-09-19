@@ -3,360 +3,416 @@ Modul Presentasi: Scalability and Security (06.1)
 
 ---
 
-## Slide 1: Judul Presentasi
+## Slide 1: The Blockchain Trilemma: Throughput Limits and Modular Paradigms
 
 ### Konten Slide
-- **Topik:** The Blockchain Trilemma: Skalabilitas, Keamanan, dan Desentralisasi
-- **Track:** Fundamentals of Distributed Trust
-- **Fokus Utama:** Mengapa jaringan blockchain monolitik tidak bisa memaksimalkan throughput tanpa mengorbankan desentralisasi, dan bagaimana paradigma modular menyelesaikannya.
-- *Visual:* Diagram segitiga Trilemma dengan tiga sudut (Decentralization, Security, Scalability) dan posisi berbagai blockchain.
+The Blockchain Trilemma: Throughput Limits, Hardware Constraints, and Modular Paradigms
+Module 06.1: Scalability and Security
+Track: Fundamentals of Distributed Trust
+
+Core Architectural Focus:
+- Why monolithic public blockchains cannot simultaneously optimize throughput, security, and decentralization.
+- The physics of distributed networks: network latency, CPU execution bounds, and disk I/O bottlenecks.
+- How decoupling execution, consensus, settlement, and data availability resolves the trilemma through modular scaling.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Selamat datang di modul pertama dari Chapter 06: Scalability and Security.
-- Membahas batasan fundamental sistem terdistribusi yang dikenal sebagai the blockchain trilemma.
-- Menjelaskan mengapa menaikkan ukuran blok bukan solusi jangka panjang, dan bagaimana arsitektur modular memecahkan kebuntuan ini.
+- Membuka modul pertama dari Chapter 06: Scalability and Security.
+- Memperkenalkan batasan fundamental sistem terdistribusi yang dikenal sebagai The Blockchain Trilemma.
+- Menekankan bahwa menaikkan ukuran blok bukan solusi jangka panjang, dan paradigma modular adalah kunci penskalaan masa depan.
 
 **Naskah Tutur (Voiceover Script):**
 Selamat datang di modul pertama dari bab Scalability and Security.
-Setelah di bab sebelumnya kita mempelajari bagaimana smart contract, AMM, dan protokol DeFi bekerja mengelola modal terdesentralisasi, sekarang kita membentur satu tembok besar dalam ilmu komputer.
-Ketika jutaan orang di seluruh dunia mulai menggunakan aplikasi ini secara serentak, jaringan mendadak menjadi lambat dan biaya transaksi melonjak tinggi.
-Banyak orang langsung bertanya: kenapa blockchain tidak dibuat secepat aplikasi perbankan modern?
-Hari ini kita akan membedah akar penyebab masalah tersebut: the blockchain trilemma.
-Kita akan lihat kenapa batasan fisik hardware membuat blockchain monolitik tidak bisa cepat tanpa mengorbankan desentralisasi, dan mengapa industri sekarang beralih ke arsitektur modular.
+Pada bab sebelumnya, kita telah mempelajari bagaimana smart contract, automated market makers, dan protokol lending mengoordinasikan modal global secara terdesentralisasi.
+Namun ketika jutaan pengguna bertransaksi secara bersamaan, jaringan publik mendadak mengalami kemacetan parah dan biaya gas melonjak tinggi.
+Banyak orang bertanya: mengapa blockchain tidak bisa dibuat secepat sistem perbankan terpusat modern?
+Hari ini kita akan membedah akar penyebab masalah tersebut melalui The Blockchain Trilemma.
+Kita akan meneliti mengapa batasan fisik perangkat keras membuat blockchain monolitik tidak dapat dipercepat tanpa mengorbankan desentralisasi.
+Kita juga akan mempelajari bagaimana pergeseran ke paradigma modular memecahkan kebuntuan fundamental ini.
 
 ---
 
-## Slide 2: Latar Belakang dan Trade-off Sistem Terdistribusi
+## Slide 2: Distributed Systems Trade-offs and the Trilemma Origin
 
 ### Konten Slide
-- **Hukum Fisika Sistem Terdistribusi:** Merancang protokol desentralistik selalu merupakan seni mengelola trade-off fundamental.
-- **Tidak Ada Sistem Sempurna:** Tidak ada satu pun arsitektur database atau jaringan komunikasi yang bisa memaksimalkan semua parameter operasional secara bersamaan.
-- **Formulasi Vitalik Buterin (2017):**
-  - Mengkristalisasi batasan arsitektur public distributed ledger ke dalam tiga pilar yang saling mengunci.
-  - Sebuah blockchain terdesentralisasi hanya mampu memaksimalkan paling banyak **dua dari tiga** pilar utama pada waktu yang sama.
-- *Visual:* Ilustrasi timbangan tiga arah yang saling menarik antara desentralisasi, keamanan, dan skalabilitas.
+Distributed Systems Trade-offs and the Trilemma Origin
+
+The Law of Distributed Physics:
+- Designing decentralized protocols requires managing unavoidable fundamental trade-offs.
+- No single database or network topology can simultaneously maximize every performance metric.
+- Derived from classical distributed systems theory, analogous to the CAP Theorem in database engineering.
+
+Vitalik Buterin Formulation (2017):
+- Formalized the core trade-off governing public distributed ledgers.
+- A decentralized blockchain can optimize at most two of three primary properties at any given time.
+- The three competing pillars: Decentralization, Security, and Scalability.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Mengingatkan kembali prinsip trade-off dalam komputer sains seperti Teorema CAP.
-- Vitalik Buterin merumuskan the blockchain trilemma pada tahun 2017.
-- Pesan kunci: kita tidak bisa mendapatkan segalanya sekaligus tanpa merombak arsitektur dasar.
+- Hubungkan dengan prinsip trade-off klasik dalam ilmu komputer seperti Teorema CAP.
+- Vitalik Buterin merumuskan the blockchain trilemma secara formal pada tahun 2017.
+- Pesan inti: tidak ada makan siang gratis dalam sistem terdistribusi monolitik.
 
 **Naskah Tutur (Voiceover Script):**
 Dalam ilmu komputer dan arsitektur sistem terdistribusi, tidak pernah ada yang namanya makan siang gratis.
-Kalian mungkin pernah mendengar Teorema CAP di sistem database tradisional, di mana kita dipaksa memilih antara Consistency, Availability, dan Partition Tolerance.
-Hal serupa terjadi pada blockchain publik.
-Pada tahun 2017, Vitalik Buterin merumuskan aturan main ini secara formal lewat konsep the blockchain trilemma.
-Dalilnya sederhana tapi mengikat: sebuah jaringan blockchain desentralistik hanya bisa memaksimalkan paling banyak dua dari tiga sifat dasar sekaligus.
-Tiga sifat dasar itu adalah Decentralization, Security, dan Scalability.
-Jika kalian mencoba memaksa memaksimalkan ketiganya dalam satu sistem monolitik, hukum fisika komputasi dan jaringan akan menolak sistem kalian.
+Kalian mungkin familiar dengan Teorema CAP pada sistem basis data tradisional, di mana kita dipaksa memilih antara Consistency, Availability, dan Partition Tolerance.
+Hukum trade-off serupa berlaku pada blockchain publik.
+Pada tahun 2017, Vitalik Buterin merumuskan aturan main ini secara formal melalui konsep The Blockchain Trilemma.
+Dalilnya sangat tegas: sebuah jaringan blockchain terdesentralisasi hanya mampu memaksimalkan paling banyak dua dari tiga sifat dasar sekaligus.
+Tiga sifat dasar tersebut adalah Decentralization, Security, dan Scalability.
+Jika kita mencoba memaksa memaksimalkan ketiganya dalam satu lapisan monolitik, hukum fisika komputasi dan jaringan akan menolak desain tersebut.
 
 ---
 
-## Slide 3: Tiga Pilar Blockchain Trilemma
+## Slide 3: The Three Pillars Defined: Decentralization, Security, Scalability
 
 ### Konten Slide
-- **1. Decentralization (Desentralisasi):**
-  - Jaringan dapat diverifikasi dan dijalankan oleh ribuan pengguna biasa menggunakan laptop konsumen standar.
-  - Menghindari ketergantungan pada oligarki data center berbiaya mahal.
-- **2. Security (Keamanan):**
-  - Protokol kebal secara matematis dan ekonomis terhadap serangan Byzantine terkoordinasi, reorganisasi 51 persen, dan kartel validator.
-  - Biaya untuk memanipulasi atau membalikkan transaksi jauh melampaui potensi keuntungan penyerang.
-- **3. Scalability / Throughput (Skalabilitas):**
-  - Sistem mampu memproses ribuan transaksi per detik (TPS) dengan latensi sub-detik dan biaya gas mendekati nol.
-- *Visual:* Tiga diagram kartu mendalam yang menguraikan masing-masing pilar beserta tolok ukur teknologinya.
+The Three Pillars Defined: Decentralization, Security, Scalability
+
+1. Decentralization:
+- The network can be verified and validated by thousands of independent participants using standard consumer hardware.
+- Prevents systemic reliance on expensive, specialized institutional data centers.
+- Anyone can run a full node locally to independently audit the state of the system.
+
+2. Security:
+- The protocol provides mathematical and economic resistance against coordinated Byzantine attacks and 51 percent reorganizations.
+- The economic cost to manipulate or reverse transactions far exceeds any potential attacker profit.
+- Finalized state transitions remain tamper-proof and mathematically immutable.
+
+3. Scalability:
+- The network processes thousands of transactions per second (TPS) with sub-second latency and minimal fees.
+- High capacity to absorb surges in global economic activity without pricing out everyday users.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
 - Bedah satu per satu arti konkret dari desentralisasi, keamanan, dan skalabilitas.
-- Tekankan bahwa desentralisasi bukan slogan politis, melainkan syarat bahwa pengguna biasa bisa memverifikasi chain sendiri.
+- Desentralisasi bukan sekadar jargon politik, melainkan syarat bahwa pengguna biasa mampu memverifikasi buku besar di rumah.
 - Keamanan adalah ketahanan termodinamika atau ekonomi terhadap serangan 51 persen.
 
 **Naskah Tutur (Voiceover Script):**
-Mari kita definisikan tiga pilar ini dengan sangat presisi agar kita tidak terjebak slogan pemasaran.
+Mari kita definisikan ketiga pilar ini secara presisi agar kita tidak terjebak dalam slogan pemasaran.
 Pilar pertama adalah Decentralization.
 Ini bukan sekadar desentralisasi di atas kertas.
-Syarat utamanya adalah: pengguna biasa seperti kalian harus bisa menjalankan full node verifikasi di laptop rumah sendiri tanpa harus menyewa server data center berharga ratusan juta rupiah.
+Syarat mutlaknya adalah: pengguna biasa harus mampu menjalankan full node verifikasi di laptop atau komputer rumah sendiri tanpa perlu menyewa server data center berbiaya mahal.
 Pilar kedua adalah Security.
-Ini berarti jaringan memiliki jaminan ekonomi dan kriptografi yang sangat kokoh terhadap serangan Byzantine atau reorganisasi 51 persen.
-Biaya modal untuk menyerang jaringan harus jauh lebih besar daripada nilai aset yang ada di dalamnya.
+Ini berarti jaringan memiliki jaminan ekonomi dan kriptografis yang sangat kokoh terhadap serangan Byzantine atau reorganisasi 51 persen.
+Modal yang diperlukan untuk menyerang jaringan harus jauh melampaui seluruh nilai aset yang tersimpan di dalamnya.
 Pilar ketiga adalah Scalability atau throughput.
-Artinya sistem sanggup memproses ribuan transaksi per detik dengan finalitas instan dan biaya transaksi hanya beberapa sen saja.
-Tantangannya: memilih dua pilar pertama akan langsung menekan pilar ketiga.
+Artinya sistem mampu memproses ribuan transaksi per detik dengan latensi instan dan biaya transaksi hanya beberapa sen saja.
+Tantangan utamanya: memilih dua pilar pertama secara langsung akan menekan pilar ketiga.
 
 ---
 
-## Slide 4: Spektrum Kompromi Blockchain Monolitik
+## Slide 4: The Monolithic Compromise Spectrum
 
 ### Konten Slide
-- **Desentralisasi + Keamanan (Mengorbankan Skalabilitas):**
-  - *Contoh:* Bitcoin, Ethereum Layer 1.
-  - *Karakteristik:* Ribuan validator independen di seluruh dunia, biaya serangan sangat masif, throughput rendah (7 sampai 30 TPS), biaya gas tinggi saat lalu lintas padat.
-- **Skalabilitas + Keamanan (Mengorbankan Desentralisasi):**
-  - *Contoh:* Solana, Binance Smart Chain.
-  - *Karakteristik:* Throughput mencapai ribuan TPS dengan biaya murah, tetapi menuntut hardware kelas enterprise (CPU puluhan core, RAM 256 GB, koneksi data center), hanya segelintir validator institusional yang mampu bertahan.
-- **Skalabilitas + Desentralisasi (Mengorbankan Keamanan):**
-  - *Contoh:* Multi-chain sharding tanpa shared security.
-  - *Karakteristik:* Banyak rantai independen berkecepatan tinggi, tetapi setiap shard rentan terhadap serangan partisi atau pembajakan validator minoritas.
-- *Visual:* Diagram spektrum segitiga dengan titik koordinat Bitcoin, Ethereum, Solana, dan shard terisolasi.
+The Monolithic Compromise Spectrum
+
+Decentralization + Security (Sacrificing Scalability):
+- Examples: Bitcoin, Ethereum Layer 1.
+- Profile: Tens of thousands of independent consumer nodes globally; astronomically expensive attack cost.
+- Limitation: Low throughput (7 to 30 TPS); high gas fees and network congestion during demand peaks.
+
+Scalability + Security (Sacrificing Decentralization):
+- Examples: Solana, Binance Smart Chain.
+- Profile: High throughput reaching thousands of TPS with negligible transaction fees.
+- Limitation: Requires high-end enterprise hardware (multi-core server CPUs, 256 GB RAM, 10 Gbps data center fiber); regular users cannot run verifying nodes.
+
+Scalability + Decentralization (Sacrificing Security):
+- Examples: Early multi-chain sharding without shared security.
+- Profile: Multiple independent parallel chains with low entry barriers.
+- Limitation: Partitioned economic security; individual shards remain highly vulnerable to 51 percent takeovers and validator collusion.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Bitcoin dan Ethereum L1 memilih desentralisasi dan keamanan, menerima konsekuensi throughput rendah.
-- Solana dan BSC memilih skalabilitas dan keamanan, terpaksa mengorbankan desentralisasi node.
-- Sharding tanpa shared security memecah keamanan menjadi rapuh.
+- Bitcoin dan Ethereum L1 memprioritaskan desentralisasi dan keamanan, menerima konsekuensi throughput rendah.
+- Rantai berkecepatan tinggi sering kali menuntut hardware enterprise sehingga mengorbankan desentralisasi node.
+- Sharding tanpa shared security membuat keamanan terpecah menjadi rapuh.
 
 **Naskah Tutur (Voiceover Script):**
-Kita bisa melihat spektrum kompromi ini di industri nyata hari ini.
+Kita dapat melihat spektrum kompromi ini dalam ekosistem blockchain dunia nyata hari ini.
 Kubu pertama memilih Desentralisasi dan Keamanan, seperti Bitcoin dan Ethereum Layer 1.
-Siapa pun bisa menjalankan node Ethereum di perangkat mini PC di rumah, dan biaya untuk menyerang jaringannya mencapai miliaran dolar.
-Namun konsekuensinya, throughput mereka terbatas pada 15 hingga 30 transaksi per detik, yang memicu lonjakan biaya gas saat pasar ramai.
+Siapa pun dapat menjalankan node Ethereum di mini PC rumah, dan biaya untuk menyerang jaringannya mencapai miliaran dolar.
+Namun konsekuensinya, kapasitas transaksi mereka terbatas pada 15 hingga 30 transaksi per detik, yang memicu lonjakan biaya gas saat lalu lintas padat.
 Kubu kedua memilih Skalabilitas dan Keamanan, seperti Solana.
-Mereka bisa memproses ribuan transaksi per detik dengan biaya sangat murah.
-Namun syarat menjalankan nodenya membutuhkan prosesor tingkat server, RAM ratusan gigabyte, dan koneksi internet fiber data center.
+Mereka sanggup memproses ribuan transaksi per detik dengan biaya murah.
+Namun untuk menjadi validator, kalian membutuhkan prosesor server puluhan inti, ratusan gigabyte RAM, dan koneksi internet serat optik data center.
 Pengguna biasa tersingkir dari proses verifikasi mandiri.
 Kubu ketiga mencoba mengejar Skalabilitas dan Desentralisasi dengan memecah jaringan menjadi banyak rantai kecil tanpa keamanan bersama.
-Hasilnya, setiap rantai kecil sangat mudah diserang karena modal untuk menguasai validatornya terlalu rendah.
+Hasilnya, setiap rantai sangat rentan diserang karena modal untuk menguasai validatornya terlalu kecil.
 
 ---
 
-## Slide 5: Misteri Throughput: Mengapa Visa Cepat dan Blockchain Lambat?
+## Slide 5: The Throughput Mystery: Why Visa is Fast and Blockchains are Slow
 
 ### Konten Slide
-- **Pertanyaan Klasik:** Mengapa jaringan Visa mampu memproses 24.000 TPS, sementara Bitcoin hanya 7 TPS dan Ethereum L1 hanya 15 sampai 30 TPS?
-- **Arsitektur Terpusat Visa:**
-  - Server cluster privat di data center tertutup menulis langsung ke satu master database relasional.
-  - Tanpa konsensus Byzantine, tanpa latensi gossip P2P, tanpa verifikasi independen oleh publik.
-- **Arsitektur Terdesentralisasi Blockchain:**
-  - **Redundant Execution:** Setiap satu transaksi dieksekusi ulang secara redundan oleh puluhan ribu node independen di seluruh dunia.
-  - Transaksi swap Bob di Tokyo dieksekusi secara identik oleh node di Berlin, New York, dan Jakarta.
-- *Visual:* Perbandingan alur eksekusi Visa (Client -> Central Server -> Single DB) vs Blockchain (Client -> P2P Gossip -> 10.000+ Redundant Nodes).
+The Throughput Mystery: Why Visa is Fast and Blockchains are Slow
+
+Centralized Database Architecture (Visa):
+- Capacity: 24,000+ transactions per second on demand.
+- Topology: Private server clusters inside secure corporate data centers writing directly to centralized relational databases.
+- Single Execution: Each transaction is computed and committed exactly once by the database cluster.
+- No P2P gossip latency, no Byzantine fault tolerance overhead, no permissionless public verification.
+
+Decentralized Blockchain Architecture:
+- Capacity: 7 to 30 transactions per second on base layers.
+- Topology: Global peer-to-peer network across thousands of untrusted, geographically dispersed consumer nodes.
+- Redundant Execution: Every single transaction is independently executed and re-computed by every single full node worldwide.
+- A token swap initiated in Tokyo is executed identically by nodes in Berlin, New York, and Jakarta to independently verify state transitions.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Jawaban fundamental kenapa blockchain lambat: eksekusi redundan.
-- Visa hanya menjalankan komputasi satu kali di server internal mereka.
-- Blockchain memaksa setiap node di bumi mengulang komputasi yang persis sama.
+- Jawaban mendasar mengapa blockchain lambat: eksekusi redundan.
+- Visa hanya mengeksekusi komputasi satu kali di server internal tertutup mereka.
+- Blockchain memaksa puluhan ribu node di seluruh dunia mengulang komputasi yang persis sama.
 
 **Naskah Tutur (Voiceover Script):**
-Pertanyaan yang paling sering diajukan orang awam adalah: kenapa Visa bisa memproses 24.000 transaksi per detik, tapi blockchain terdesentralisasi begitu lambat?
-Jawabannya terletak pada bagaimana komputasi dan verifikasi dirancang.
-Di sistem terpusat seperti Visa, transaksi kalian diproses oleh cluster server privat yang langsung menulis ke satu master database.
-Tidak ada voting konsensus lintas internet terbuka, tidak ada toleransi terhadap validator nakal, dan komputasi hanya dieksekusi satu kali saja.
-Sebaliknya, pada blockchain terdesentralisasi, berlaku prinsip *redundant execution*.
-Ketika Bob melakukan swap token di Uniswap, komputasi itu tidak dijalankan satu kali.
-Komputasi tersebut dijalankan ulang secara redundan oleh puluhan ribu node independen di Tokyo, Berlin, New York, dan Jakarta.
-Setiap node memeriksa keabsahan signature, menghitung saldo baru, dan memperbarui database lokal masing-masing secara serentak.
+Pertanyaan yang paling sering diajukan orang awam adalah: mengapa jaringan Visa sanggup memproses 24.000 transaksi per detik, tetapi blockchain terdesentralisasi begitu lambat?
+Jawabannya terletak pada perbedaan mendasar antara eksekusi tunggal dan eksekusi redundan.
+Di sistem terpusat seperti Visa, transaksi kalian diproses oleh cluster server privat yang langsung memperbarui satu master database.
+Tidak ada pemungutan suara konsensus melalui internet terbuka, tidak ada toleransi terhadap peretas Byzantine, dan komputasi hanya dijalankan satu kali saja.
+Sebaliknya, pada blockchain terdesentralisasi berlaku prinsip redundant execution.
+Ketika seorang pengguna melakukan swap token di Uniswap, komputasi tersebut tidak dijalankan sekali.
+Komputasi itu dieksekusi ulang secara identik oleh puluhan ribu validator independen di Tokyo, Berlin, New York, dan Jakarta.
+Setiap node memeriksa keabsahan signature, mengeksekusi opcode mesin virtual, dan memperbarui database lokal masing-masing secara serentak.
 
 ---
 
-## Slide 6: Batasan Fisik Throughput Jaringan
+## Slide 6: Physical Limits of Network Throughput
 
 ### Konten Slide
-- **Batasan Fisika Komputasi:** Throughput jaringan terdesentralisasi secara fisik dibatasi oleh kapasitas node validator yang paling lambat dalam topologi jaringan.
-- **Persamaan Batasan Throughput:**
+Physical Limits of Network Throughput
 
-$$\text{Throughput} \propto \frac{\text{Block Size } S}{\text{Block Propagation Time } \Delta + \text{Block Execution Time } T_{\text{exec}}}$$
+The Governed Formula of Blockchain Physics:
+- Throughput is fundamentally bounded by block size, network propagation delay, and CPU execution time:
+- Throughput proportional to S / (Delta + T_exec)
+- S: Block size in bytes containing raw transaction payload.
+- Delta: Global block propagation latency across peer-to-peer network nodes.
+- T_exec: Time required for validator CPU to verify cryptographic signatures and execute smart contract bytecode.
 
-- **Parameter yang Bersaing:**
-  - *Block Size ($S$):* Semakin besar data transaksi per blok, semakin lama waktu transmisi عبر jaringan P2P ($\Delta$).
-  - *Propagation Time ($\Delta$):* Latensi penyebaran blok lintas benua; jika terlalu tinggi, tingkat percabangan (*orphan / uncle rate*) melonjak drastis.
-  - *Execution Time ($T_{\text{exec}}$):* Waktu yang dibutuhkan CPU untuk memverifikasi cryptographic signatures dan mengeksekusi bytecode smart contract.
-- *Visual:* Bagan interaksi antara ukuran blok, waktu propagasi, dan waktu komputasi CPU.
+Competing Parameter Dynamics:
+- Increasing Block Size (S): Transmitting larger blocks drastically inflates propagation latency (Delta) across intercontinental fiber links.
+- High Propagation Delay (Delta): If Delta approaches block production interval, nodes produce competing blocks simultaneously, causing high fork/uncle rates and consensus instability.
+- Execution Bound (T_exec): If execution takes too long, validators cannot keep up with the real-time head of the chain.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Hubungan matematis antara throughput, ukuran blok, dan latensi propagasi.
-- Hukum fisika: data butuh waktu untuk menyeberangi kabel bawah laut antar-benua.
-- Jika propagasi terlalu lambat dibanding interval blok, konsensus akan pecah karena fork terus-menerus.
+- Hubungan matematis antara throughput, ukuran blok, latensi propagasi, dan waktu komputasi.
+- Hukum fisika: paket data membutuhkan waktu nyata untuk menyeberangi serat optik antar-benua.
+- Jika propagasi terlalu lambat dibanding interval blok, konsensus akan pecah karena blok yatim (orphans).
 
 **Naskah Tutur (Voiceover Script):**
-Secara fisika komputasi, throughput sebuah blockchain publik dibatasi oleh kapasitas simpul verifikasi yang ada di jaringan.
+Secara fisika komputasi, kapasitas sebuah blockchain publik dibatasi secara ketat oleh simpul verifikasi terlemah dalam topologi jaringan.
 Lihat formula sederhana ini.
 Throughput sebanding dengan ukuran blok dibagi dengan waktu propagasi blok ditambah waktu eksekusi komputasi.
-Jika kita memperbesar ukuran blok $S$ agar muat lebih banyak transaksi, ukuran file yang harus dikirim lewat jaringan peer-to-peer menjadi sangat besar.
-Akibatnya, waktu propagasi $\Delta$ melonjak karena data butuh waktu fisik menyeberangi serat optik antar-benua.
-Jika sebuah blok butuh waktu 30 detik untuk sampai ke belahan bumi lain sementara blok baru dibuat setiap 12 detik, jaringan akan mengalami perpecahan terus-menerus.
-Banyak blok sah menjadi yatim atau *orphaned*, dan konsensus menjadi sangat tidak stabil.
+Jika kita memperbesar ukuran blok S agar memuat lebih banyak transaksi, ukuran paket data yang harus disiarkan lewat jaringan peer-to-peer melonjak drastis.
+Akibatnya, waktu propagasi Delta meningkat tajam karena data membutuhkan waktu fisik untuk menyeberangi serat optik antar-benua.
+Jika sebuah blok membutuhkan 30 detik untuk tiba di belahan bumi lain sementara blok baru diproduksi setiap 12 detik, jaringan akan mengalami percabangan terus-menerus.
+Banyak blok sah berubah menjadi yatim atau orphan, dan keamanan konsensus menjadi sangat tidak stabil.
 
 ---
 
-## Slide 7: Tiga Hambatan Fisik Hardware Validator
+## Slide 7: Three Hardware Validator Bottlenecks
 
 ### Konten Slide
-- **1. Network Bandwidth (Kapasitas Jaringan):**
-  - Mengirim blok berukuran ratusan megabyte secara konstan lewat koneksi internet rumah memicu kegagalan sinkronisasi.
-  - Node konsumen tertinggal dari ujung rantai (*chain tip*).
-- **2. CPU Execution Speed (Kecepatan Pemrosesan):**
-  - Mengevaluasi ribuan opcode smart contract yang rumit dan memverifikasi tanda tangan kriptografis ECDSA menguras siklus prosesor secara intensif.
-- **3. Disk I/O & State Bloat (Hambatan Utama):**
-  - Setiap transaksi harus membaca dan menulis ke database penyimpanan lokal (LevelDB atau Pebble).
-  - Batasan input/output per detik (IOPS) pada media penyimpanan adalah pembatas fisik nomor satu yang mencekik performa blockchain monolitik.
-- *Visual:* Tiga pilar hardware: Bandwidth pipa internet, siklus CPU, dan bottleneck kecepatan baca/tulis Disk NVMe.
+Three Hardware Validator Bottlenecks
+
+1. Network Bandwidth Bottleneck:
+- Continuously receiving and broadcasting multi-megabyte blocks saturates residential internet uplinks.
+- Packet loss and high latency cause home nodes to desynchronize and fall behind the chain tip.
+
+2. CPU Execution Bottleneck:
+- Verifying thousands of ECDSA signatures and evaluating complex EVM smart contract opcodes consumes heavy processor cycles.
+- Sequential execution models fail to saturate modern multi-threaded architectures.
+
+3. Disk I/O & State Bloat Bottleneck (The Critical Hurdle):
+- Every transaction requires reading and writing account balances and contract storage to local key-value stores (LevelDB or Pebble).
+- Random read and write operations on Merkle Patricia Trie structures choke disk IOPS.
+- Storage performance is the primary physical constraint governing Layer 1 block gas limits.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Tiga hardware bottleneck: Bandwidth, CPU, dan Disk IOPS.
-- Tekankan bahwa musuh terbesar blockchain sebenarnya bukan CPU, melainkan Disk I/O dan State Bloat.
-- Disk IOPS adalah alasan utama kenapa Ethereum L1 membatasi gas limit per blok.
+- Tiga bottleneck perangkat keras: Bandwidth, CPU, dan Disk IOPS.
+- Tekankan bahwa hambatan terbesar sebenarnya bukan CPU, melainkan Disk I/O dan State Bloat.
+- Disk IOPS adalah alasan utama mengapa batas gas blok Ethereum dibatasi secara ketat.
 
 **Naskah Tutur (Voiceover Script):**
-Jika kita bedah lebih dalam ke perangkat keras komputer, ada tiga bottleneck fisik utama.
-Pertama, Network Bandwidth.
-Koneksi internet residensial biasa tidak sanggup mengunduh dan menyiarkan puluhan megabyte data setiap detik secara terus-menerus tanpa jeda.
-Kedua, CPU Execution Speed.
-Memvalidasi ribuan tanda tangan digital kriptografis dan mengeksekusi jutaan instruksi opcode mesin virtual menguras siklus prosesor secara masif.
-Tetapi hambatan fisik nomor satu yang paling mematikan sebenarnya adalah Disk I/O dan State Bloat.
-Setiap kali ada saldo yang berubah, node harus membaca dan menulis struktur data Merkle Patricia Trie ke penyimpanan hard drive lokal.
-Kecepatan baca-tulis atau IOPS dari media penyimpanan inilah yang menjadi batas keras fisik kenapa blockchain monolitik tidak bisa dipaksa berlari kencang di komputer konsumen biasa.
+Jika kita membedah lebih dalam ke perangkat keras validator, ada tiga hambatan fisik utama.
+Pertama adalah Network Bandwidth.
+Koneksi internet rumah biasa tidak sanggup mengunduh dan menyiarkan puluhan megabyte data setiap detik secara nonstop tanpa jeda.
+Kedua adalah CPU Execution Speed.
+Memverifikasi ribuan tanda tangan digital kriptografis dan mengeksekusi instruksi opcode mesin virtual menguras siklus prosesor secara intensif.
+Namun hambatan fisik nomor satu yang paling mematikan sebenarnya adalah Disk I/O dan State Bloat.
+Setiap kali ada saldo yang berubah, node harus membaca dan menulis struktur data Merkle Patricia Trie ke media penyimpanan lokal.
+Batasan operasi input/output per detik atau IOPS pada hard drive inilah yang menjadi batas keras mengapa blockchain monolitik tidak dapat dipaksa berlari kencang di komputer konsumen biasa.
 
 ---
 
-## Slide 8: Jebakan Monolitik (The Monolithic Centralization Trap)
+## Slide 8: The Monolithic Centralization Trap
 
 ### Konten Slide
-- **Pendekatan Naif:** Mengapa tidak memperbesar ukuran blok menjadi 500 MB dan memangkas waktu blok menjadi 1 detik?
-- **Rantai Reaksi Sentralisasi:**
-  - *Ledakan Ukuran State:* Pada kecepatan puluhan ribu TPS, status akun global bertambah puluhan gigabyte setiap hari, membengkak menjadi puluhan terabyte dalam hitungan tahun.
-  - *Tersingkirnya Node Rumahan:* Laptop dan mini PC pengguna biasa gagal mengejar ujung rantai dan mengalami crash permanen.
-  - *Oligarki Data Center:* Hanya segelintir institusi kaya yang mampu menyewa server enterprise multi-prosesor dan storage NVMe kelas data center.
-  - *Kehilangan Kedaulatan Diri:* Ketika masyarakat tidak mampu memverifikasi buku besar secara mandiri, blockchain berubah menjadi replika Amazon Web Services yang tidak efisien.
-- *Visual:* Alur kausalitas naif: Naikkan Ukuran Blok -> Hardware Meledak -> Node Rumahan Gugur -> Oligarki Data Center -> Kerentanan Sensor Pemerintah.
+The Monolithic Centralization Trap
+
+The Naive Scaling Proposal:
+- Arbitrarily increase block size to 500 MB and reduce block interval to 1 second.
+
+The Cascading Centralization Failure:
+- State Explosion: High-throughput execution generates gigabytes of new state daily, expanding global storage to dozens of terabytes within years.
+- Consumer Node Extinction: Everyday laptops and mini PCs run out of IOPS and disk capacity, crashing permanently.
+- Data Center Oligopoly: Only well-funded institutions and enterprise data centers can afford enterprise-grade NVMe arrays and high-core servers.
+- Censorship Vulnerability: When the validator set shrinks to a handful of corporate entities, governments and regulators can easily coerce validators into censoring transactions and freezing funds.
+- Loss of Self-Sovereignty: The blockchain degenerates into an expensive, inefficient replica of traditional cloud computing.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Godaan memperbesar blok: solusi instan yang membawa petaka sentralisasi.
-- State explosion memaksa pengguna biasa bergantung pada penyedia RPC pihak ketiga seperti Infura atau Alchemy.
-- Filosofi dasar Bitcoin dan Ethereum: hak memverifikasi secara mandiri adalah harga mati.
+- Godaan memperbesar blok: solusi instan yang memicu bencana sentralisasi jangka panjang.
+- Ledakan status (state explosion) menyingkirkan validator rumahan dan memaksa ketergantungan pada penyedia RPC korporat.
+- Prinsip dasar blockchain: kemampuan verifikasi mandiri adalah benteng pertahanan terakhir kedaulatan digital.
 
 **Naskah Tutur (Voiceover Script):**
-Melihat masalah skalabilitas, reaksi pertama orang awam biasanya adalah: buat saja ukuran blok seratus kali lebih besar dan percepat waktu blok jadi satu detik.
+Melihat masalah skalabilitas, reaksi pertama orang awam sering kali adalah: perbesar saja ukuran blok seratus kali lipat dan percepat waktu pembuatan blok menjadi satu detik.
 Ini adalah jalur yang pernah dicoba oleh banyak rantai monolitik generasi awal.
-Pendekatan naif ini langsung memicu apa yang disebut *The Monolithic Centralization Trap*.
-Jika jaringan memproses 50.000 transaksi per detik secara terus-menerus, ukuran state database akan membengkak puluhan gigabyte setiap hari.
-Dalam beberapa tahun, kalian butuh storage puluhan terabyte dengan kecepatan enterprise NVMe yang sangat mahal.
+Pendekatan naif ini langsung memicu apa yang disebut The Monolithic Centralization Trap.
+Jika jaringan memproses puluhan ribu transaksi per detik secara terus-menerus, ukuran basis data status global akan membengkak puluhan gigabyte setiap hari.
+Dalam beberapa tahun, kalian membutuhkan penyimpanan puluhan terabyte dengan kecepatan enterprise NVMe yang sangat mahal.
 Node rumahan milik masyarakat biasa akan tertinggal dan mati satu per satu.
-Ujung-ujungnya, hanya tersisa segelintir data center korporat yang mampu menjalankan full node.
-Begitu jaringan dikuasai segelintir data center, regulator atau peretas tinggal mengirim surat panggilan hukum untuk menyensor transaksi atau membekukan aset pengguna.
+Pada akhirnya, hanya tersisa segelintir data center institusional yang sanggup menjalankan full node.
+Begitu jaringan dikuasai oleh segelintir korporasi, regulator atau penegak hukum tinggal mengirim surat panggilan untuk menyensor transaksi atau membekukan aset pengguna.
 Di titik itu, sifat desentralisasi runtuh total, dan blockchain kehilangan alasan eksistensinya.
 
 ---
 
-## Slide 9: Anatomi Rantai Monolitik: Empat Beban pada Satu Pundak
+## Slide 9: Anatomy of a Monolithic Chain: Four Burdens on One Shoulder
 
 ### Konten Slide
-- **Paradigma Monolitik (2009 - 2020):** Satu lapisan blockchain tunggal dipaksa menjalankan empat fungsi konsensus secara bersamaan.
-- **Empat Fungsi Dasar Konsensus Terdistribusi:**
-  - **1. Execution:** Mengeksekusi instruksi smart contract dan menghitung mutasi status saldo akun.
-  - **2. Settlement:** Memfinalisasi transaksi, menyelesaikan sengketa bukti kecurangan, dan menetapkan keabsahan absolut.
-  - **3. Consensus:** Menentukan urutan kronologis transaksi global yang tidak dapat diubah melalui PoW atau PoS.
-  - **4. Data Availability (DA):** Menjamin seluruh data transaksi mentah dipublikasikan dan dapat diakses oleh publik secara transparan.
-- *Visual:* Diagram kotak monolitik tunggal yang menanggung empat pilar sekaligus di satu lapisan node.
+Anatomy of a Monolithic Chain: Four Burdens on One Shoulder
+
+The Monolithic Architecture (2009-2020):
+- A single blockchain layer is forced to perform four distinct distributed consensus responsibilities simultaneously on every node.
+
+The Four Core Consensus Functions:
+- 1. Execution: Processing state transitions, evaluating smart contract bytecode, and mutating account storage.
+- 2. Settlement: Finalizing economic transactions, establishing dispute resolution, and enforcing absolute objective validity.
+- 3. Consensus: Determining the canonical chronological ordering of transactions and securing against reorganizations via PoW or PoS.
+- 4. Data Availability (DA): Guaranteeing that all raw transaction data is published and permanently accessible for public auditing.
+
+Resource Contention:
+- When all four functions compete for the same CPU, RAM, and Disk IOPS on a single node, scaling hits a hard computational ceiling.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Dekade pertama blockchain berjalan secara monolitik: Bitcoin, Ethereum L1 awal, Solana.
-- Kenalkan empat fungsi fundamental: Execution, Settlement, Consensus, Data Availability.
-- Karena keempat fungsi ini berebut CPU, RAM, dan disk yang sama pada satu node, skalabilitas menemui jalan buntu.
+- Dekade pertama industri kripto didominasi oleh rantai monolitik: Bitcoin, Ethereum L1 awal, Solana.
+- Empat fungsi fundamental: Execution, Settlement, Consensus, Data Availability.
+- Karena keempat fungsi ini memperebutkan resource perangkat keras yang sama, skalabilitas terbentur batas fisik.
 
 **Naskah Tutur (Voiceover Script):**
-Selama sepuluh tahun pertama sejarah industri kripto, hampir semua blockchain dibangun dengan arsitektur Monolitik.
+Selama sepuluh tahun pertama sejarah industri kripto, hampir semua blockchain dibangun dengan arsitektur monolitik.
 Dalam sistem monolitik, satu lapisan node tunggal dipaksa menanggung empat fungsi dasar konsensus terdistribusi sekaligus.
 Fungsi pertama adalah Execution: memproses logika smart contract dan menghitung perubahan saldo akun.
-Fungsi kedua adalah Settlement: menjadi hakim pengadilan tertinggi yang memutuskan transaksi mana yang final dan menyelesaikan sengketa.
-Fungsi ketiga adalah Consensus: menentukan urutan waktu kronologis transaksi agar tidak terjadi double-spending.
-Fungsi keempat adalah Data Availability: memastikan bahwa semua data transaksi mentah disiarkan ke publik dan tidak ada data yang disembunyikan oleh validator.
-Karena keempat beban ini berebut bandwidth, siklus prosesor, dan ruang disk yang sama pada setiap perangkat komputer, rantai monolitik tidak akan pernah bisa meloloskan diri dari Blockchain Trilemma.
+Fungsi kedua adalah Settlement: menjadi pengadilan tertinggi yang memutuskan transaksi mana yang final dan menyelesaikan sengketa bukti keabsahan.
+Fungsi ketiga adalah Consensus: menentukan urutan waktu kronologis transaksi agar tidak terjadi pembelanjaan ganda.
+Fungsi keempat adalah Data Availability: memastikan bahwa semua data transaksi mentah dipublikasikan ke publik tanpa ada yang disembunyikan oleh validator.
+Karena keempat beban ini memperebutkan bandwidth, siklus prosesor, dan ruang disk yang sama pada setiap perangkat komputer, rantai monolitik tidak akan pernah bisa meloloskan diri dari Blockchain Trilemma.
 
 ---
 
-## Slide 10: Pergeseran Paradigma Menuju Arsitektur Modular
+## Slide 10: The Modular Architecture Paradigm Shift
 
 ### Konten Slide
-- **Gagasan Revolusioner:** Jangan paksa satu blockchain mengerjakan semua fungsi sekaligus.
-- **Prinsip Modularitas:** Dekopel keempat fungsi konsensus dan serahkan masing-masing fungsi ke lapisan spesialis yang dioptimalkan secara independen.
-- **Tumpukan Arsitektur Modular (The Modular Stack):**
-  - *Execution Layer (Layer 2 Rollups):* Memproses transaksi berkecepatan tinggi off-chain (Arbitrum, Optimism, zkSync, Base).
-  - *Settlement & Consensus Layer (Ethereum Layer 1):* Mengamankan finalitas ekonomi, memverifikasi cryptographic proofs, dan menjadi pengadil sengketa.
-  - *Data Availability Layer (EIP-4844 / Celestia / EigenDA):* Menggaransi ketersediaan data transaksi mentah tanpa membebani eksekusi L1.
-- *Visual:* Diagram bertingkat arsitektur modular: Execution (L2) di atas -> Settlement & Consensus (L1) di tengah -> Data Availability (Blobs/DA) di bawah.
+The Modular Architecture Paradigm Shift
+
+The Modular Core Philosophy:
+- Decouple the four consensus responsibilities and assign each function to specialized, purpose-built layers.
+- Avoid forcing a single decentralized node to execute, order, settle, and store all global economic activity.
+
+The Modular Architecture Stack:
+- Execution Layer (Layer 2 Rollups): Processes thousands of off-chain transactions per second with ultra-low latency (Arbitrum, Optimism, zkSync, Base).
+- Settlement Layer (Ethereum Layer 1): Verifies cryptographic validity or fraud proofs, settles cross-chain bridges, and resolves state disputes.
+- Consensus Layer (Ethereum Layer 1 / CometBFT): Enforces canonical transaction ordering and prevents chain reorganizations.
+- Data Availability Layer (EIP-4844 Blobs / Celestia / EigenDA): Guarantees that raw transaction inputs are published cheaply without consuming execution state.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
 - Pelopor arsitektur modular: Mustafa Al-Bassam, John Adler, dan Vitalik Buterin.
-- Logika modular: seperti divisi kerja pada industri manufaktur modern.
-- Execution dipindahkan ke Layer 2, sementara L1 fokus pada Consensus, Settlement, dan Data Availability.
+- Logika modular: seperti pembagian divisi kerja spesialis dalam manufaktur modern.
+- Komputasi dipindahkan ke Layer 2, sementara Layer 1 fokus pada konsensus, penyelesaian akhir, dan ketersediaan data.
 
 **Naskah Tutur (Voiceover Script):**
-Untuk keluar dari jebakan tersebut, para peneliti sistem terdistribusi memicu perubahan paradigma besar yang disebut *The Modular Blockchain Paradigm Shift*.
-Filosofinya sangat brilian: daripada memaksa satu lapisan mengerjakan segalanya, kenapa tidak kita bagi tugas ke lapisan-lapisan spesialis yang bekerja secara independen?
+Untuk keluar dari jebakan tersebut, para peneliti sistem terdistribusi memicu perubahan paradigma besar yang disebut The Modular Blockchain Paradigm Shift.
+Filosofinya sangat elegan: daripada memaksa satu lapisan mengerjakan segalanya, mengapa tidak kita bagi tugas ke lapisan-lapisan spesialis yang dioptimalkan secara independen?
 Inilah tumpukan arsitektur modular.
 Lapisan pertama di puncak adalah Execution Layer, yang kita kenal sebagai Layer 2 Rollup.
-Lapisan ini khusus dirancang untuk mengeksekusi ribuan transaksi per detik di luar rantai utama dengan sangat cepat.
-Lapisan kedua di tengah adalah Settlement dan Consensus Layer, yang dijalankan oleh rantai desentralistik kokoh seperti Ethereum Layer 1.
-Lapisan ini tidak perlu menjalankan eksekusi komputasi yang berat; tugasnya murni mengurutkan transaksi dan memverifikasi bukti keabsahan matematis.
-Lapisan ketiga adalah Data Availability Layer, seperti EIP-4844 atau Celestia, yang bertugas menjamin ketersediaan data transaksi mentah bagi siapa saja yang ingin memverifikasinya.
+Lapisan ini khusus dirancang untuk mengeksekusi ribuan transaksi per detik di luar rantai utama dengan sangat cepat dan murah.
+Lapisan kedua di tengah adalah Settlement dan Consensus Layer, yang dijalankan oleh rantai terdesentralisasi kokoh seperti Ethereum Layer 1.
+Lapisan ini tidak perlu mengeksekusi transaksi massal satu per satu; tugasnya murni mengurutkan transaksi dan memverifikasi bukti keabsahan matematis.
+Lapisan ketiga adalah Data Availability Layer, seperti EIP-4844 atau Celestia, yang bertugas menjamin ketersediaan data transaksi mentah bagi siapa saja yang ingin mengauditnya secara independen.
 
 ---
 
-## Slide 11: Resolusi Blockchain Trilemma Melalui Desain Modular
+## Slide 11: Resolving the Trilemma via Modular Specialization
 
 ### Konten Slide
-- **Harmoni Tiga Pilar dalam Desain Modular:**
-  - **1. Desentralisasi Tetap Terjaga di Layer 1:**
-    - Syarat hardware node Layer 1 tetap ringan karena L1 tidak lagi mengeksekusi transaksi massal satu per satu.
-    - Pengguna biasa tetap dapat menjalankan full node di rumah untuk memverifikasi kebenaran konsensus.
-  - **2. Keamanan Terwariskan Penuh (Inherited Security):**
-    - Layer 2 tidak memiliki token validator sendiri untuk konsensus akhir; keamanannya dijamin 100 persen oleh nilai ekonomi dan kekuatan hash/staking Layer 1.
-  - **3. Skalabilitas Terbuka Lebar di Layer 2:**
-    - Ribuan transaksi off-chain dikompresi menjadi satu ringkasan komputasi ringkas sebelum dikirim ke Layer 1, menghasilkan biaya transaksi yang sangat murah.
-- *Visual:* Infografis resolusi Trilemma: L1 menjaga Decentralization & Security, L2 menghadirkan Scalability tanpa kompromi.
+Resolving the Trilemma via Modular Specialization
+
+Harmonizing All Three Pillars:
+- 1. Decentralization Preserved at Layer 1:
+- Hardware requirements for Layer 1 full nodes remain light because L1 only verifies compressed cryptographic proofs rather than executing raw smart contracts.
+- Regular users continue running full nodes on consumer hardware to maintain censorship resistance.
+
+- 2. Inherited Security for Layer 2:
+- Layer 2 networks do not require their own vulnerable validator sets for finality; their security is mathematically anchored to the billions of dollars of economic stake on Layer 1.
+
+- 3. Scalability Unlocked at the Execution Layer:
+- Off-chain execution bundles thousands of transactions into single compressed state proofs submitted to L1, driving transaction fees down by 95 percent or more.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Bagaimana arsitektur modular akhirnya menaklukkan Trilemma.
-- L1 tidak lagi tercekik karena hanya memvalidasi bukti kompresi, bukan menjalankan ulang tiap swap.
-- Pengguna mendapatkan pengalaman kilat dan murah di L2 tanpa kehilangan jaminan keamanan L1.
+- Bagaimana arsitektur modular akhirnya menaklukkan Blockchain Trilemma tanpa kompromi.
+- L1 tidak lagi tercekik karena hanya memvalidasi bukti kompresi ringkas, bukan mengulang setiap swap token.
+- Pengguna menikmati transaksi kilat dan murah di L2 sambil mempertahankan jaminan keamanan mutlak L1.
 
 **Naskah Tutur (Voiceover Script):**
 Dengan arsitektur modular ini, untuk pertama kalinya kita berhasil memecahkan teka-teki Blockchain Trilemma tanpa ada sifat yang dikorbankan.
-Lihat bagaimana ketiga pilar terpenuhi dengan harmonis.
+Lihat bagaimana ketiga pilar terpenuhi secara harmonis.
 Desentralisasi tetap terjaga secara murni di Layer 1.
-Karena Ethereum Layer 1 tidak lagi dipaksa mengeksekusi jutaan transaksi ritel secara berulang, beban prosesor dan disk L1 tetap stabil.
-Kalian dan saya tetap bisa menyalakan full node di laptop rumah untuk memverifikasi seluruh sejarah dunia.
+Karena Ethereum Layer 1 tidak lagi dipaksa mengeksekusi jutaan transaksi ritel secara berulang, beban prosesor dan media penyimpanan L1 tetap stabil.
+Kalian dan saya tetap dapat menyalakan full node di laptop rumah untuk memverifikasi seluruh sejarah konsensus dunia.
 Keamanan juga terjamin secara maksimal.
 Layer 2 tidak membuat sistem konsensus rapuh yang baru; mereka mewarisi seratus persen keamanan ekonomi puluhan miliar dolar milik Layer 1.
 Dan yang terpenting, Skalabilitas tercapai secara masif.
-Ribuan transaksi per detik dijalankan di Layer 2, lalu dikompresi secara kriptografis menjadi bukti kecil yang diselesaikan di Layer 1 dengan biaya receh.
+Ribuan transaksi per detik dijalankan di Layer 2, lalu dikompresi secara kriptografis menjadi bukti ringkas yang diselesaikan di Layer 1 dengan biaya yang sangat terjangkau.
 
 ---
 
-## Slide 12: Jembatan ke Modul Berikutnya (Layer 2 Fundamentals)
+## Slide 12: Transition to Module 06.2: Layer 2 Fundamentals
 
 ### Konten Slide
-- **Tantangan Arsitektur yang Muncul:**
-  - Kita telah memahami mengapa eksekusi harus dipisahkan dari konsensus Layer 1.
-  - Namun, bagaimana sebuah sistem off-chain dapat membuktikan kebenaran perhitungannya ke Layer 1 secara trustless?
-- **Pertanyaan Inti untuk Modul Berikutnya:**
-  - Apa perbedaan teknis mendasar antara Sidechain, State Channel, Plasma, dan True Rollup?
-  - Mengapa jaringan seperti Polygon PoS memiliki asumsi keamanan terpisah, sementara Layer 2 sejati mewarisi keamanan Layer 1 seutuhnya?
-  - Bagaimana mekanisme *unilateral exit* menjamin dana pengguna tetap aman walau operator L2 menghilang?
-- **Materi Modul Berikutnya:** **Layer 2 Fundamentals: Taksonomi dan Prinsip Eksekusi Off-Chain**.
-- *Visual:* Peta jalan evolusi Layer 2 menuju modul 06.2: State Channels -> Plasma -> Sidechains -> Rollups.
+Transition to Module 06.2: Layer 2 Fundamentals
+
+Emerging Engineering Challenges:
+- We have established why execution must be decoupled from Layer 1 consensus.
+- However, how can an off-chain execution environment prove computational correctness to Layer 1 in a trustless manner?
+
+Core Questions for Module 06.2:
+- What architectural criteria strictly distinguish a true Layer 2 from an independent sidechain?
+- Why do sidechains like Polygon PoS possess separate trust assumptions, while true rollups inherit L1 security?
+- How does the unilateral exit mechanism guarantee user fund safety even if the L2 sequencer goes offline or acts maliciously?
+
+Next Up:
+- Module 06.2: Layer 2 Fundamentals: Taxonomy and Principles of Off-Chain Execution.
 
 ### Catatan Presenter (Cheatsheet)
 **Quick Cues:**
-- Rangkuman bab: pergeseran dari monolitik ke modular.
-- Menimbulkan pertanyaan kunci: bagaimana L1 memverifikasi transaksi yang terjadi di luar rantai?
-- Teaser materi modul 6.2: Layer 2 Fundamentals.
+- Rangkum modul 06.1: pergeseran dari arsitektur monolitik ke modular memecahkan Trilemma.
+- Muncul pertanyaan lanjutan: bagaimana L1 memverifikasi transaksi yang terjadi di luar rantai secara trustless?
+- Mengantarkan peserta ke modul 06.2: Layer 2 Fundamentals.
 
 **Naskah Tutur (Voiceover Script):**
-Kita sudah melihat bagaimana peralihan dari arsitektur monolitik ke modular menyelamatkan ekosistem terdesentralisasi dari kebuntuan Blockchain Trilemma.
-Namun, arsitektur ini memunculkan pertanyaan teknik baru yang sangat krusial.
-Jika ribuan transaksi dieksekusi di luar rantai utama di Layer 2, bagaimana mungkin Layer 1 yang ada di bawahnya bisa tahu bahwa transaksi tersebut benar dan operator off-chain tidak mencuri uang kita?
+Kita telah menyaksikan bagaimana peralihan dari arsitektur monolitik ke modular menyelamatkan ekosistem terdesentralisasi dari kebuntuan Blockchain Trilemma.
+Namun, pemisahan tugas ini memunculkan pertanyaan rekayasa baru yang sangat krusial.
+Jika ribuan transaksi dieksekusi di luar rantai utama pada Layer 2, bagaimana mungkin Layer 1 yang berada di bawahnya dapat memastikan bahwa transaksi tersebut sah dan operator off-chain tidak mencuri dana pengguna?
 Apakah semua jaringan yang mengklaim dirinya Layer 2 benar-benar aman?
 Mengapa sidechain seperti Polygon PoS memiliki asumsi risiko yang berbeda dengan true rollup seperti Arbitrum atau Optimism?
-Dan bagaimana mekanisme matematika menjamin bahwa pengguna selalu bisa menarik uang mereka kembali ke Layer 1 bahkan jika operator Layer 2 mati total atau berniat jahat?
+Dan bagaimana mekanisme matematika menjamin bahwa pengguna selalu dapat menarik dana mereka kembali ke Layer 1 bahkan jika operator Layer 2 mati total atau berniat jahat?
 Untuk membongkar taksonomi dan cara kerja sistem penskalaan off-chain ini, di modul berikutnya kita akan membedah topik: Layer 2 Fundamentals.
 Sampai jumpa di sesi berikutnya.
